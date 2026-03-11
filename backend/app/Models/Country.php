@@ -24,11 +24,18 @@ class Country extends Model
     protected static function booted(): void
     {
         static::saving(function (Country $country) {
-            if (blank($country->slug) || ($country->isDirty('name') && ! $country->isDirty('slug'))) {
+            if (blank($country->slug) || ($country->isDirty('name') && !$country->isDirty('slug'))) {
                 $country->slug = $country->generateUniqueSlug($country->name);
             }
         });
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Scopes
+    |--------------------------------------------------------------------------
+    */
+
 
     public function scopeActive(Builder $query): Builder
     {
@@ -55,6 +62,13 @@ class Country extends Model
         $this->forceFill(['is_active' => false])->save();
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Slug generation
+    |--------------------------------------------------------------------------
+    */
+
+
     public function generateUniqueSlug(string $name): string
     {
         $base = Str::slug($name);
@@ -64,7 +78,7 @@ class Country extends Model
         while (
         static::query()
             ->where('slug', $slug)
-            ->when($this->exists, fn ($q) => $q->whereKeyNot($this->getKey()))
+            ->when($this->exists, fn($q) => $q->whereKeyNot($this->getKey()))
             ->exists()
         ) {
             $slug = "{$base}-{$i}";
@@ -72,6 +86,17 @@ class Country extends Model
         }
 
         return $slug;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Relationships
+    |--------------------------------------------------------------------------
+    */
+
+    public function modules()
+    {
+        return $this->hasMany(Module::class)->orderBy('order');
     }
 
 }

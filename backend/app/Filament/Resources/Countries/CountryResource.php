@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Countries;
 
 use App\Filament\Resources\Countries\Pages\CreateCountry;
 use App\Filament\Resources\Countries\Pages\EditCountry;
+use App\Filament\Resources\Countries\RelationManagers\ModulesRelationManager;
 use App\Filament\Resources\Countries\Pages\ListCountries;
 use App\Filament\Resources\Countries\Schemas\CountryForm;
 use App\Filament\Resources\Countries\Tables\CountriesTable;
@@ -46,6 +47,13 @@ class CountryResource extends Resource
             'index' => ListCountries::route('/'),
             'create' => CreateCountry::route('/create'),
             'edit' => EditCountry::route('/{record}/edit'),
+        ];
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            ModulesRelationManager::class,
         ];
     }
 }
