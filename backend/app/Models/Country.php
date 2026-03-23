@@ -2,12 +2,26 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 class Country extends Model
 {
+
+    /**
+     * @property int $id
+     * @property string $name
+     * @property string $slug
+     * @property string|null $region
+     * @property string|null $description
+     * @property string|null $flag_path
+     * @property bool $is_active
+     * @property Carbon $created_at
+     * @property Carbon $updated_at
+     */
+
     protected $fillable = [
         'name',
         'slug',

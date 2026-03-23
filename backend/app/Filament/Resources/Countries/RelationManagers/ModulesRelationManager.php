@@ -2,11 +2,12 @@
 
 namespace App\Filament\Resources\Countries\RelationManagers;
 
+use App\Filament\Resources\Modules\ModuleResource;
 use App\Models\Module;
+use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -101,14 +102,16 @@ class ModulesRelationManager extends RelationManager
                     ->sortable()
                     ->toggleable(),
             ])
-            ->filters([
-                //
-            ])
             ->headerActions([
                 CreateAction::make(),
             ])
             ->recordActions([
-                EditAction::make(),
+                Action::make('open')
+                    ->label('Open')
+                    ->icon('heroicon-o-arrow-top-right-on-square')
+                    ->url(fn (Module $record): string => ModuleResource::getUrl('edit', ['record' => $record]))
+                    ->openUrlInNewTab(false),
+
                 DeleteAction::make(),
             ])
             ->toolbarActions([

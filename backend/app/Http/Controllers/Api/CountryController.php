@@ -3,27 +3,26 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Resources\Api\CountryResource;
 use App\Models\Country;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class CountryController extends Controller
 {
-    public function index(Request $request)
+    public function index(): AnonymousResourceCollection
     {
-        $query = Country::query()->where('is_active', true);
-        if ($region = $request->get('region')) {
-            $query->where('region', $region);
-        }
-        return response()->json(['data' => $query->orderBy('name')->get()]);
+        $countries = Country::query()
+            ->active()
+            ->orderBy('name')
+            ->get();
+
+        return CountryResource::collection($countries);
     }
 
-    public function show(Country $country)
+    public function show(Country $country): CountryResource
     {
         abort_unless($country->is_active, 404);
 
-        return response()->json([
-            'data' => $country
-        ]);
+        return new CountryResource($country);
     }
-
 }

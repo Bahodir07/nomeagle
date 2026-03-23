@@ -13,7 +13,23 @@ return new class extends Migration
     {
         Schema::create('lessons', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('module_id')
+                ->constrained()
+                ->cascadeOnDelete();
+            $table->string('title');
+            $table->string('slug');
+            $table->string('type')->index();
+            $table->text('description')->nullable();
+            $table->json('content')->nullable();
+            $table->unsignedInteger('order')->default(1);
+            $table->unsignedInteger('xp_reward')->default(0);
+            $table->unsignedInteger('stars_reward')->default(0);
+            $table->unsignedInteger('estimated_minutes')->nullable();
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
+            $table->index('module_id');
+            $table->index('order');
+            $table->unique(['module_id', 'slug']);
         });
     }
 

@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
 class Module extends Model
@@ -28,9 +30,14 @@ class Module extends Model
     |--------------------------------------------------------------------------
     */
 
-    public function country()
+    public function country(): BelongsTo
     {
         return $this->belongsTo(Country::class);
+    }
+
+    public function lessons(): HasMany
+    {
+        return $this->hasMany(Lesson::class)->orderBy('order');
     }
 
     /*
@@ -73,5 +80,10 @@ class Module extends Model
         }
 
         return $slug;
+    }
+
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
     }
 }
