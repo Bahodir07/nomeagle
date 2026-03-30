@@ -5,6 +5,9 @@ namespace App\Filament\Resources\Lessons;
 use App\Filament\Resources\Lessons\Pages\CreateLesson;
 use App\Filament\Resources\Lessons\Pages\EditLesson;
 use App\Filament\Resources\Lessons\Pages\ListLessons;
+use App\Filament\Resources\Lessons\RelationManagers\QuizQuestionsRelationManager;
+use App\Filament\Resources\Lessons\RelationManagers\ScenariosRelationManager;
+use App\Filament\Resources\Lessons\RelationManagers\FlashcardsRelationManager;
 use App\Filament\Resources\Lessons\Schemas\LessonForm;
 use App\Filament\Resources\Lessons\Tables\LessonsTable;
 use App\Models\Lesson;
@@ -36,6 +39,16 @@ class LessonResource extends Resource
     {
         return LessonsTable::configure($table);
     }
+
+    public static function getRelations(): array
+    {
+        return [
+            ScenariosRelationManager::class,
+            QuizQuestionsRelationManager::class,
+            FlashcardsRelationManager::class,
+        ];
+    }
+
 
     public static function getPages(): array
     {

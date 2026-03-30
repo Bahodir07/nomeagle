@@ -1,0 +1,187 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+use App\Http\Resources\Api\ScenarioResource;
+use App\Models\Country;
+use App\Models\Scenario;
+use App\Models\ScenarioAttempt;
+use App\Models\UserLessonProgress;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\DB;
+
+class ScenarioController extends Controller
+{
+    public function index(Country $country, string $module, string $lesson): AnonymousResourceCollection
+    {
+        abort_unless($country->is_active, 404);
+
+        $moduleRecord = $country->modules()
+            ->where('slug', $module)
+            ->where('is_active', true)
+            ->firstOrFail();
+
+        $lessonRecord = $moduleRecord->lessons()
+            ->where('slug', $lesson)
+            ->where('is_active', true)
+            ->firstOrFail();
+
+        $scenarios = $lessonRecord->scenarios()
+            ->where('is_active', true)
+            ->orderBy('order')
+            ->get();
+
+        return ScenarioResource::collection($scenarios);
+    }
+
+    public function show(Country $country, string $module, string $lesson, Scenario $scenario): ScenarioResource
+    {
+        abort_unless($country->is_active, 404);
+
+        $moduleRecord = $country->modules()
+            ->where('slug', $module)
+            ->where('is_active', true)
+            ->firstOrFail();
+
+        $lessonRecord = $moduleRecord->lessons()
+            ->where('slug', $lesson)
+            ->where('is_active', true)
+            ->firstOrFail();
+
+        abort_unless($scenario->lesson_id === $lessonRecord->id, 404);
+        abort_unless($scenario->is_active, 404);
+
+        return new ScenarioResource($scenario);
+    }
+
+    public function submit(Request $request, Scenario $scenario)
+    {
+        abort_unless($scenario->is_active, 404);
+
+        $user = \App\Models\User::first();
+
+        if (! $user) {
+            return response()->json([
+                'message' => 'Authentication required for progress tracking.',
+            ], 401);
+        }
+
+        $request->validate([
+            'answer' => ['required', 'string'],
+        ]);
+
+        $payload = $scenario->payload;
+
+        if (! isset($payload['options']) || ! is_array($payload['options'])) {
+            return response()->json([
+                'error' => 'Invalid scenario payload',
+            ], 500);
+        }
+
+        $selected = collect($payload['options'])
+            ->firstWhere('id', $request->input('answer'));
+
+        if (! $selected) {
+            return response()->json([
+                'error' => 'Invalid answer',
+            ], 422);
+        }
+
+        $isCorrect = (bool) ($selected['is_correct'] ?? false);
+        $lesson = $scenario->lesson;
+
+        $result = DB::transaction(function () use ($user, $scenario, $selected, $isCorrect, $lesson) {
+            $alreadySolvedCorrectly = ScenarioAttempt::query()
+                ->where('user_id', $user->id)
+                ->where('scenario_id', $scenario->id)
+                ->where('is_correct', true)
+                ->exists();
+
+            $xpEarned = ($isCorrect && ! $alreadySolvedCorrectly)
+                ? $scenario->xp_reward
+                : 0;
+
+            ScenarioAttempt::create([
+                'user_id' => $user->id,
+                'scenario_id' => $scenario->id,
+                'selected_answer' => $selected['id'],
+                'is_correct' => $isCorrect,
+                'xp_earned' => $xpEarned,
+                'answered_at' => now(),
+            ]);
+
+            $totalScenarios = $lesson->scenarios()->where('is_active', true)->count();
+
+            $completedScenarioIds = ScenarioAttempt::query()
+                ->where('user_id', $user->id)
+                ->whereIn('scenario_id', $lesson->scenarios()->pluck('id'))
+                ->distinct()
+                ->pluck('scenario_id');
+
+            $completedScenarios = $completedScenarioIds->count();
+
+            $totalAttempts = ScenarioAttempt::query()
+                ->where('user_id', $user->id)
+                ->whereIn('scenario_id', $lesson->scenarios()->pluck('id'))
+                ->count();
+
+            $correctAnswers = ScenarioAttempt::query()
+                ->where('user_id', $user->id)
+                ->whereIn('scenario_id', $lesson->scenarios()->pluck('id'))
+                ->where('is_correct', true)
+                ->count();
+
+            $xpTotal = ScenarioAttempt::query()
+                ->where('user_id', $user->id)
+                ->whereIn('scenario_id', $lesson->scenarios()->pluck('id'))
+                ->sum('xp_earned');
+
+            $progressPct = $totalScenarios > 0
+                ? (int) floor(($completedScenarios / $totalScenarios) * 100)
+                : 0;
+
+            $status = match (true) {
+                $progressPct === 0 => 'not_started',
+                $progressPct >= 100 => 'completed',
+                default => 'in_progress',
+            };
+
+            $progress = UserLessonProgress::query()->updateOrCreate(
+                [
+                    'user_id' => $user->id,
+                    'lesson_id' => $lesson->id,
+                ],
+                [
+                    'status' => $status,
+                    'progress_pct' => $progressPct,
+                    'total_scenarios' => $totalScenarios,
+                    'completed_scenarios' => $completedScenarios,
+                    'correct_answers' => $correctAnswers,
+                    'total_attempts' => $totalAttempts,
+                    'xp_earned' => $xpTotal,
+                    'completed_at' => $status === 'completed' ? now() : null,
+                    'last_activity_at' => now(),
+                ]
+            );
+
+            return compact('xpEarned', 'progress');
+        });
+
+        return response()->json([
+            'correct' => $isCorrect,
+            'explanation' => $selected['explanation'] ?? null,
+            'xp_earned' => $result['xpEarned'],
+            'progress' => [
+                'status' => $result['progress']->status,
+                'progress_pct' => $result['progress']->progress_pct,
+                'total_scenarios' => $result['progress']->total_scenarios,
+                'completed_scenarios' => $result['progress']->completed_scenarios,
+                'correct_answers' => $result['progress']->correct_answers,
+                'total_attempts' => $result['progress']->total_attempts,
+                'xp_earned' => $result['progress']->xp_earned,
+            ],
+        ]);
+    }
+}

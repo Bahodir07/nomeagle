@@ -8,21 +8,18 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('scenarios', function (Blueprint $table) {
+        Schema::create('quiz_questions', function (Blueprint $table) {
             $table->id();
 
             $table->foreignId('lesson_id')
                 ->constrained()
                 ->cascadeOnDelete();
 
-            $table->string('title');
-            $table->string('slug');
+            $table->text('question');
 
-            $table->string('type')->default('decision')->index();
+            $table->json('options')->nullable();
 
-            $table->text('prompt');
-
-            $table->json('payload')->nullable();
+            $table->text('explanation')->nullable();
 
             $table->unsignedInteger('order')->default(1);
 
@@ -34,13 +31,11 @@ return new class extends Migration
 
             $table->index('lesson_id');
             $table->index('order');
-
-            $table->unique(['lesson_id', 'slug']);
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('scenarios');
+        Schema::dropIfExists('quiz_questions');
     }
 };

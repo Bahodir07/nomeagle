@@ -6,6 +6,7 @@ use App\Enums\LessonType;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
 class Lesson extends Model
@@ -39,6 +40,26 @@ class Lesson extends Model
     public function module(): BelongsTo
     {
         return $this->belongsTo(Module::class);
+    }
+
+    public function scenarios(): HasMany
+    {
+        return $this->hasMany(Scenario::class)->orderBy('order');
+    }
+
+    public function quizQuestions(): HasMany
+    {
+        return $this->hasMany(QuizQuestion::class)->orderBy('order');
+    }
+
+    public function progress(): HasMany
+    {
+        return $this->hasMany(UserLessonProgress::class);
+    }
+
+    public function flashcards(): HasMany
+    {
+        return $this->hasMany(Flashcard::class)->orderBy('order');
     }
 
     /*
