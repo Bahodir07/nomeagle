@@ -7,7 +7,9 @@ use App\Http\Resources\Api\QuizQuestionResource;
 use App\Models\Country;
 use App\Models\QuizQuestion;
 use App\Models\QuizQuestionAttempt;
+use App\Models\User;
 use App\Models\UserLessonProgress;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
@@ -56,11 +58,12 @@ class QuizQuestionController extends Controller
         return new QuizQuestionResource($quizQuestion);
     }
 
-    public function submit(Request $request, QuizQuestion $quizQuestion)
+    public function submit(Request $request, QuizQuestion $quizQuestion): JsonResponse
     {
         abort_unless($quizQuestion->is_active, 404);
 
-        $user = $request->user() ?? \App\Models\User::first();
+        // Временный dev-вариант, пока нет полноценной auth:
+        $user = $request->user() ?? User::first();
 
         if (! $user) {
             return response()->json([
@@ -70,6 +73,7 @@ class QuizQuestionController extends Controller
 
         $request->validate([
             'answer' => ['required', 'string'],
+            'duration_seconds' => ['nullable', 'integer', 'min:0'],
         ]);
 
         $options = $quizQuestion->options;
@@ -90,8 +94,13 @@ class QuizQuestionController extends Controller
 
         $isCorrect = (bool) ($selected['is_correct'] ?? false);
         $lesson = $quizQuestion->lesson;
+        $durationSeconds = (int) $request->input('duration_seconds', 0);
 
-        $result = DB::transaction(function () use ($user, $quizQuestion, $selected, $isCorrect, $lesson) {
+        $result = DB::transaction(function () use ($user, $quizQuestion, $selected, $isCorrect, $lesson, $durationSeconds) {
+            $questionIds = $lesson->quizQuestions()
+                ->where('is_active', true)
+                ->pluck('id');
+
             $alreadySolvedCorrectly = QuizQuestionAttempt::query()
                 ->where('user_id', $user->id)
                 ->where('quiz_question_id', $quizQuestion->id)
@@ -108,19 +117,19 @@ class QuizQuestionController extends Controller
                 'selected_answer' => $selected['id'],
                 'is_correct' => $isCorrect,
                 'xp_earned' => $xpEarned,
+                'duration_seconds' => $durationSeconds,
                 'answered_at' => now(),
             ]);
 
-            $questionIds = $lesson->quizQuestions()->where('is_active', true)->pluck('id');
-            $totalQuestions = $questionIds->count();
+            $totalItems = $questionIds->count();
 
-            $completedQuestionIds = QuizQuestionAttempt::query()
+            $completedItemIds = QuizQuestionAttempt::query()
                 ->where('user_id', $user->id)
                 ->whereIn('quiz_question_id', $questionIds)
                 ->distinct()
                 ->pluck('quiz_question_id');
 
-            $completedQuestions = $completedQuestionIds->count();
+            $completedItems = $completedItemIds->count();
 
             $totalAttempts = QuizQuestionAttempt::query()
                 ->where('user_id', $user->id)
@@ -138,8 +147,8 @@ class QuizQuestionController extends Controller
                 ->whereIn('quiz_question_id', $questionIds)
                 ->sum('xp_earned');
 
-            $progressPct = $totalQuestions > 0
-                ? (int) floor(($completedQuestions / $totalQuestions) * 100)
+            $progressPct = $totalItems > 0
+                ? (int) floor(($completedItems / $totalItems) * 100)
                 : 0;
 
             $status = match (true) {
@@ -156,8 +165,8 @@ class QuizQuestionController extends Controller
                 [
                     'status' => $status,
                     'progress_pct' => $progressPct,
-                    'total_scenarios' => $totalQuestions,
-                    'completed_scenarios' => $completedQuestions,
+                    'total_items' => $totalItems,
+                    'completed_items' => $completedItems,
                     'correct_answers' => $correctAnswers,
                     'total_attempts' => $totalAttempts,
                     'xp_earned' => $xpTotal,
@@ -176,8 +185,8 @@ class QuizQuestionController extends Controller
             'progress' => [
                 'status' => $result['progress']->status,
                 'progress_pct' => $result['progress']->progress_pct,
-                'total_questions' => $result['progress']->total_scenarios,
-                'completed_questions' => $result['progress']->completed_scenarios,
+                'total_items' => $result['progress']->total_items,
+                'completed_items' => $result['progress']->completed_items,
                 'correct_answers' => $result['progress']->correct_answers,
                 'total_attempts' => $result['progress']->total_attempts,
                 'xp_earned' => $result['progress']->xp_earned,

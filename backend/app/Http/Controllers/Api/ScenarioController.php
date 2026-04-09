@@ -62,7 +62,7 @@ class ScenarioController extends Controller
 
         $user = \App\Models\User::first();
 
-        if (! $user) {
+        if (!$user) {
             return response()->json([
                 'message' => 'Authentication required for progress tracking.',
             ], 401);
@@ -70,11 +70,12 @@ class ScenarioController extends Controller
 
         $request->validate([
             'answer' => ['required', 'string'],
+            'duration_seconds' => ['nullable', 'integer', 'min:0'],
         ]);
 
         $payload = $scenario->payload;
 
-        if (! isset($payload['options']) || ! is_array($payload['options'])) {
+        if (!isset($payload['options']) || !is_array($payload['options'])) {
             return response()->json([
                 'error' => 'Invalid scenario payload',
             ], 500);
@@ -83,23 +84,28 @@ class ScenarioController extends Controller
         $selected = collect($payload['options'])
             ->firstWhere('id', $request->input('answer'));
 
-        if (! $selected) {
+        if (!$selected) {
             return response()->json([
                 'error' => 'Invalid answer',
             ], 422);
         }
 
-        $isCorrect = (bool) ($selected['is_correct'] ?? false);
+        $isCorrect = (bool)($selected['is_correct'] ?? false);
         $lesson = $scenario->lesson;
+        $durationSeconds = (int)$request->input('duration_seconds', 0);
 
-        $result = DB::transaction(function () use ($user, $scenario, $selected, $isCorrect, $lesson) {
+        $result = DB::transaction(function () use ($user, $scenario, $selected, $isCorrect, $lesson, $durationSeconds) {
+            $scenarioIds = $lesson->scenarios()
+                ->where('is_active', true)
+                ->pluck('id');
+
             $alreadySolvedCorrectly = ScenarioAttempt::query()
                 ->where('user_id', $user->id)
                 ->where('scenario_id', $scenario->id)
                 ->where('is_correct', true)
                 ->exists();
 
-            $xpEarned = ($isCorrect && ! $alreadySolvedCorrectly)
+            $xpEarned = ($isCorrect && !$alreadySolvedCorrectly)
                 ? $scenario->xp_reward
                 : 0;
 
@@ -109,37 +115,38 @@ class ScenarioController extends Controller
                 'selected_answer' => $selected['id'],
                 'is_correct' => $isCorrect,
                 'xp_earned' => $xpEarned,
+                'duration_seconds' => $durationSeconds,
                 'answered_at' => now(),
             ]);
 
-            $totalScenarios = $lesson->scenarios()->where('is_active', true)->count();
+            $totalItems = $scenarioIds->count();
 
-            $completedScenarioIds = ScenarioAttempt::query()
+            $completedItemIds = ScenarioAttempt::query()
                 ->where('user_id', $user->id)
-                ->whereIn('scenario_id', $lesson->scenarios()->pluck('id'))
+                ->whereIn('scenario_id', $scenarioIds)
                 ->distinct()
                 ->pluck('scenario_id');
 
-            $completedScenarios = $completedScenarioIds->count();
+            $completedItems = $completedItemIds->count();
 
             $totalAttempts = ScenarioAttempt::query()
                 ->where('user_id', $user->id)
-                ->whereIn('scenario_id', $lesson->scenarios()->pluck('id'))
+                ->whereIn('scenario_id', $scenarioIds)
                 ->count();
 
             $correctAnswers = ScenarioAttempt::query()
                 ->where('user_id', $user->id)
-                ->whereIn('scenario_id', $lesson->scenarios()->pluck('id'))
+                ->whereIn('scenario_id', $scenarioIds)
                 ->where('is_correct', true)
                 ->count();
 
             $xpTotal = ScenarioAttempt::query()
                 ->where('user_id', $user->id)
-                ->whereIn('scenario_id', $lesson->scenarios()->pluck('id'))
+                ->whereIn('scenario_id', $scenarioIds)
                 ->sum('xp_earned');
 
-            $progressPct = $totalScenarios > 0
-                ? (int) floor(($completedScenarios / $totalScenarios) * 100)
+            $progressPct = $totalItems > 0
+                ? (int)floor(($completedItems / $totalItems) * 100)
                 : 0;
 
             $status = match (true) {
@@ -156,8 +163,8 @@ class ScenarioController extends Controller
                 [
                     'status' => $status,
                     'progress_pct' => $progressPct,
-                    'total_scenarios' => $totalScenarios,
-                    'completed_scenarios' => $completedScenarios,
+                    'total_items' => $totalItems,
+                    'completed_items' => $completedItems,
                     'correct_answers' => $correctAnswers,
                     'total_attempts' => $totalAttempts,
                     'xp_earned' => $xpTotal,
@@ -176,8 +183,8 @@ class ScenarioController extends Controller
             'progress' => [
                 'status' => $result['progress']->status,
                 'progress_pct' => $result['progress']->progress_pct,
-                'total_scenarios' => $result['progress']->total_scenarios,
-                'completed_scenarios' => $result['progress']->completed_scenarios,
+                'total_items' => $result['progress']->total_items,
+                'completed_items' => $result['progress']->completed_items,
                 'correct_answers' => $result['progress']->correct_answers,
                 'total_attempts' => $result['progress']->total_attempts,
                 'xp_earned' => $result['progress']->xp_earned,

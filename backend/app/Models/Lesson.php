@@ -62,6 +62,11 @@ class Lesson extends Model
         return $this->hasMany(Flashcard::class)->orderBy('order');
     }
 
+    public function completionEvents(): HasMany
+    {
+        return $this->hasMany(LessonCompletionEvent::class);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Scopes

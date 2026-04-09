@@ -5,21 +5,23 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class ScenarioAttempt extends Model
+class FlashcardReview extends Model
 {
     protected $fillable = [
         'user_id',
-        'scenario_id',
-        'selected_answer',
-        'is_correct',
+        'flashcard_id',
+        'rating',
         'xp_earned',
         'duration_seconds',
-        'answered_at',
+        'shown_at',
+        'flipped_at',
+        'reviewed_at',
     ];
 
     protected $casts = [
-        'is_correct' => 'boolean',
-        'answered_at' => 'datetime',
+        'shown_at' => 'datetime',
+        'flipped_at' => 'datetime',
+        'reviewed_at' => 'datetime',
     ];
 
     public function user(): BelongsTo
@@ -27,8 +29,8 @@ class ScenarioAttempt extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function scenario(): BelongsTo
+    public function flashcard(): BelongsTo
     {
-        return $this->belongsTo(Scenario::class);
+        return $this->belongsTo(Flashcard::class);
     }
 }

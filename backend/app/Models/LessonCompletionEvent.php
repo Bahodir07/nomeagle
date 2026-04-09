@@ -5,27 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class UserLessonProgress extends Model
+class LessonCompletionEvent extends Model
 {
-    protected $table = 'user_lesson_progress';
-
     protected $fillable = [
         'user_id',
         'lesson_id',
-        'status',
-        'progress_pct',
-        'total_items',
-        'completed_items',
-        'correct_answers',
-        'total_attempts',
         'xp_earned',
+        'duration_seconds',
         'completed_at',
-        'last_activity_at',
     ];
 
     protected $casts = [
         'completed_at' => 'datetime',
-        'last_activity_at' => 'datetime',
     ];
 
     public function user(): BelongsTo
