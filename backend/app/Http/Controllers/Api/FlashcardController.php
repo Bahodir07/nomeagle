@@ -60,8 +60,7 @@ class FlashcardController extends Controller
     {
         abort_unless($flashcard->is_active, 404);
 
-        // Временный dev-вариант, пока нет полноценной auth:
-        $user = $request->user() ?? \App\Models\User::first();
+        $user = $request->user();
 
         if (! $user) {
             return response()->json([

@@ -60,7 +60,7 @@ class ScenarioController extends Controller
     {
         abort_unless($scenario->is_active, 404);
 
-        $user = \App\Models\User::first();
+        $user = $request->user();
 
         if (!$user) {
             return response()->json([

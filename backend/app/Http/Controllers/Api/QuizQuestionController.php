@@ -62,8 +62,7 @@ class QuizQuestionController extends Controller
     {
         abort_unless($quizQuestion->is_active, 404);
 
-        // Временный dev-вариант, пока нет полноценной auth:
-        $user = $request->user() ?? User::first();
+        $user = $request->user();
 
         if (! $user) {
             return response()->json([

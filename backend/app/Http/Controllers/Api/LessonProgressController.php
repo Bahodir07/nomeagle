@@ -15,7 +15,7 @@ class LessonProgressController extends Controller
     {
         abort_unless($country->is_active, 404);
 
-        $user = $request->user() ?? User::first();
+        $user = $request->user();
 
         if (! $user) {
             return response()->json([

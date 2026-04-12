@@ -12,17 +12,17 @@ use App\Models\ScenarioAttempt;
 use App\Models\User;
 use App\Models\UserLessonProgress;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Storage;
 
 class DashboardController extends Controller
 {
     public function index(): JsonResponse
     {
-        $user = request()->user() ?? User::first();
+        // Временный dev fallback, пока Sanctum не подключен окончательно.
+        $user = request()->user();
 
         if (! $user) {
             return response()->json([
-                'message' => 'Authentication required for dashboard.',
+                'message' => 'Authentication required for progress tracking.',
             ], 401);
         }
 
@@ -32,8 +32,11 @@ class DashboardController extends Controller
                 'modules' => fn ($query) => $query
                     ->where('is_active', true)
                     ->with([
-                        'lessons' => fn ($lessonQuery) => $lessonQuery->where('is_active', true),
-                    ]),
+                        'lessons' => fn ($lessonQuery) => $lessonQuery
+                            ->where('is_active', true)
+                            ->orderBy('order'),
+                    ])
+                    ->orderBy('order'),
             ])
             ->orderBy('name')
             ->get();
@@ -43,7 +46,7 @@ class DashboardController extends Controller
             ->get()
             ->keyBy('lesson_id');
 
-        $learningCountries = $countries->map(function (Country $country) use ($lessonProgressRows) {
+        $activeCountries = $countries->map(function (Country $country) use ($lessonProgressRows) {
             $lessons = $country->modules
                 ->flatMap(fn ($module) => $module->lessons)
                 ->values();
@@ -54,45 +57,58 @@ class DashboardController extends Controller
                 $progress = $lessonProgressRows->get($lesson->id);
 
                 return $progress && $progress->status === 'completed';
-            })->count();
+            });
 
             $startedLessons = $lessons->filter(function ($lesson) use ($lessonProgressRows) {
                 $progress = $lessonProgressRows->get($lesson->id);
 
                 return $progress && in_array($progress->status, ['in_progress', 'completed'], true);
-            })->count();
+            });
 
             $progressPct = $totalLessons > 0
-                ? (int) floor(($completedLessons / $totalLessons) * 100)
+                ? (int) floor(($completedLessons->count() / $totalLessons) * 100)
                 : 0;
 
             $status = match (true) {
                 $progressPct >= 100 && $totalLessons > 0 => 'completed',
-                $startedLessons > 0 => 'in_progress',
+                $startedLessons->isNotEmpty() => 'in_progress',
                 default => 'not_started',
             };
 
-            $action = match ($status) {
-                'completed' => 'review',
-                'in_progress' => 'continue',
-                default => 'start',
+            $lastLessonTitle = match ($status) {
+                'completed' => $completedLessons->last()?->title ?? $lessons->last()?->title,
+                'in_progress' => $startedLessons->last()?->title ?? $lessons->first()?->title,
+                default => $lessons->first()?->title,
             };
 
             return [
-                'country_id' => $country->id,
-                'name' => $country->name,
-                'slug' => $country->slug,
-                'flag_url' => $country->flag_path
-                    ? Storage::disk('public')->url($country->flag_path)
-                    : null,
-                'description' => str($country->description ?? '')->limit(80)->toString(),
+                // IMPORTANT:
+                // frontend currently navigates by countryId, but backend routing is slug-based.
+                // so countryId intentionally contains slug, not numeric id.
+                'countryId' => $country->slug,
+                'countryName' => $country->name,
+                'region' => $country->region,
                 'status' => $status,
-                'progress_pct' => $progressPct,
-                'total_lessons' => $totalLessons,
-                'completed_lessons' => $completedLessons,
-                'action' => $action,
+                'progressPct' => $progressPct,
+                'teaser' => str($country->description ?? '')->limit(90)->toString(),
+                'lastLessonTitle' => $lastLessonTitle,
             ];
-        });
+        })->values();
+
+        /*
+         |--------------------------------------------------------------------------
+         | User stats
+         |--------------------------------------------------------------------------
+         */
+
+        $xp = UserLessonProgress::query()
+            ->where('user_id', $user->id)
+            ->sum('xp_earned');
+
+        // Простая level формула для MVP.
+        $level = intdiv($xp, 100) + 1;
+        $xpToNextLevel = 100 - ($xp % 100);
+        $xpToNextLevel = $xpToNextLevel === 0 ? 100 : $xpToNextLevel;
 
         $totalActiveLessons = Lesson::query()
             ->where('is_active', true)
@@ -119,6 +135,12 @@ class DashboardController extends Controller
         $quizAccuracyPct = $quizTotalAttempts > 0
             ? (int) floor(($quizCorrectAttempts / $quizTotalAttempts) * 100)
             : 0;
+
+        /*
+         |--------------------------------------------------------------------------
+         | Time tracking
+         |--------------------------------------------------------------------------
+         */
 
         $todayStart = now()->startOfDay();
         $weekStart = now()->startOfWeek();
@@ -184,14 +206,18 @@ class DashboardController extends Controller
         $timeSpentTotalSeconds = $scenarioTimeTotal + $quizTimeTotal + $flashcardTimeTotal + $lessonTimeTotal;
 
         return response()->json([
-            'learning_countries' => $learningCountries->values(),
-            'stats' => [
-                'quiz_accuracy_pct' => $quizAccuracyPct,
-                'lessons_completed_pct' => $lessonsCompletedPct,
-                'time_spent_today_seconds' => $timeSpentTodaySeconds,
-                'time_spent_week_seconds' => $timeSpentWeekSeconds,
-                'time_spent_total_seconds' => $timeSpentTotalSeconds,
+            'user' => [
+                'xp' => $xp,
+                'level' => $level,
+                'xpToNextLevel' => $xpToNextLevel,
+                'streakDays' => 0, // TODO: add streak logic later
+                'accuracy' => $quizAccuracyPct,
+                'lessonsCompletedPct' => $lessonsCompletedPct,
+                'timeTodayMinutes' => (int) floor($timeSpentTodaySeconds / 60),
+                'timeWeekMinutes' => (int) floor($timeSpentWeekSeconds / 60),
+                'timeTotalMinutes' => (int) floor($timeSpentTotalSeconds / 60),
             ],
+            'activeCountries' => $activeCountries,
         ]);
     }
 }
