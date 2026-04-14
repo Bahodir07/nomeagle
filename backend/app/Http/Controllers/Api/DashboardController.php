@@ -9,15 +9,14 @@ use App\Models\Lesson;
 use App\Models\LessonCompletionEvent;
 use App\Models\QuizQuestionAttempt;
 use App\Models\ScenarioAttempt;
-use App\Models\User;
 use App\Models\UserLessonProgress;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Storage;
 
 class DashboardController extends Controller
 {
     public function index(): JsonResponse
     {
-        // Временный dev fallback, пока Sanctum не подключен окончательно.
         $user = request()->user();
 
         if (! $user) {
@@ -81,10 +80,11 @@ class DashboardController extends Controller
                 default => $lessons->first()?->title,
             };
 
+            $flagUrl = $country->flag_path
+                ? Storage::url($country->flag_path)
+                : null;
+
             return [
-                // IMPORTANT:
-                // frontend currently navigates by countryId, but backend routing is slug-based.
-                // so countryId intentionally contains slug, not numeric id.
                 'countryId' => $country->slug,
                 'countryName' => $country->name,
                 'region' => $country->region,
@@ -92,20 +92,16 @@ class DashboardController extends Controller
                 'progressPct' => $progressPct,
                 'teaser' => str($country->description ?? '')->limit(90)->toString(),
                 'lastLessonTitle' => $lastLessonTitle,
+                'flagPath' => $country->flag_path,
+                'flagUrl' => $flagUrl,
+                'flagEmoji' => $this->getFlagEmoji($country->slug),
             ];
         })->values();
-
-        /*
-         |--------------------------------------------------------------------------
-         | User stats
-         |--------------------------------------------------------------------------
-         */
 
         $xp = UserLessonProgress::query()
             ->where('user_id', $user->id)
             ->sum('xp_earned');
 
-        // Простая level формула для MVP.
         $level = intdiv($xp, 100) + 1;
         $xpToNextLevel = 100 - ($xp % 100);
         $xpToNextLevel = $xpToNextLevel === 0 ? 100 : $xpToNextLevel;
@@ -135,12 +131,6 @@ class DashboardController extends Controller
         $quizAccuracyPct = $quizTotalAttempts > 0
             ? (int) floor(($quizCorrectAttempts / $quizTotalAttempts) * 100)
             : 0;
-
-        /*
-         |--------------------------------------------------------------------------
-         | Time tracking
-         |--------------------------------------------------------------------------
-         */
 
         $todayStart = now()->startOfDay();
         $weekStart = now()->startOfWeek();
@@ -210,7 +200,7 @@ class DashboardController extends Controller
                 'xp' => $xp,
                 'level' => $level,
                 'xpToNextLevel' => $xpToNextLevel,
-                'streakDays' => 0, // TODO: add streak logic later
+                'streakDays' => 0,
                 'accuracy' => $quizAccuracyPct,
                 'lessonsCompletedPct' => $lessonsCompletedPct,
                 'timeTodayMinutes' => (int) floor($timeSpentTodaySeconds / 60),
@@ -219,5 +209,22 @@ class DashboardController extends Controller
             ],
             'activeCountries' => $activeCountries,
         ]);
+    }
+
+    private function getFlagEmoji(string $slug): string
+    {
+        return match ($slug) {
+            'japan' => '🇯🇵',
+            'germany' => '🇩🇪',
+            'kazakhstan' => '🇰🇿',
+            'france' => '🇫🇷',
+            'italy' => '🇮🇹',
+            'brazil' => '🇧🇷',
+            'usa', 'united-states' => '🇺🇸',
+            'china' => '🇨🇳',
+            'turkey' => '🇹🇷',
+            'south-korea', 'korea' => '🇰🇷',
+            default => '🏳️',
+        };
     }
 }

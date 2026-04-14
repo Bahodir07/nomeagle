@@ -10,17 +10,8 @@ use App\Http\Controllers\Api\LessonProgressController;
 use App\Http\Controllers\Api\ModuleController;
 use App\Http\Controllers\Api\QuizQuestionController;
 use App\Http\Controllers\Api\ScenarioController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\LearningPathController;
 use Illuminate\Support\Facades\Route;
-
-/*
-|--------------------------------------------------------------------------
-| Auth routes
-|--------------------------------------------------------------------------
-*/
-
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
 
 /*
 |--------------------------------------------------------------------------
@@ -37,6 +28,7 @@ Route::prefix('countries')->group(function () {
 
     Route::get('/{country:slug}/modules/{module:slug}/lessons', [LessonController::class, 'index']);
     Route::get('/{country:slug}/modules/{module:slug}/lessons/{lesson:slug}', [LessonController::class, 'show']);
+
 
     Route::get('/{country:slug}/modules/{module:slug}/lessons/{lesson:slug}/scenarios', [ScenarioController::class, 'index']);
     Route::get('/{country:slug}/modules/{module:slug}/lessons/{lesson:slug}/scenarios/{scenario:slug}', [ScenarioController::class, 'show']);
@@ -55,10 +47,11 @@ Route::prefix('countries')->group(function () {
 */
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
 
     Route::get('/dashboard', [DashboardController::class, 'index']);
+
+    Route::get('/countries/{country:slug}/learning-path', [LearningPathController::class, 'show']);
 
     Route::get(
         '/countries/{country:slug}/modules/{module:slug}/lessons/{lesson:slug}/progress',
