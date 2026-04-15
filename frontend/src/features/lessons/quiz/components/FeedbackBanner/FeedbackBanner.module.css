@@ -1,0 +1,58 @@
+/* FeedbackBanner — full-width pill above bottom bar */
+
+.banner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--ne-1);
+    width: 100%;
+    max-width: 560px;
+    margin: 0 auto;
+    padding: var(--ne-2) var(--ne-4);
+    border-radius: var(--ne-5);
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.4;
+    box-sizing: border-box;
+
+    animation: slideUp 0.3s ease forwards;
+}
+
+/* --- Variants --- */
+
+.correct {
+    background: var(--ne-success);
+}
+
+.wrong {
+    background: var(--ne-danger);
+}
+
+/* --- Icon --- */
+
+.icon {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    filter: brightness(0) invert(1);
+}
+
+/* --- Text --- */
+
+.text {
+    white-space: nowrap;
+}
+
+/* --- Animation --- */
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(var(--ne-2));
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

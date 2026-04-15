@@ -1,0 +1,48 @@
+.container {
+  width: 100%;
+}
+
+.title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  margin: 0;
+  margin-bottom: var(--ne-1);
+  color: var(--ne-text);
+  text-align: center;
+}
+
+.subtitle {
+  margin: 0;
+  color: var(--ne-muted);
+  font-size: 1rem;
+  text-align: center;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ne-3);
+  margin-top: var(--ne-4);
+}
+
+.footer {
+  text-align: center;
+  margin-top: var(--ne-2);
+}
+
+.footerText {
+  margin: 0;
+  color: var(--ne-muted);
+  font-size: 0.9rem;
+}
+
+.footerLink {
+  color: var(--ne-primary);
+  text-decoration: none;
+  font-weight: 600;
+  margin-left: 4px;
+}
+
+.footerLink:hover {
+  text-decoration: underline;
+}

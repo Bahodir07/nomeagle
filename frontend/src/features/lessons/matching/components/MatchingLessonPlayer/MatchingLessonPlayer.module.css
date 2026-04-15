@@ -1,0 +1,47 @@
+/* MatchingLessonPlayer — full-page lesson shell */
+
+.player {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    flex: 1;
+    min-height: 100%;
+    background: var(--ne-bg);
+    padding: var(--ne-4) var(--ne-3);
+    box-sizing: border-box;
+    gap: var(--ne-3);
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 720px;
+    background: var(--ne-surface);
+    border-radius: var(--ne-radius-lg);
+    box-shadow: var(--ne-shadow-md);
+    padding: var(--ne-3) var(--ne-3);
+    box-sizing: border-box;
+    gap: var(--ne-3);
+}
+
+.title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--ne-text);
+    text-align: center;
+    margin: 0;
+    line-height: 1.3;
+}
+
+.empty {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100%;
+    color: var(--ne-muted);
+    font-size: 18px;
+}

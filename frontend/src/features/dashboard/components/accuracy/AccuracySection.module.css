@@ -1,0 +1,112 @@
+/* ==========================================================================
+   AccuracySection
+   Two large percentages side by side — clean, calm, informative.
+   ========================================================================== */
+
+/* ---------- Root ---------- */
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ne-2); /* 16px */
+}
+
+/* ==========================================================================
+   Header — icon + label  (matches other section headers)
+   ========================================================================== */
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--ne-1); /* 8px */
+}
+
+.headerIcon {
+  font-size: 1.125rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.headerLabel {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--ne-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ==========================================================================
+   Stats row — two columns with a vertical divider
+   ========================================================================== */
+
+.statsRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ne-3); /* 24px */
+  padding: var(--ne-1) 0; /* 8px vertical breathing room */
+}
+
+/* ---------- Single stat column ---------- */
+.statCol {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+/* ---------- Value row (number + %) ---------- */
+.valueRow {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+}
+
+.bigValue {
+  font-size: 2rem;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.suffix {
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* ---------- Colour variants ---------- */
+.valueGreen {
+  color: var(--ne-success); /* #10b981 — >= 80% */
+}
+
+.valueAmber {
+  color: var(--ne-warning); /* amber — 50–79% */
+}
+
+.valueRed {
+  color: var(--ne-danger); /* red — < 50% */
+}
+
+/* ---------- Label ---------- */
+.label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--ne-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  text-align: center;
+}
+
+/* ==========================================================================
+   Vertical divider between the two stats
+   ========================================================================== */
+
+.verticalDivider {
+  width: 1px;
+  align-self: stretch;
+  background-color: var(--ne-border);
+  flex-shrink: 0;
+}

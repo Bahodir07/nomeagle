@@ -1,0 +1,68 @@
+/* ==========================================================================
+   SpeedCard — XP/Level + Accuracy & Completion (Edclub style)
+   ========================================================================== */
+
+.card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  padding: var(--ne-2) var(--ne-3);
+}
+
+.title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ne-text);
+}
+
+.content {
+  padding: var(--ne-2) var(--ne-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ne-3);
+}
+
+/* ---------- Divider ---------- */
+.divider {
+  height: 1px;
+  background: var(--ne-border);
+  margin: 0 calc(-1 * var(--ne-3));
+}
+
+/* ---------- Rings section ---------- */
+.ringsSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ne-2);
+}
+
+.subtitle {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ne-text);
+}
+
+.rings {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ne-5);
+  flex-wrap: wrap;
+}
+
+.ringWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ne-1);
+}
+
+.ringLabel {
+  font-size: 0.75rem;
+  color: var(--ne-muted);
+}

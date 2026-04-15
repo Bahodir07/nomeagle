@@ -1,0 +1,107 @@
+.bar {
+    display: flex;
+    gap: var(--ne-2);
+    width: 100%;
+    max-width: 520px;
+    justify-content: center;
+}
+
+.btn {
+    flex: 1;
+    max-width: 160px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: var(--ne-2) var(--ne-1);
+    border: 2px solid transparent;
+    border-radius: var(--ne-radius-md);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+        background 0.15s ease,
+        border-color 0.15s ease,
+        box-shadow 0.15s ease,
+        transform 0.1s ease,
+        opacity 0.2s ease;
+    background: var(--ne-surface);
+    box-shadow: var(--ne-shadow-sm);
+}
+
+.btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.btn:not(:disabled):hover {
+    transform: translateY(-2px);
+    box-shadow: var(--ne-shadow-md);
+}
+
+.btn:not(:disabled):active {
+    transform: translateY(0);
+}
+
+.again {
+    color: var(--ne-danger);
+    border-color: rgba(239, 68, 68, 0.25);
+}
+
+.again:not(:disabled):hover {
+    background: rgba(239, 68, 68, 0.06);
+    border-color: var(--ne-danger);
+}
+
+.good {
+    color: var(--ne-primary);
+    border-color: rgba(59, 130, 246, 0.25);
+}
+
+.good:not(:disabled):hover {
+    background: rgba(59, 130, 246, 0.06);
+    border-color: var(--ne-primary);
+}
+
+.easy {
+    color: var(--ne-success);
+    border-color: rgba(16, 185, 129, 0.25);
+}
+
+.easy:not(:disabled):hover {
+    background: rgba(16, 185, 129, 0.06);
+    border-color: var(--ne-success);
+}
+
+.label {
+    line-height: 1;
+}
+
+.shortcut {
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--ne-muted);
+    background: var(--ne-bg);
+    border: 1px solid var(--ne-border);
+    border-radius: 4px;
+    padding: 1px 6px;
+    line-height: 1.4;
+}
+
+@media (max-width: 600px) {
+    .bar {
+        gap: var(--ne-1);
+    }
+
+    .btn {
+        padding: var(--ne-1) var(--ne-1);
+        font-size: 14px;
+    }
+
+    .shortcut {
+        display: none;
+    }
+}

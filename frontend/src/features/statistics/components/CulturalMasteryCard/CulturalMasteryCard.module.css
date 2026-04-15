@@ -1,0 +1,262 @@
+/* ==========================================================================
+   CulturalMasteryCard – Analytics Dashboard Layout
+   Two-column (text + map), bottom tip cards, soft dashboard aesthetic.
+   ========================================================================== */
+
+/* ── Root Container ── */
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  background: #ffffff;
+  border: 1px solid #e8ecf1;
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.04),
+    0 4px 12px rgba(0, 0, 0, 0.02);
+}
+
+/* ── Top Section: Two-Column ── */
+.topSection {
+  display: flex;
+  align-items: flex-start;
+  gap: 48px;
+}
+
+@media (max-width: 1024px) {
+  .topSection {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 32px;
+  }
+}
+
+/* ── Left Column: Text + Controls ── */
+.leftText {
+  flex: 0 0 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-top: 4px;
+}
+
+@media (max-width: 1024px) {
+  .leftText {
+    flex: 1 1 auto;
+    max-width: 100%;
+  }
+}
+
+/* Title & Subtitle */
+.title {
+  margin: 0;
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: #1e293b;
+  letter-spacing: -0.01em;
+}
+
+.subtitle {
+  margin: 6px 0 0 0;
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: #64748b;
+}
+
+/* ── Toggle Group ── */
+.toggleGroup {
+  display: inline-flex;
+  background-color: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 4px;
+  width: fit-content;
+  gap: 4px;
+}
+
+.toggleButton {
+  padding: 8px 20px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 7px;
+  background-color: transparent;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  letter-spacing: 0.01em;
+}
+
+.toggleButton:hover {
+  color: #334155;
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+.toggleButtonActive {
+  background-color: var(--ne-primary, #f97316);
+  color: #ffffff;
+  box-shadow: 0 1px 3px rgba(249, 115, 22, 0.3);
+}
+
+.toggleButtonActive:hover {
+  color: #ffffff;
+  background-color: var(--ne-primary, #f97316);
+}
+
+/* ── Breakdown Section ── */
+.breakdownContainer {
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.breakdownTitle {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #334155;
+  margin: 0 0 4px 0;
+  letter-spacing: 0.01em;
+}
+
+.breakdownRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.breakdownLabel {
+  width: 80px;
+  text-align: right;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #94a3b8;
+  flex-shrink: 0;
+}
+
+.breakdownTrack {
+  flex: 1;
+  background-color: #f1f5f9;
+  border-radius: 999px;
+  height: 7px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.breakdownFill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.5s ease-out, background-color 0.3s ease;
+}
+
+.fillMastery {
+  background: linear-gradient(90deg, #86efac, #22c55e);
+}
+
+.fillRecall {
+  background: linear-gradient(90deg, #93c5fd, #3b82f6);
+}
+
+.noDataText {
+  font-size: 0.8125rem;
+  color: #94a3b8;
+  font-style: italic;
+  padding: 12px 0;
+  line-height: 1.6;
+}
+
+.emptyText {
+  font-size: 0.8125rem;
+  color: #94a3b8;
+  padding: 8px 0;
+  line-height: 1.6;
+}
+
+/* ── Right Column: Map ── */
+.rightMap {
+  flex: 1 1 0%;
+  min-width: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.mapContainer {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border: 1px solid #e8ecf1;
+  border-radius: 16px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 24px;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.02);
+  transition: box-shadow 0.2s ease;
+  overflow: hidden;
+}
+
+.mapContainer:hover {
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+@media (max-width: 1024px) {
+  .mapContainer {
+    min-height: 300px;
+    padding: 16px;
+  }
+}
+
+/* ── Bottom Tips ── */
+.bottomTips {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding-top: 28px;
+  border-top: 1px solid #f1f5f9;
+}
+
+@media (max-width: 900px) {
+  .bottomTips {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+.tipCard {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 18px 20px;
+  background: #fefefe;
+  border: 1px solid #f1f5f9;
+  border-radius: 12px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tipCard:hover {
+  border-color: #e2e8f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.tipIcon {
+  color: #f59e0b;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.tipText {
+  font-size: 0.8125rem;
+  color: #64748b;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.tipText b {
+  color: #334155;
+  font-weight: 600;
+}

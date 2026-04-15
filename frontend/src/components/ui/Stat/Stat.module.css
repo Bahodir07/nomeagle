@@ -1,0 +1,25 @@
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--ne-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--ne-text);
+  line-height: 1.2;
+}
+
+.help {
+  font-size: 0.75rem;
+  color: var(--ne-muted);
+}

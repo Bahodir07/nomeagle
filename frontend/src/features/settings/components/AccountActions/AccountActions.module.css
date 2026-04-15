@@ -1,0 +1,73 @@
+/* ==========================================================================
+   AccountActions
+   Logout + Delete account buttons. Modal content layout. 8px spacing.
+   ========================================================================== */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ne-2);
+  max-width: 280px;
+}
+
+/* ---------- Modal content ---------- */
+.modalContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ne-2);
+}
+
+.modalDescription {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--ne-text);
+  line-height: 1.5;
+}
+
+.modalDescription strong {
+  font-weight: 600;
+  color: var(--ne-danger);
+}
+
+.inputLabel {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--ne-text);
+}
+
+.confirmInput {
+  padding: var(--ne-1) var(--ne-2);
+  font-size: 0.875rem;
+  font-family: inherit;
+  color: var(--ne-text);
+  background-color: var(--ne-surface);
+  border: 1px solid var(--ne-border);
+  border-radius: var(--ne-radius-sm);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.confirmInput:focus {
+  border-color: var(--ne-primary);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.confirmInput[aria-invalid="true"] {
+  border-color: var(--ne-danger);
+}
+
+.confirmInput[aria-invalid="true"]:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+}
+
+.inputHint {
+  font-size: 0.75rem;
+  color: var(--ne-muted);
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--ne-2);
+  margin-top: var(--ne-1);
+}

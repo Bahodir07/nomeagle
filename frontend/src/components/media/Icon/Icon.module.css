@@ -1,0 +1,22 @@
+/* ==========================================================================
+   Icon
+   Thin wrapper around an <img> SVG icon.
+   ========================================================================== */
+
+.wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  vertical-align: middle;
+  line-height: 0; /* prevent extra height from inline baseline */
+}
+
+.img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+}

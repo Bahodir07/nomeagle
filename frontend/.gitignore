@@ -1,0 +1,112 @@
+# =========================
+# Dependencies
+# =========================
+node_modules/
+.pnpm-store/
+.npm/
+.yarn/
+.yarn-cache/
+.yarn/unplugged/
+.yarn/build-state.yml
+.yarn/install-state.gz
+
+# =========================
+# Build output
+# =========================
+dist/
+build/
+out/
+coverage/
+.cache/
+.vite/
+
+# =========================
+# Environment files
+# =========================
+.env
+.env.*
+!.env.example
+
+# =========================
+# Logs
+# =========================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# =========================
+# OS generated files
+# =========================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# =========================
+# Editor / IDE
+# =========================
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.code-workspace
+
+# =========================
+# TypeScript
+# =========================
+*.tsbuildinfo
+
+# =========================
+# Testing
+# =========================
+coverage/
+.nyc_output/
+
+# =========================
+# Temporary files
+# =========================
+tmp/
+temp/
+*.tmp
+
+# =========================
+# Lock files (optional — choose your package manager)
+# =========================
+# Uncomment the one you DON'T use
+
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+# =========================
+# Misc
+# =========================
+*.local
+*.cache
+*.bak
+*.old
+*.orig
+
+# =========================
+# Vite specific
+# =========================
+vite.config.ts.timestamp-*
+vite.config.js.timestamp-*
+
+# =========================
+# Storybook (if added later)
+# =========================
+storybook-static/
+
+# =========================
+# Playwright / Cypress (optional)
+# =========================
+playwright-report/
+test-results/
+cypress/videos/
+cypress/screenshots/

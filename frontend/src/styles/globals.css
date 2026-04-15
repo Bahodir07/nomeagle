@@ -1,0 +1,182 @@
+/* ==========================================================================
+   NomEagle Global Styles
+   ========================================================================== */
+
+/* Import design tokens */
+@import './tokens.css';
+
+/* ==========================================================================
+   CSS Reset & Base
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ==========================================================================
+   Base Typography
+   ========================================================================== */
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--ne-text);
+  background-color: var(--ne-bg);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--ne-text);
+}
+
+p {
+  color: var(--ne-text);
+}
+
+a {
+  color: var(--ne-primary);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+a:hover {
+  color: var(--ne-primary-600);
+}
+
+/* ==========================================================================
+   Utility Classes (Optional)
+   ========================================================================== */
+
+/* Text Colors */
+.text-primary {
+  color: var(--ne-primary);
+}
+
+.text-muted {
+  color: var(--ne-muted);
+}
+
+.text-success {
+  color: var(--ne-success);
+}
+
+.text-warning {
+  color: var(--ne-warning);
+}
+
+.text-danger {
+  color: var(--ne-danger);
+}
+
+/* Background Colors */
+.bg-surface {
+  background-color: var(--ne-surface);
+}
+
+.bg-primary {
+  background-color: var(--ne-primary);
+}
+
+/* Shadows */
+.shadow-sm {
+  box-shadow: var(--ne-shadow-sm);
+}
+
+.shadow-md {
+  box-shadow: var(--ne-shadow-md);
+}
+
+.shadow-lg {
+  box-shadow: var(--ne-shadow-lg);
+}
+
+/* Border Radius */
+.rounded-sm {
+  border-radius: var(--ne-radius-sm);
+}
+
+.rounded-md {
+  border-radius: var(--ne-radius-md);
+}
+
+.rounded-lg {
+  border-radius: var(--ne-radius-lg);
+}
+
+/* Spacing Utilities - Padding */
+.p-1 {
+  padding: var(--ne-1);
+}
+.p-2 {
+  padding: var(--ne-2);
+}
+.p-3 {
+  padding: var(--ne-3);
+}
+.p-4 {
+  padding: var(--ne-4);
+}
+.p-5 {
+  padding: var(--ne-5);
+}
+.p-6 {
+  padding: var(--ne-6);
+}
+
+/* Spacing Utilities - Margin */
+.m-1 {
+  margin: var(--ne-1);
+}
+.m-2 {
+  margin: var(--ne-2);
+}
+.m-3 {
+  margin: var(--ne-3);
+}
+.m-4 {
+  margin: var(--ne-4);
+}
+.m-5 {
+  margin: var(--ne-5);
+}
+.m-6 {
+  margin: var(--ne-6);
+}
+
+/* Gap Utilities */
+.gap-1 {
+  gap: var(--ne-1);
+}
+.gap-2 {
+  gap: var(--ne-2);
+}
+.gap-3 {
+  gap: var(--ne-3);
+}
+.gap-4 {
+  gap: var(--ne-4);
+}
+.gap-5 {
+  gap: var(--ne-5);
+}
+.gap-6 {
+  gap: var(--ne-6);
+}

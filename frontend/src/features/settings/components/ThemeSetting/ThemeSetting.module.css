@@ -1,0 +1,62 @@
+/* ==========================================================================
+   ThemeSetting
+   Segmented control: Light / Dark / System. Uses tokens and 8px spacing.
+   ========================================================================== */
+
+.container {
+  display: inline-flex;
+  align-items: stretch;
+  border: 1px solid var(--ne-border);
+  border-radius: var(--ne-radius-sm);
+  overflow: hidden;
+  background-color: var(--ne-surface);
+}
+
+.option {
+  padding: var(--ne-1) var(--ne-2);
+  min-width: 72px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  font-family: inherit;
+  color: var(--ne-text);
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  position: relative;
+}
+
+.option:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 25%;
+  height: 50%;
+  width: 1px;
+  background-color: var(--ne-border);
+}
+
+.option.active::after,
+.option:has(+ .active)::after {
+  opacity: 0;
+}
+
+.option:not(.active):hover:not(:disabled) {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.option:focus-visible {
+  outline: 2px solid var(--ne-primary);
+  outline-offset: -2px;
+  z-index: 1;
+}
+
+.option.active {
+  background-color: var(--ne-bg);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+.option:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

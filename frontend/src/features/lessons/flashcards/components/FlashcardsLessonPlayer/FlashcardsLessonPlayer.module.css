@@ -1,0 +1,31 @@
+.playerContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    min-height: 100%;
+    background-color: var(--ne-bg);
+    padding: var(--ne-5) var(--ne-3);
+    box-sizing: border-box;
+    gap: var(--ne-4);
+}
+
+.cardArea {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 520px;
+    flex: 1;
+    justify-content: center;
+    gap: var(--ne-4);
+}
+
+.empty {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100%;
+    color: var(--ne-muted);
+    font-size: 18px;
+}

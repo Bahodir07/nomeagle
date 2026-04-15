@@ -1,0 +1,184 @@
+.playerContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+    background-color: var(--ne-bg);
+    position: relative;
+    padding: var(--ne-6) 0;
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+
+.playerContainerCompletion {
+    background-color: white;
+}
+
+.contentArea {
+    flex: 1;
+    max-width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 0 var(--ne-6);
+    overflow: hidden;
+}
+
+.sliderWrapper {
+    width: 100%;
+    max-width: 800px;
+    overflow: hidden;
+    border-radius: var(--ne-radius-md);
+}
+
+.slideStage {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 280px;
+}
+
+.slideStage.idle {
+    display: flex;
+    justify-content: center;
+}
+
+.slideLayer {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 0 2px;
+    box-sizing: border-box;
+}
+
+.slideLayer.entering {
+    z-index: 0;
+}
+
+.slideLayer.exiting {
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* Entering: next = from right + fade in; prev = from left + fade in */
+.slideLayer.enteringNext .cardWrapper {
+    animation: enterFromRight var(--article-transition-duration, 0.45s) ease-out forwards;
+}
+
+.slideLayer.enteringPrev .cardWrapper {
+    animation: enterFromLeft var(--article-transition-duration, 0.45s) ease-out forwards;
+}
+
+/* Exiting: next = slide left + fade out; prev = slide right + fade out */
+.slideLayer.exitingNext .cardWrapper {
+    animation: exitToLeft var(--article-transition-duration, 0.45s) ease-in forwards;
+}
+
+.slideLayer.exitingPrev .cardWrapper {
+    animation: exitToRight var(--article-transition-duration, 0.45s) ease-in forwards;
+}
+
+@keyframes exitToLeft {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(-72px);
+        opacity: 0;
+    }
+}
+
+@keyframes exitToRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(72px);
+        opacity: 0;
+    }
+}
+
+@keyframes enterFromRight {
+    from {
+        transform: translateX(72px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes enterFromLeft {
+    from {
+        transform: translateX(-72px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.slide {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    box-sizing: border-box;
+}
+
+/* Wraps only the article card; this element is transformed so the whole card slides */
+.cardWrapper {
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    box-sizing: border-box;
+}
+
+/* Invisible sentinel at bottom of card for scroll-end detection (Intersection Observer) */
+.endSentinel {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 1px;
+    height: 1px;
+    pointer-events: none;
+    visibility: hidden;
+}
+
+.navPrev {
+    position: fixed;
+    left: var(--ne-4);
+    bottom: var(--ne-4);
+    z-index: 10;
+}
+
+.navNext {
+    position: fixed;
+    right: var(--ne-4);
+    bottom: var(--ne-4);
+    z-index: 10;
+}
+
+.toolsRail {
+    position: fixed;
+    right: var(--ne-4);
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+}
+
+.empty {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100%;
+    color: var(--ne-muted);
+    font-size: 18px;
+}

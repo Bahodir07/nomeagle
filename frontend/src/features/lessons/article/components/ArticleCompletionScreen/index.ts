@@ -1,0 +1,1 @@
+export { ArticleCompletionScreen } from './ArticleCompletionScreen';

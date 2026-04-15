@@ -1,0 +1,50 @@
+/* RightSidePanel — score counter matching Edclub screenshot */
+
+.panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--ne-1);
+}
+
+.scoreRing {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: 3px solid var(--ne-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    box-sizing: border-box;
+}
+
+.scoreValue {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ne-text);
+    line-height: 1;
+}
+
+.scoreSeparator {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ne-muted);
+    line-height: 1;
+}
+
+.scoreTotal {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ne-muted);
+    line-height: 1;
+}
+
+.label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ne-muted);
+    text-align: center;
+    line-height: 1.2;
+    max-width: 64px;
+}

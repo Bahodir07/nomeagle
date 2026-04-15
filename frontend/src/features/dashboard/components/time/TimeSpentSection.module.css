@@ -1,0 +1,159 @@
+/* ==========================================================================
+   TimeSpentSection
+   Three circular progress rings — calm blue stroke, goal inside.
+   ========================================================================== */
+
+/* ---------- Root ---------- */
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ne-2); /* 16px */
+}
+
+/* ==========================================================================
+   Header — icon + label
+   ========================================================================== */
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--ne-1); /* 8px */
+}
+
+.headerIcon {
+  font-size: 1.125rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.headerLabel {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--ne-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ==========================================================================
+   Rings row — 3 circles horizontally, wrap on small screens
+   ========================================================================== */
+
+.ringsRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-around;
+  gap: var(--ne-2); /* 16px */
+  flex-wrap: wrap;
+  padding-top: var(--ne-1); /* 8px extra breathing room */
+}
+
+/* ---------- Single ring column ---------- */
+.ringCol {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ne-1); /* 8px */
+  min-width: 0;
+}
+
+/* ==========================================================================
+   Time value — displayed ABOVE the circle
+   ========================================================================== */
+
+.timeValue {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--ne-text);
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+
+/* ==========================================================================
+   SVG ring
+   ========================================================================== */
+
+.ringWrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* Fixed at 80 × 80 to match the TS constants */
+  width: 80px;
+  height: 80px;
+}
+
+.svg {
+  transform: rotate(-90deg); /* Start arc from 12 o'clock */
+}
+
+/* ---- Background track circle ---- */
+.trackCircle {
+  fill: none;
+  stroke: var(--ne-bg); /* light grey track */
+}
+
+/* ---- Progress arc — calm blue ---- */
+.fillCircle {
+  fill: none;
+  stroke: var(--ne-primary); /* blue #3b82f6 */
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ==========================================================================
+   Goal text — centred inside the ring
+   ========================================================================== */
+
+.goalInner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  gap: 2px;
+}
+
+.goalValue {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--ne-text);
+  line-height: 1;
+}
+
+.goalLabel {
+  font-size: 0.625rem;
+  font-weight: 600;
+  color: var(--ne-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  line-height: 1;
+}
+
+/* ==========================================================================
+   Category label — below the circle
+   ========================================================================== */
+
+.categoryLabel {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--ne-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+/* ==========================================================================
+   Responsive — stack on very narrow widths
+   ========================================================================== */
+
+@media (max-width: 320px) {
+  .ringsRow {
+    flex-direction: column;
+    align-items: center;
+  }
+}

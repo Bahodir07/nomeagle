@@ -1,0 +1,173 @@
+/* MatchingCompleteBanner — success screen after all pairs matched */
+
+.screen {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--ne-6) var(--ne-2);
+    box-sizing: border-box;
+    animation: screenIn 0.35s ease-out;
+}
+
+@keyframes screenIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 400px;
+    width: 100%;
+}
+
+/* --- Animated checkmark circle --- */
+
+.iconWrap {
+    margin-bottom: var(--ne-4);
+}
+
+.circle {
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    background: var(--ne-success);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
+    animation: circleIn 0.5s cubic-bezier(0.34, 1.4, 0.64, 1) forwards;
+    transform: scale(0);
+}
+
+@keyframes circleIn {
+    to { transform: scale(1); }
+}
+
+.checkmark {
+    width: 36px;
+    height: 36px;
+    color: white;
+}
+
+.checkPath {
+    stroke-dasharray: 50;
+    stroke-dashoffset: 50;
+    animation: drawCheck 0.4s ease-out 0.35s forwards;
+}
+
+@keyframes drawCheck {
+    to { stroke-dashoffset: 0; }
+}
+
+/* --- Text --- */
+
+.heading {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--ne-text);
+    margin: 0 0 var(--ne-1);
+    animation: fadeUp 0.4s ease-out 0.3s forwards;
+    opacity: 0;
+    transform: translateY(8px);
+}
+
+@keyframes fadeUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- Stats row --- */
+
+.stats {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--ne-3);
+    margin-bottom: var(--ne-4);
+    animation: fadeUp 0.4s ease-out 0.45s forwards;
+    opacity: 0;
+    transform: translateY(8px);
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.statValue {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.statValue.xp {
+    color: var(--ne-warning);
+}
+
+.statValue.mistakes {
+    color: var(--ne-danger);
+}
+
+.statValue.attempts {
+    color: var(--ne-primary);
+}
+
+.statLabel {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ne-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+/* --- Button --- */
+
+.actions {
+    width: 100%;
+    animation: fadeUp 0.4s ease-out 0.6s forwards;
+    opacity: 0;
+    transform: translateY(8px);
+}
+
+.nextBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: var(--ne-2) var(--ne-3);
+    border: none;
+    border-radius: var(--ne-radius-md);
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    color: white;
+    background: var(--ne-success);
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+    transition:
+        background 0.15s ease,
+        box-shadow 0.15s ease,
+        transform 0.1s ease;
+}
+
+.nextBtn:hover {
+    background: #0d9668;
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+    transform: translateY(-1px);
+}
+
+.nextBtn:active {
+    transform: translateY(0);
+}
+
+.nextBtn:focus-visible {
+    outline: 3px solid rgba(16, 185, 129, 0.5);
+    outline-offset: 2px;
+}

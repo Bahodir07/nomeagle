@@ -1,0 +1,205 @@
+/* ==========================================================================
+   PracticeTimeCard — Donut + SegmentedControl (Edclub style)
+   ========================================================================== */
+
+.card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: visible !important; /* allow tooltip to show outside card */
+}
+
+.header {
+  padding: var(--ne-2) var(--ne-3);
+  display: flex;
+  align-items: center;
+  gap: var(--ne-1);
+  overflow: visible;
+}
+
+.title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ne-text);
+}
+
+/* Wrapper for info button + tooltip (hover/focus shows tooltip) */
+.infoWrap {
+  position: relative;
+  overflow: visible;
+}
+
+/* Info button — solid dark gray circle, white “i” (no pointer cursor on hover) */
+.infoBtn {
+  width: var(--ne-2);
+  height: var(--ne-2);
+  border-radius: 50%;
+  border: none;
+  background: #5c5c5c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: default;
+  padding: 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.infoBtn:hover {
+  background: #4a4a4a;
+  color: #fff;
+}
+
+/* White “i” — slightly italic, distinct dot, centered */
+.infoIcon {
+  display: inline-block;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1em;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  position: relative;
+  top: 0.5px;
+}
+
+/* Tooltip — centered vertically with icon; smooth fade + slide in */
+.tooltip {
+  position: absolute;
+  left: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%) translateX(-10px);
+  width: 320px;
+  padding: 12px 14px;
+  background: #5c5c5c;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  text-align: left;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.25s ease-out,
+    visibility 0.25s ease-out,
+    transform 0.25s ease-out;
+  z-index: 10;
+  pointer-events: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.tooltip::before {
+  content: "";
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 6px solid transparent;
+  border-right-color: #5c5c5c;
+}
+
+.infoWrap:hover .tooltip,
+.infoWrap:focus-within .tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(-50%) translateX(0);
+}
+
+.tooltipLine {
+  margin: 0 0 6px 0;
+  color: #fff;
+}
+
+.tooltipLine:last-child {
+  margin-bottom: 0;
+}
+
+.tooltipLine strong {
+  font-weight: 600;
+  color: #fff;
+}
+
+.content {
+  padding: var(--ne-2) var(--ne-3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.donutSection {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: var(--ne-1);
+}
+
+.toggle {
+  margin-top: var(--ne-2);
+}
+
+/* ---------- Donut + legend with pointing arrows ---------- */
+.donutChartWrap {
+  position: relative;
+  width: 340px;
+  height: 260px;
+  flex-shrink: 0;
+  overflow: visible;
+  max-width: 100%;
+}
+
+.donutChartSvg {
+  display: block;
+}
+
+.donutChartSvg circle {
+  transition: stroke-dasharray 0.3s ease, stroke-dashoffset 0.3s ease;
+}
+
+.leaderLine {
+  transition: stroke 0.2s ease;
+}
+
+.segmentTyping {
+  stroke: #0d9488;
+}
+
+.segmentLearning {
+  stroke: #38bdf8;
+}
+
+.segmentNotPassed {
+  stroke: #f472b6;
+}
+
+.donutCenter {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.donutTime {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--ne-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.legendLabelText {
+  font-size: 0.75rem;
+  font-weight: 600;
+  fill: var(--ne-text);
+}
+
+.legendTimeText {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+

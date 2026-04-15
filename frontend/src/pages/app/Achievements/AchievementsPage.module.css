@@ -1,0 +1,104 @@
+/* ==========================================================================
+   Achievements Page
+   8px spacing system, tokens only.
+   ========================================================================== */
+
+.wrapper {
+  padding: var(--ne-2);
+}
+
+.header {
+  margin-bottom: var(--ne-3);
+}
+
+.title {
+  margin: 0 0 var(--ne-1);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--ne-text);
+}
+
+.subtitle {
+  margin: 0;
+  font-size: 0.9375rem;
+  color: var(--ne-muted);
+  line-height: 1.4;
+}
+
+/* ---------- Summary bar ---------- */
+.summaryBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ne-2);
+  padding: var(--ne-2) var(--ne-3);
+  background-color: var(--ne-surface);
+  border: 1px solid var(--ne-border);
+  border-radius: var(--ne-radius-md);
+  box-shadow: var(--ne-shadow-sm);
+  margin-bottom: var(--ne-4);
+}
+
+.summaryItem {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.summaryValue {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ne-text);
+}
+
+.summaryLabel {
+  font-size: 0.75rem;
+  color: var(--ne-muted);
+}
+
+.summaryDivider {
+  width: 1px;
+  height: 32px;
+  background-color: var(--ne-border);
+}
+
+@media (max-width: 480px) {
+  .summaryDivider {
+    display: none;
+  }
+
+  .summaryBar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* ---------- Categories ---------- */
+.categories {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ---------- Loading skeleton ---------- */
+.titleSkeleton {
+  display: block;
+  margin-bottom: var(--ne-1);
+}
+
+.subtitleSkeleton {
+  display: block;
+}
+
+.summarySkeleton {
+  margin-bottom: var(--ne-4);
+}
+
+.summaryBarSkeleton {
+  width: 100%;
+  border-radius: var(--ne-radius-md);
+}
+
+.loadingGrid {
+  margin-top: var(--ne-2);
+}

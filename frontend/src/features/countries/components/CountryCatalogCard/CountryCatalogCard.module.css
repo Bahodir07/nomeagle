@@ -1,0 +1,125 @@
+/* ==========================================================================
+   CountryCatalogCard
+   Search page only: flag (full background), name, description, Learn button.
+   ========================================================================== */
+
+/* ---------- Card container ---------- */
+.card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* ==========================================================================
+   Flag Area — full-width background, perfect proportions (3:2)
+   ========================================================================== */
+
+.flagArea {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 2; /* Standard flag proportion */
+  background-color: var(--ne-bg);
+  overflow: hidden;
+}
+
+.flagImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Fill area, crop to fit proportions */
+  transition: transform 0.2s ease;
+}
+
+.card:hover .flagImage {
+  transform: scale(1.03);
+}
+
+/* Fallback initial when flag fails to load */
+.flagFallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--ne-muted);
+  background-color: var(--ne-bg);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ==========================================================================
+   Details Area (name + description only)
+   ========================================================================== */
+
+.detailsArea {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ne-1); /* 8px */
+  padding: var(--ne-2); /* 16px */
+  flex: 1;
+}
+
+.countryName {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--ne-text);
+  line-height: 1.3;
+}
+
+.countryDescription {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--ne-muted);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ==========================================================================
+   Divider
+   ========================================================================== */
+
+.divider {
+  height: 1px;
+  background-color: var(--ne-border);
+  margin: 0 var(--ne-2); /* 16px */
+}
+
+/* ==========================================================================
+   Action Area — Learn button at end (right)
+   ========================================================================== */
+
+.actionArea {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* Button at end */
+  padding: var(--ne-2); /* 16px */
+}
+
+.learnButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ne-1); /* 8px */
+}
+
+.buttonIcon {
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+
+@media (max-width: 480px) {
+  .countryName {
+    font-size: 1rem;
+  }
+}

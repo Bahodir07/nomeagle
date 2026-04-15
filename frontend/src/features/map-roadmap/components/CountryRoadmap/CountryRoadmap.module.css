@@ -1,0 +1,121 @@
+/* --------- CONTAINER & RESPONSIVENESS --------- */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+/* --------- MAP WRAPPER (Full Background) --------- */
+.mapWrapper {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #e3f2fd; /* A soft sky-blue background as map base */
+}
+
+.mapImage {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: fill; /* Stretch the image slightly to ensure coordinates map exactly to the full screen */
+  user-select: none;
+  pointer-events: none; /* Prevents dragging the image itself */
+}
+
+/* --------- NODES OVERLAY --------- */
+.nodesOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* Let map wrapper handle mostly everything... */
+}
+
+.nodePositioner {
+  position: absolute;
+  transform: translate(-50%, -50%); /* Centers the point exactly on the X/Y percentages */
+  pointer-events: auto; /* ...except the nodes, which should intercept clicks */
+  z-index: 10;
+}
+
+/* --------- MOCK NODE VISUALS (Duolingo-style) --------- */
+.mockNode {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 4px 0px rgba(0, 0, 0, 0.15); /* Bottom 3D ledge effect */
+  border: 4px solid white;
+}
+
+/* Dynamic States */
+.isCompleted {
+  background-color: #ffc800; /* Vibrant Gold */
+  box-shadow: 0 4px 0px #e5b400; /* Darker Gold for 3D effect */
+}
+
+.isAvailable {
+  background-color: #58cc02; /* Vibrant Green */
+  box-shadow: 0 4px 0px #46a302; /* Darker Green for 3D effect */
+  animation: pulseNode 2s infinite; /* Attention grabber */
+}
+
+.isLocked {
+  background-color: #e5e5e5; /* Flat Gray */
+  border-color: #f0f0f0;
+  box-shadow: 0 4px 0px #d4d4d4;
+  cursor: not-allowed;
+}
+
+/* Interactions */
+.mockNode:not(.isLocked):hover {
+  transform: scale(1.1) translateY(-2px);
+  box-shadow: 0 6px 0px rgba(0, 0, 0, 0.15);
+}
+
+.mockNode:not(.isLocked):active {
+  transform: scale(1) translateY(4px); /* Pushing the button down */
+  box-shadow: 0 0px 0px rgba(0, 0, 0, 0); /* Removing ledge */
+}
+
+/* Pulse animation for the active level node */
+@keyframes pulseNode {
+  0% { box-shadow: 0 0 0 0 rgba(88, 204, 2, 0.4), 0 4px 0px #46a302; }
+  70% { box-shadow: 0 0 0 16px rgba(88, 204, 2, 0), 0 4px 0px #46a302; }
+  100% { box-shadow: 0 0 0 0 rgba(88, 204, 2, 0), 0 4px 0px #46a302; }
+}
+
+/* --------- NODE ICON & LABEL --------- */
+.nodeIcon {
+  font-size: 22px;
+  line-height: 1;
+  user-select: none;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.15));
+}
+
+.isLocked .nodeIcon {
+  opacity: 0.4;
+  filter: grayscale(1);
+}
+
+.nodeLabel {
+  display: block;
+  text-align: center;
+  margin-top: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #1a1a2e;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+}
+

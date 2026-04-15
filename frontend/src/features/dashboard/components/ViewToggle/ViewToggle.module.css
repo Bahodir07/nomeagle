@@ -1,0 +1,89 @@
+/* ==========================================================================
+   ViewToggle
+   Edclub-style segmented control — grouped toggle buttons with active state.
+   Uses 8px spacing system.
+   ========================================================================== */
+
+/* ---------- Container ---------- */
+.container {
+  display: inline-flex;
+  align-items: center;
+  gap: 0; /* buttons touch each other */
+  border: 1px solid var(--ne-border);
+  border-radius: var(--ne-radius-sm); /* 8px */
+  overflow: hidden;
+  background-color: var(--ne-surface);
+}
+
+/* ---------- Toggle Button ---------- */
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px; /* 5 × 8px */
+  height: 32px; /* 4 × 8px */
+  padding: var(--ne-1); /* 8px */
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+  position: relative;
+}
+
+/* Divider between buttons */
+.button:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 25%;
+  height: 50%;
+  width: 1px;
+  background-color: var(--ne-border);
+  transition: opacity 0.15s ease;
+}
+
+/* Hide divider when button or next sibling is active */
+.button.active::after,
+.button:has(+ .active)::after {
+  opacity: 0;
+}
+
+/* Hover state (non-active) */
+.button:not(.active):hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+/* Focus state */
+.button:focus-visible {
+  outline: 2px solid var(--ne-primary);
+  outline-offset: -2px;
+  z-index: 1;
+}
+
+/* Active state — Edclub style: subtle bg + darker feel */
+.button.active {
+  background-color: var(--ne-bg);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+/* ---------- Icon ---------- */
+.icon {
+  width: 16px; /* 2 × 8px */
+  height: 16px;
+  opacity: 0.5;
+  transition: opacity 0.15s ease;
+}
+
+/* Active icon — more prominent */
+.button.active .icon {
+  opacity: 0.9;
+}
+
+/* Hover icon */
+.button:hover .icon {
+  opacity: 0.7;
+}
+
+.button.active:hover .icon {
+  opacity: 1;
+}

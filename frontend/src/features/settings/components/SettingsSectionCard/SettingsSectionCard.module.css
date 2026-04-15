@@ -1,0 +1,36 @@
+/* ==========================================================================
+   SettingsSectionCard
+   White card with soft shadow, title, description, content slot.
+   Uses 8px spacing system and design tokens.
+   ========================================================================== */
+
+.card {
+  background-color: var(--ne-surface);
+  border: 1px solid var(--ne-border);
+  border-radius: var(--ne-radius-md);
+  box-shadow: var(--ne-shadow-md);
+  overflow: hidden;
+}
+
+.header {
+  padding: var(--ne-2) var(--ne-3);
+  border-bottom: 1px solid var(--ne-border);
+}
+
+.title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ne-text);
+}
+
+.description {
+  margin: var(--ne-1) 0 0;
+  font-size: 0.8125rem;
+  color: var(--ne-muted);
+  line-height: 1.4;
+}
+
+.content {
+  padding: var(--ne-3);
+}

@@ -1,0 +1,116 @@
+/* ==========================================================================
+   SearchCountriesPage
+   Course Catalog style layout with 3-column responsive grid.
+   
+   Breakpoints:
+   - Desktop (≥1024px): 3 cards per row
+   - Tablet (≥640px): 2 cards per row
+   - Mobile (<640px): 1 card per row
+   ========================================================================== */
+
+/* ---------- Page container ---------- */
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ne-3); /* 24px */
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ---------- Page header ---------- */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.pageTitle {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--ne-text);
+}
+
+/* ---------- Search bar row ---------- */
+.searchBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ne-2); /* 16px */
+}
+
+.searchInputWrapper {
+  flex: 0 1 auto;
+  min-width: 180px;
+  max-width: 280px;
+}
+
+.searchInput {
+  width: 100%;
+}
+
+/* ---------- Content layout: filters + catalog ---------- */
+.contentLayout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ne-3); /* 24px */
+}
+
+/* Desktop: left panel (filters) | catalog */
+@media (min-width: 960px) {
+  .contentLayout {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: var(--ne-3);
+  }
+}
+
+.filtersPanel {
+  flex-shrink: 0;
+  min-width: 0;
+}
+
+@media (min-width: 960px) {
+  .filtersPanel {
+    width: 220px;
+  }
+}
+
+/* ---------- Main content area (catalog) ---------- */
+.main {
+  flex: 1;
+  min-width: 0;
+  min-height: 400px;
+}
+
+/* ---------- One big card wrapping the catalog grid ---------- */
+.catalogCard {
+  width: 100%;
+}
+
+.catalogCardContent {
+  padding: var(--ne-3); /* 24px */
+}
+
+/* ---------- Country cards grid (shrunk, proportions kept) ---------- */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--ne-2); /* 16px — slightly tighter */
+}
+
+/* Tablet: 2 columns */
+@media (min-width: 640px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--ne-2);
+  }
+}
+
+/* Desktop: 4 columns per row */
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--ne-2);
+  }
+}

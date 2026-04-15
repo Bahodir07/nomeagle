@@ -1,0 +1,10 @@
+/* ==========================================================================
+   LessonGrid — responsive grid for fixed-size 160px lesson cards
+   8px spacing system, tokens only.
+   ========================================================================== */
+
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ne-2);
+}

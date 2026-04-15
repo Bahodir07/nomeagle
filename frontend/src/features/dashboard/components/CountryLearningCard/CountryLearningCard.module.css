@@ -1,0 +1,325 @@
+/* ==========================================================================
+   CountryLearningCard
+   Dashboard country card — supports grid and list variants.
+   ========================================================================== */
+
+/* ==========================================================================
+   GRID VARIANT (default) — vertical card layout
+   ========================================================================== */
+
+.card {
+    width: 100%;
+    position: relative;
+}
+
+/* ---------- Grid Menu Wrapper ---------- */
+.gridMenuWrapper {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.card:hover .gridMenuWrapper {
+    opacity: 1;
+}
+
+.gridMenuWrapper:focus-within {
+    opacity: 1;
+}
+
+/* ---------- Grid Menu Button ---------- */
+.gridMenuButton {
+    width: var(--ne-4);
+    height: var(--ne-4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--ne-surface);
+    border: 1px solid var(--ne-border);
+    border-top: none;
+    border-right: none;
+    border-radius: 0 var(--ne-radius-md) 0 var(--ne-radius-sm);
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.gridMenuButton img {
+    width: 16px;
+    height: 16px;
+    opacity: 0.6;
+    transition: opacity 0.15s ease;
+}
+
+.gridMenuButton:hover {
+    background-color: var(--ne-bg);
+}
+
+.gridMenuButton:hover img {
+    opacity: 0.9;
+}
+
+.gridMenuButton:focus-visible {
+    outline: 2px solid var(--ne-primary);
+    outline-offset: -2px;
+}
+
+/* ---------- Body ---------- */
+.body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ne-2);
+}
+
+/* ---- Header row ---- */
+.headerRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--ne-1);
+}
+
+.identity {
+    display: flex;
+    align-items: center;
+    gap: var(--ne-1);
+    min-width: 0;
+}
+
+/* ==========================================================================
+   Flag
+   ========================================================================== */
+
+.flagCircle {
+    position: relative;
+    width: var(--ne-5);
+    height: var(--ne-5);
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    background-color: var(--ne-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--ne-border);
+}
+
+.flagImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.flagEmoji {
+    font-size: 1.375rem;
+    line-height: 1;
+}
+
+.flagFallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--ne-muted);
+    pointer-events: none;
+    user-select: none;
+    width: 100%;
+    height: 100%;
+}
+
+/* ---------- Country name ---------- */
+.name {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--ne-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ---- Teaser ---- */
+.teaser {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--ne-muted);
+    line-height: 1.5;
+}
+
+/* ---- Last lesson ---- */
+.lastLesson {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: var(--ne-muted);
+}
+
+.lastLessonLabel {
+    font-weight: 600;
+    color: var(--ne-text);
+}
+
+/* ---- Progress row ---- */
+.progressRow {
+    display: flex;
+    align-items: center;
+    gap: var(--ne-1);
+}
+
+.pct {
+    flex-shrink: 0;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--ne-text);
+    min-width: var(--ne-4);
+    text-align: right;
+}
+
+/* ==========================================================================
+   LIST VARIANT — compact horizontal row
+   ========================================================================== */
+
+.listCard {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--ne-2);
+    padding: var(--ne-2);
+    background-color: var(--ne-surface);
+    border: 1px solid var(--ne-border);
+    border-radius: var(--ne-radius-md);
+    box-shadow: var(--ne-shadow-md);
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.listCard:hover {
+    box-shadow: var(--ne-shadow-lg);
+    transform: translateY(-2px);
+}
+
+.listCard:active {
+    transform: translateY(0);
+    box-shadow: var(--ne-shadow-md);
+}
+
+.listInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    flex: 0 0 auto;
+    max-width: 200px;
+}
+
+.listName {
+    margin: 0;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--ne-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.listTeaser {
+    margin: 0;
+    font-size: 0.75rem;
+    color: var(--ne-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.listProgressSection {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ne-1);
+    flex: 1;
+    min-width: 100px;
+    max-width: 240px;
+}
+
+.listStatusRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--ne-1);
+}
+
+.listProgress {
+    width: 100%;
+}
+
+.listPct {
+    flex-shrink: 0;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--ne-text);
+    min-width: var(--ne-4);
+    text-align: right;
+}
+
+/* ---------- List Menu Button ---------- */
+.listMenuButton {
+    width: var(--ne-4);
+    height: var(--ne-4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    border-radius: var(--ne-radius-sm);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background-color 0.15s ease;
+}
+
+.listMenuButton img {
+    width: 16px;
+    height: 16px;
+    opacity: 0.5;
+    transition: opacity 0.15s ease;
+}
+
+.listMenuButton:hover {
+    background-color: var(--ne-bg);
+}
+
+.listMenuButton:hover img {
+    opacity: 0.8;
+}
+
+.listMenuButton:focus-visible {
+    outline: 2px solid var(--ne-primary);
+    outline-offset: 2px;
+}
+
+.listMenuButton:focus-visible img {
+    opacity: 0.8;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 640px) {
+    .listCard {
+        flex-wrap: wrap;
+        gap: var(--ne-1);
+    }
+
+    .listInfo {
+        flex: 1;
+        max-width: none;
+    }
+
+    .listProgressSection {
+        flex: 100%;
+        max-width: none;
+        order: 10;
+    }
+
+    .listMenuButton {
+        order: 5;
+    }
+}

@@ -1,0 +1,33 @@
+/* ==========================================================================
+   SidebarSection – Titled group of NavItems
+   ========================================================================== */
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 2px; /* tight spacing between nav rows */
+  padding: var(--ne-1) 0;
+}
+
+/* ── Optional title ─────────────────────────────────────────────────────── */
+
+.title {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ne-muted);
+  padding: var(--ne-1) var(--ne-2);
+  margin: 0;
+  user-select: none;
+  transition: opacity 0.2s ease, height 0.2s ease, padding 0.2s ease, margin 0.2s ease;
+}
+
+.section.collapsed .title {
+  opacity: 0;
+  height: 0;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  white-space: nowrap;
+}

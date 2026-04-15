@@ -1,0 +1,106 @@
+/* ============================================================
+   ProgressBar
+   ============================================================ */
+
+.barTrack {
+  position: relative;
+  width: 100%;
+  background-color: var(--ne-bg);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+/* Sizes */
+.bar-sm {
+  height: 4px;
+}
+
+.bar-md {
+  height: 8px;
+}
+
+.bar-lg {
+  height: 12px;
+}
+
+.barFill {
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 0.3s ease;
+}
+
+/* Fill Colors */
+.fill-primary {
+  background-color: var(--ne-primary);
+}
+
+.fill-success {
+  background-color: var(--ne-success);
+}
+
+.fill-warning {
+  background-color: var(--ne-warning);
+}
+
+.fill-danger {
+  background-color: var(--ne-danger);
+}
+
+.barLabel {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.625rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* ============================================================
+   ProgressRing
+   ============================================================ */
+
+.ringWrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ringSvg {
+  transform: rotate(-90deg);
+}
+
+.ringBg {
+  fill: none;
+  stroke: var(--ne-bg);
+}
+
+.ringFill {
+  fill: none;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.3s ease;
+}
+
+/* Ring Colors */
+.ring-primary {
+  stroke: var(--ne-primary);
+}
+
+.ring-success {
+  stroke: var(--ne-success);
+}
+
+.ring-warning {
+  stroke: var(--ne-warning);
+}
+
+.ring-danger {
+  stroke: var(--ne-danger);
+}
+
+.ringLabel {
+  position: absolute;
+  font-weight: 700;
+  color: var(--ne-text);
+}

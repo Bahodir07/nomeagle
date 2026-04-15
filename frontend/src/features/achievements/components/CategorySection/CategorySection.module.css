@@ -1,0 +1,43 @@
+/* ==========================================================================
+   CategorySection — section title + grid of badge cards
+   8px spacing, 4 per row desktop, responsive.
+   ========================================================================== */
+
+.section {
+  margin-bottom: var(--ne-6);
+}
+
+.section:last-child {
+  margin-bottom: 0;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--ne-text);
+  margin: 0 0 var(--ne-3) 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: var(--ne-3);
+}
+
+@media (min-width: 480px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

@@ -1,0 +1,37 @@
+/* ==========================================================================
+   Statistics Page
+   ========================================================================== */
+
+.wrapper {
+  padding: var(--ne-2);
+}
+
+.header {
+  margin-bottom: var(--ne-3);
+}
+
+.cardsRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--ne-3);
+  align-items: stretch;
+}
+
+@media (max-width: 1024px) {
+  .cardsRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+.title {
+  margin: 0 0 var(--ne-1);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--ne-text);
+}
+
+.subtitle {
+  margin: 0;
+  font-size: 0.9375rem;
+  color: var(--ne-muted);
+}

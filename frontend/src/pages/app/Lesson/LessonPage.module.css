@@ -1,0 +1,86 @@
+.page {
+    /* Ensure the page takes up the full viewport height */
+    height: 100vh;
+    width: 100%;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.header {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    padding: 16px 24px;
+    background-color: white;
+    height: 64px;
+    z-index: 10;
+}
+
+.backButton {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--ne-text-muted);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 8px;
+    border-radius: 6px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.backButton:hover {
+    background-color: var(--ne-bg-hover);
+    color: var(--ne-text);
+}
+
+.titleSpacer {
+    /* Keeps center column for grid balance; title is now on the left */
+}
+
+.title {
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--ne-text);
+    margin: 0;
+}
+
+.userInfo {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+}
+
+.userName {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ne-text);
+}
+
+.userAvatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: var(--ne-primary, #4A90E2);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.content {
+    flex: 1;
+    display: flex;
+    overflow-x: hidden;
+    overflow-y: auto;
+    position: relative;
+    background-color: var(--ne-bg);
+}

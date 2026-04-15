@@ -1,0 +1,119 @@
+/* ==========================================================================
+   Menu
+   Accessible dropdown menu with Edclub-style clean design.
+   Opens on hover. Sharp 90-degree corners.
+   Rendered via portal to body for guaranteed visibility.
+   Uses 8px spacing system and tokens.
+   ========================================================================== */
+
+/* ---------- Wrapper ---------- */
+.wrapper {
+  position: relative;
+  display: inline-flex;
+}
+
+/* ---------- Menu Panel (rendered in portal to body) ---------- */
+.menu {
+  min-width: 130px;
+  background-color: var(--ne-surface);
+  border: 1px solid var(--ne-border);
+  border-radius: 0; /* Sharp 90-degree corners */
+  box-shadow: var(--ne-shadow-lg);
+  z-index: 999999; /* Very high z-index for portal */
+  padding: 0;
+  overflow: visible;
+  animation: menuFadeIn 0.1s ease-out;
+}
+
+/* ---------- Menu Item ---------- */
+.item {
+  display: flex;
+  align-items: center;
+  gap: var(--ne-1); /* 8px */
+  width: 100%;
+  padding: 10px var(--ne-2); /* 10px vertical, 16px horizontal */
+  font-size: 0.875rem;
+  font-family: inherit;
+  font-weight: 400;
+  color: var(--ne-text);
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--ne-border);
+  border-radius: 0;
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 0.12s ease;
+  outline: none;
+}
+
+/* Remove border from last item */
+.item:last-child {
+  border-bottom: none;
+}
+
+/* Hover state */
+.item:hover:not(:disabled) {
+  background-color: var(--ne-bg);
+}
+
+/* Focus state (keyboard navigation) */
+.item:focus-visible {
+  background-color: var(--ne-bg);
+  box-shadow: inset 0 0 0 2px var(--ne-primary);
+}
+
+/* Disabled state */
+.item:disabled,
+.item.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Danger/destructive action — red text */
+.danger {
+  color: var(--ne-danger);
+}
+
+.danger:hover:not(:disabled) {
+  background-color: rgba(239, 68, 68, 0.06);
+}
+
+.danger:focus-visible {
+  background-color: rgba(239, 68, 68, 0.06);
+  box-shadow: inset 0 0 0 2px var(--ne-danger);
+}
+
+/* ---------- Item Icon ---------- */
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px; /* 2 × 8px */
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.icon img,
+.icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* ---------- Item Label ---------- */
+.label {
+  flex: 1;
+  white-space: pre-wrap;
+  line-height: 1.4;
+}
+
+/* ---------- Animation ---------- */
+@keyframes menuFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

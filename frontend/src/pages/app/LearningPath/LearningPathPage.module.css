@@ -1,0 +1,108 @@
+/* ==========================================================================
+   LearningPathPage — Full-screen lesson roadmap (no sidebar/topbar)
+   Edclub-style blue cloud background. Custom scroll, no browser scrollbar.
+   8px spacing system, tokens only.
+   ========================================================================== */
+
+/* ---- Full viewport scroll container (scrollbar hidden) ---- */
+
+.page {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  /* Hide browser scrollbar; scrolling still works (custom scroll UI elsewhere) */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.page::-webkit-scrollbar {
+  display: none;
+}
+
+/* Edclub blue sky gradient with CSS cloud shapes */
+.page {
+  background:
+    radial-gradient(ellipse 70% 45% at 8% 92%, rgba(255, 255, 255, 0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 55% 35% at 88% 88%, rgba(255, 255, 255, 0.14) 0%, transparent 55%),
+    radial-gradient(ellipse 90% 40% at 50% 97%, rgba(255, 255, 255, 0.20) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 30% at 50% 5%, rgba(255, 255, 255, 0.08) 0%, transparent 60%),
+    linear-gradient(180deg, #7ec8e3 0%, #5bb5d8 35%, #89cff0 100%);
+
+  background-attachment: fixed;
+}
+
+/* ---- Go Back: fixed top-left only ---- */
+
+.backLink {
+  position: fixed;
+  top: var(--ne-3);
+  left: var(--ne-3);
+  z-index: 10;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ne-1);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+  transition: color 0.15s ease;
+  padding: var(--ne-1) var(--ne-2);
+  border-radius: var(--ne-radius-sm);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.backLink:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.backLink svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* ---- Content column (scrollable, clear of back link) ---- */
+
+.container {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: calc(var(--ne-3) + 40px) var(--ne-3) var(--ne-6);
+  padding-left: var(--ne-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ne-4);
+  padding-right: 64px;
+}
+
+/* ---- Module wrapper (target for scrollIntoView) ---- */
+
+.moduleWrap {
+  scroll-margin-top: var(--ne-2);
+}
+
+/* ---- Responsive ---- */
+
+@media (max-width: 860px) {
+  .container {
+    padding-right: 56px;
+  }
+}
+
+@media (max-width: 600px) {
+  .backLink {
+    top: var(--ne-2);
+    left: var(--ne-2);
+  }
+
+  .container {
+    padding-top: calc(var(--ne-2) + 36px);
+    padding-right: var(--ne-6);
+    padding-left: var(--ne-2);
+    padding-bottom: var(--ne-4);
+    gap: var(--ne-3);
+  }
+}

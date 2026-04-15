@@ -1,0 +1,152 @@
+/* ==========================================================================
+   LeaderboardTable
+   White card feel via parent; table with token spacing. Responsive scroll.
+   ========================================================================== */
+
+.scrollWrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table {
+  width: 100%;
+  min-width: 520px;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.thRank,
+.thUser,
+.thNum,
+.thPct {
+  text-align: left;
+  padding: var(--ne-2);
+  font-weight: 600;
+  color: var(--ne-muted);
+  border-bottom: 1px solid var(--ne-border);
+}
+
+.thRank {
+  width: 64px;
+}
+
+.thNum,
+.thPct {
+  text-align: right;
+}
+
+.thPct {
+  white-space: nowrap;
+}
+
+.row {
+  border-bottom: 1px solid var(--ne-border);
+  transition: background-color 0.15s ease;
+}
+
+.row:hover {
+  background-color: var(--ne-bg);
+}
+
+.rowCurrent {
+  background-color: rgba(59, 130, 246, 0.06);
+}
+
+.rowCurrent:hover {
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+.rowTopThree .rankBadge {
+  font-weight: 700;
+}
+
+.tdRank,
+.tdUser,
+.tdNum,
+.tdPct {
+  padding: var(--ne-2);
+  vertical-align: middle;
+}
+
+.tdRank {
+  width: 64px;
+}
+
+.tdUser {
+  display: flex;
+  align-items: center;
+  gap: var(--ne-1);
+}
+
+.tdNum,
+.tdPct {
+  text-align: right;
+  color: var(--ne-text);
+}
+
+.tdPct {
+  white-space: nowrap;
+}
+
+.avatar {
+  flex-shrink: 0;
+}
+
+.userName {
+  font-weight: 500;
+  color: var(--ne-text);
+}
+
+/* ---------- Rank badge (top 3 subtle medal styling, no emoji) ---------- */
+.rankBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 var(--ne-1);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--ne-muted);
+  background-color: var(--ne-bg);
+  border-radius: var(--ne-radius-sm);
+}
+
+.rankBadge1 {
+  color: #b45309;
+  background-color: rgba(245, 158, 11, 0.15);
+}
+
+.rankBadge2 {
+  color: #6b7280;
+  background-color: rgba(107, 114, 128, 0.15);
+}
+
+.rankBadge3 {
+  color: #92400e;
+  background-color: rgba(180, 83, 9, 0.12);
+}
+
+/* ---------- Empty state ---------- */
+.empty {
+  padding: var(--ne-6);
+  text-align: center;
+}
+
+.emptyText {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--ne-muted);
+}
+
+/* ---------- Responsive: fewer columns on small screens ---------- */
+@media (max-width: 600px) {
+  .table {
+    min-width: 400px;
+  }
+
+  .thPct,
+  .tdPct {
+    display: none;
+  }
+}

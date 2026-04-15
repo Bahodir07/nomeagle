@@ -1,0 +1,156 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  height: var(--ne-5); /* 40px */
+  border-radius: var(--ne-5); /* 40px / 2 = 20px, pill shape */
+  border: 1px solid var(--ne-border);
+  background-color: var(--ne-surface);
+  color: var(--ne-text);
+  cursor: pointer;
+  padding: 0;
+  transition: border-color 0.3s ease;
+  overflow: hidden;
+  outline: none;
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.button:hover:not(:disabled) {
+  border-color: var(--ne-primary);
+}
+
+/* Hide label until showLabel is true (e.g. after scrolling to end of article) */
+.button.labelHidden .labelContainer {
+  max-width: 0;
+}
+
+.button.finish.labelHidden {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.button.labelHidden .label {
+  opacity: 0;
+}
+
+.button.labelHidden:hover:not(:disabled) .labelContainer,
+.button.labelHidden .labelContainer {
+  max-width: 0;
+}
+
+.button.labelHidden:hover:not(:disabled) .label,
+.button.labelHidden .label {
+  opacity: 0;
+}
+
+/* Finish variant: blue pill, white text + icon, always show label, subtle shadow */
+.button.finish {
+  background-color: var(--ne-primary);
+  border-color: var(--ne-primary);
+  color: white;
+  padding-left: var(--ne-2);
+  padding-right: var(--ne-2);
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.35);
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.button.finish:hover:not(:disabled) {
+  background-color: var(--ne-primary-600);
+  border-color: var(--ne-primary-600);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+.button.finish .icon {
+  background-color: white;
+}
+
+.button.finish:hover:not(:disabled) .icon {
+  background-color: white;
+}
+
+.button.finish:not(.labelHidden) .labelContainer {
+  max-width: 200px;
+}
+
+.button.finish:not(.labelHidden) .label {
+  opacity: 1;
+  color: white;
+}
+
+.button.finish:hover:not(:disabled):not(.labelHidden) .label {
+  opacity: 1;
+  color: white;
+}
+
+.iconContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--ne-5); /* 40px */
+  height: var(--ne-5); /* 40px */
+  flex-shrink: 0;
+}
+
+.icon {
+  width: 16px;
+  height: 16px;
+  background-color: var(--ne-text);
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  transition: background-color 0.3s ease;
+}
+
+.button:hover:not(:disabled) .icon {
+  background-color: var(--ne-primary);
+}
+
+.button:disabled .icon {
+  background-color: var(--ne-muted);
+}
+
+.labelContainer {
+  display: inline-block;
+  vertical-align: middle;
+  max-width: 0;
+  overflow: hidden;
+  transition: max-width 0.3s ease;
+}
+
+.button:hover:not(:disabled) .labelContainer {
+  max-width: 200px;
+}
+
+.label {
+  display: inline-block;
+  white-space: nowrap;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ne-primary);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  line-height: var(--ne-5); /* 40px vertically aligns center */
+}
+
+.button:hover:not(:disabled) .label {
+  opacity: 1;
+  transition: opacity 0.2s ease 0.1s;
+}
+
+/* Direction specific paddings to match 8px spacing system */
+.button.prev .label {
+  padding-left: var(--ne-1); /* 8px space from icon */
+  padding-right: var(--ne-2); /* 16px bounding right edge */
+}
+
+.button.next .label {
+  padding-left: var(--ne-2); /* 16px bounding left edge */
+  padding-right: var(--ne-1); /* 8px space from icon */
+}

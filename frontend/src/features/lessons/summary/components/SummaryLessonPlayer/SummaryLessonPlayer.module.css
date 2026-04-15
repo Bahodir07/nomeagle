@@ -1,0 +1,64 @@
+/* Summary lesson shell — aligns with Article / Quiz fixed rail + scrollable main */
+
+.player {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    flex: 1 1 0;
+    min-height: 0;
+    height: 100%;
+    background-color: var(--ne-bg);
+    box-sizing: border-box;
+    overflow: hidden;
+    position: relative;
+}
+
+.topBar {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    min-height: 40px;
+    padding: var(--ne-2) var(--ne-4);
+    background: var(--ne-surface);
+    border-bottom: 1px solid var(--ne-border);
+    box-sizing: border-box;
+}
+
+.topBarLabel {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ne-muted);
+}
+
+.main {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.mainInner {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: var(--ne-6) var(--ne-4);
+    box-sizing: border-box;
+}
+
+.mainInnerWithRail {
+    padding-right: 104px;
+}
+
+.toolsRail {
+    position: fixed;
+    right: var(--ne-4);
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+}

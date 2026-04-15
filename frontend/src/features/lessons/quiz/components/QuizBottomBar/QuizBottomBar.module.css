@@ -1,0 +1,78 @@
+/* QuizBottomBar — progress track + Check/Next button */
+
+.bar {
+    display: flex;
+    align-items: center;
+    gap: var(--ne-3);
+    padding: var(--ne-2) var(--ne-4);
+    background: var(--ne-surface);
+    border-top: 1px solid var(--ne-border);
+    box-sizing: border-box;
+}
+
+/* --- Progress track --- */
+
+.progressTrack {
+    flex: 1;
+    height: var(--ne-1);
+    background: var(--ne-border);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progressFill {
+    height: 100%;
+    background: var(--ne-success);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+    min-width: 0;
+}
+
+/* --- Action button --- */
+
+.actionBtn {
+    flex-shrink: 0;
+    padding: var(--ne-1) var(--ne-3);
+    border: 1px solid var(--ne-border);
+    border-radius: var(--ne-5);
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.4;
+    cursor: pointer;
+    transition:
+        background-color 0.15s ease,
+        border-color 0.15s ease,
+        color 0.15s ease,
+        opacity 0.15s ease;
+    outline: none;
+    white-space: nowrap;
+}
+
+.actionBtn:focus-visible {
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.35);
+}
+
+.actionBtnDisabled {
+    background: var(--ne-bg);
+    color: var(--ne-muted);
+    border-color: var(--ne-border);
+    cursor: default;
+    opacity: 0.7;
+}
+
+.actionBtnEnabled {
+    background: var(--ne-success);
+    color: #ffffff;
+    border-color: var(--ne-success);
+}
+
+.actionBtnEnabled:hover {
+    background: #0ea572;
+    border-color: #0ea572;
+}
+
+.actionBtnEnabled:active {
+    background: #0d9668;
+    border-color: #0d9668;
+}

@@ -1,0 +1,63 @@
+.section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ne-2);
+}
+
+.heading {
+    color: var(--ne-text);
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+    line-height: 1.3;
+}
+
+/* ── Block list ────────────────────────────────────────── */
+
+.list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ne-1);
+}
+
+.block {
+    display: flex;
+    gap: var(--ne-1);
+    padding: var(--ne-1);
+    border-radius: var(--ne-radius-sm);
+    transition: background-color 0.2s ease;
+}
+
+.blockClickable {
+    cursor: pointer;
+}
+
+.blockClickable:hover {
+    background-color: var(--ne-bg);
+}
+
+.blockActive {
+    background-color: var(--ne-bg);
+}
+
+/* ── Timestamp ─────────────────────────────────────────── */
+
+.time {
+    color: var(--ne-primary);
+    font-size: 13px;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    min-width: 48px;
+    flex-shrink: 0;
+    padding-top: 2px;
+    line-height: 1.55;
+}
+
+/* ── Text ──────────────────────────────────────────────── */
+
+.text {
+    color: var(--ne-text);
+    font-size: 15px;
+    line-height: 1.55;
+    margin: 0;
+}

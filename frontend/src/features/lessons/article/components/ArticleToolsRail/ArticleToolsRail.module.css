@@ -1,0 +1,79 @@
+.rail {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--ne-5);
+    /* 40px */
+}
+
+.tools {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--ne-3);
+    /* 24px */
+}
+
+.iconButton {
+    width: var(--ne-6);
+    /* 48px */
+    height: var(--ne-6);
+    /* 48px */
+    border-radius: 50%;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease;
+    padding: 0;
+}
+
+.iconButton:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+}
+
+.icon {
+    width: 24px;
+    height: 24px;
+    background-color: var(--ne-text);
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+}
+
+.pageIndicatorWrapper {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.pageIndicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: var(--ne-muted);
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 1;
+}
+
+.current {
+    color: var(--ne-text);
+    padding-bottom: 4px;
+}
+
+.total {
+    padding-top: 4px;
+}
+
+.divider {
+    width: var(--ne-4);
+    /* 32px */
+    height: 2px;
+    background-color: var(--ne-muted);
+}

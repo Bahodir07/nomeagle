@@ -1,0 +1,59 @@
+.header {
+    width: 100%;
+    max-width: 520px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--ne-1);
+}
+
+.title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--ne-text);
+    margin: 0;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.progressRow {
+    display: flex;
+    align-items: center;
+    gap: var(--ne-2);
+}
+
+.progressTrack {
+    flex: 1;
+    height: 6px;
+    background: var(--ne-border);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progressFill {
+    height: 100%;
+    background: var(--ne-primary);
+    border-radius: 3px;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    min-width: 0;
+}
+
+.counter {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ne-muted);
+    white-space: nowrap;
+    min-width: 48px;
+    text-align: right;
+}
+
+.masteryBadge {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ne-success);
+    background: rgba(16, 185, 129, 0.1);
+    padding: 2px var(--ne-1);
+    border-radius: 4px;
+    white-space: nowrap;
+}

@@ -1,0 +1,193 @@
+.screen {
+    width: 100%;
+    min-height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--ne-6);
+    box-sizing: border-box;
+    animation: screenIn 0.35s ease-out;
+}
+
+@keyframes screenIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 420px;
+    width: 100%;
+}
+
+.iconWrap {
+    margin-bottom: var(--ne-4);
+}
+
+.circle {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    background: var(--ne-success);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
+    animation: circleIn 0.5s cubic-bezier(0.34, 1.4, 0.64, 1) forwards;
+    transform: scale(0);
+}
+
+@keyframes circleIn {
+    to { transform: scale(1); }
+}
+
+.checkmark {
+    width: 40px;
+    height: 40px;
+    color: white;
+}
+
+.checkPath {
+    stroke-dasharray: 50;
+    stroke-dashoffset: 50;
+    animation: drawCheck 0.4s ease-out 0.35s forwards;
+}
+
+@keyframes drawCheck {
+    to { stroke-dashoffset: 0; }
+}
+
+.heading {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--ne-text);
+    margin: 0 0 var(--ne-4);
+    animation: fadeUp 0.4s ease-out 0.3s forwards;
+    opacity: 0;
+    transform: translateY(8px);
+}
+
+@keyframes fadeUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--ne-2);
+    width: 100%;
+    margin-bottom: var(--ne-4);
+    animation: fadeUp 0.4s ease-out 0.45s forwards;
+    opacity: 0;
+    transform: translateY(8px);
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: var(--ne-2);
+    background: var(--ne-surface);
+    border-radius: var(--ne-radius-sm);
+    box-shadow: var(--ne-shadow-sm);
+}
+
+.statValue {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.statValue.mastery {
+    color: var(--ne-success);
+}
+
+.statValue.mastered {
+    color: var(--ne-primary);
+}
+
+.statValue.mistakes {
+    color: var(--ne-danger);
+}
+
+.statValue.xp {
+    color: var(--ne-warning);
+}
+
+.statLabel {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ne-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ne-2);
+    width: 100%;
+    animation: fadeUp 0.4s ease-out 0.6s forwards;
+    opacity: 0;
+    transform: translateY(8px);
+}
+
+.btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--ne-2) var(--ne-3);
+    border: none;
+    border-radius: var(--ne-radius-md);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+        background 0.15s ease,
+        box-shadow 0.15s ease,
+        transform 0.1s ease;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.finishBtn {
+    background: var(--ne-success);
+    color: white;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+}
+
+.finishBtn:hover {
+    background: #0d9668;
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+}
+
+.retryBtn {
+    background: var(--ne-surface);
+    color: var(--ne-text);
+    border: 2px solid var(--ne-border);
+    box-shadow: var(--ne-shadow-sm);
+}
+
+.retryBtn:hover {
+    border-color: var(--ne-primary);
+    color: var(--ne-primary);
+    box-shadow: var(--ne-shadow-md);
+}
+
+.retryBtn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+}

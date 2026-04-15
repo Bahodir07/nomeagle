@@ -1,0 +1,73 @@
+/* ==========================================================================
+   LeaderboardFilters
+   Segmented time range + search. Token spacing only.
+   ========================================================================== */
+
+.wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ne-2);
+}
+
+.segmented {
+  display: inline-flex;
+  background-color: var(--ne-bg);
+  border: 1px solid var(--ne-border);
+  border-radius: var(--ne-radius-md);
+  padding: var(--ne-1);
+  box-shadow: var(--ne-shadow-sm);
+}
+
+.segment {
+  padding: var(--ne-1) var(--ne-2);
+  font-size: 0.875rem;
+  font-family: inherit;
+  font-weight: 500;
+  color: var(--ne-muted);
+  background: transparent;
+  border: none;
+  border-radius: var(--ne-radius-sm);
+  cursor: pointer;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.segment:hover:not(:disabled) {
+  color: var(--ne-text);
+}
+
+.segment:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.segmentActive {
+  color: var(--ne-text);
+  background-color: var(--ne-surface);
+  box-shadow: var(--ne-shadow-sm);
+}
+
+.search {
+  flex: 1;
+  min-width: 200px;
+}
+
+@media (max-width: 480px) {
+  .wrapper {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .segmented {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .segment {
+    flex: 1;
+  }
+
+  .search {
+    min-width: 0;
+  }
+}

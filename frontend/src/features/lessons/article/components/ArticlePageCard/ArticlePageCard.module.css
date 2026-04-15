@@ -1,0 +1,49 @@
+.card {
+    background-color: var(--ne-surface);
+    border-radius: var(--ne-radius-md);
+    box-shadow: var(--ne-shadow-md);
+    padding: var(--ne-5);
+    /* 40px */
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+.title {
+    color: var(--ne-text);
+    font-size: 32px;
+    font-weight: 700;
+    margin: 0 0 var(--ne-4) 0;
+    /* 32px bottom margin */
+    line-height: 1.2;
+}
+
+.imageContainer {
+    margin-bottom: var(--ne-4);
+    /* 32px */
+    border-radius: var(--ne-radius-sm);
+    overflow: hidden;
+    width: 100%;
+}
+
+.image {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ne-3);
+    /* 24px between paragraphs */
+}
+
+.paragraph {
+    color: var(--ne-text);
+    font-size: 18px;
+    line-height: 1.6;
+    margin: 0;
+}

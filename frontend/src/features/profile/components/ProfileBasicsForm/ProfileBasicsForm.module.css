@@ -1,0 +1,112 @@
+/* ==========================================================================
+   ProfileBasicsForm
+   Display name, email (read-only), bio textarea, save button.
+   ========================================================================== */
+
+.card {
+  background-color: var(--ne-surface);
+  border: 1px solid var(--ne-border);
+  border-radius: var(--ne-radius-md);
+  box-shadow: var(--ne-shadow-md);
+  overflow: hidden;
+}
+
+.header {
+  padding: var(--ne-2) var(--ne-3);
+  border-bottom: 1px solid var(--ne-border);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ne-text);
+}
+
+.content {
+  padding: var(--ne-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ne-2);
+}
+
+.footer {
+  padding: var(--ne-2) var(--ne-3);
+  border-top: 1px solid var(--ne-border);
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* ---------- Fields ---------- */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ne-1);
+}
+
+.label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--ne-text);
+}
+
+.input {
+  padding: var(--ne-1) 12px;
+  font-size: 0.875rem;
+  font-family: inherit;
+  color: var(--ne-text);
+  background-color: var(--ne-surface);
+  border: 1px solid var(--ne-border);
+  border-radius: var(--ne-radius-sm);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.input::placeholder {
+  color: var(--ne-muted);
+}
+
+.input:focus {
+  border-color: var(--ne-primary);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.inputReadOnly {
+  background-color: var(--ne-bg);
+  color: var(--ne-muted);
+  cursor: default;
+}
+
+.textarea {
+  min-height: 80px;
+  padding: var(--ne-1) 12px;
+  font-size: 0.875rem;
+  font-family: inherit;
+  color: var(--ne-text);
+  background-color: var(--ne-surface);
+  border: 1px solid var(--ne-border);
+  border-radius: var(--ne-radius-sm);
+  outline: none;
+  resize: vertical;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.textarea::placeholder {
+  color: var(--ne-muted);
+}
+
+.textarea:focus {
+  border-color: var(--ne-primary);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.charCount {
+  font-size: 0.75rem;
+  color: var(--ne-muted);
+  text-align: right;
+}
+
+.charCountOver {
+  color: var(--ne-danger);
+}
+
+.error {
+  font-size: 0.75rem;
+  color: var(--ne-danger);
+}

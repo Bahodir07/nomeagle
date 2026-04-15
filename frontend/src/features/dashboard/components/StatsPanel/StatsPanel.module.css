@@ -1,0 +1,10 @@
+/* ==========================================================================
+   StatsPanel
+   Vertical stack for the right-hand dashboard column.
+   ========================================================================== */
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ne-2); /* 16px between stat cards */
+}

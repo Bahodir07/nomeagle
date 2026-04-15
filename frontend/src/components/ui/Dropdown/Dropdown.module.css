@@ -1,0 +1,82 @@
+.wrapper {
+  position: relative;
+  display: inline-flex;
+}
+
+.trigger {
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-family: inherit;
+}
+
+.menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  min-width: 160px;
+  background-color: var(--ne-surface);
+  border: 1px solid var(--ne-border);
+  border-radius: var(--ne-radius-sm);
+  box-shadow: var(--ne-shadow-md);
+  z-index: 800;
+  padding: 4px;
+  animation: fadeDown 0.12s ease;
+}
+
+.left {
+  left: 0;
+}
+
+.right {
+  right: 0;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: var(--ne-1);
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 0.875rem;
+  font-family: inherit;
+  color: var(--ne-text);
+  background: none;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 0.1s ease;
+}
+
+.item:hover:not(:disabled) {
+  background-color: var(--ne-bg);
+}
+
+.item:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.danger {
+  color: var(--ne-danger);
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+}
+
+@keyframes fadeDown {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -1,0 +1,26 @@
+src/features/achievements/engine/rules.ts(119,13): error TS2322: Type 'BadgeRule' is not assignable to type 'never'.
+src/features/achievements/engine/rules.ts(119,13): error TS6133: '_' is declared but its value is never read.
+src/features/dashboard/components/CountryLearningCard/CountryLearningCard.tsx(49,7): error TS6133: 'cx' is declared but its value is never read.
+src/features/dashboard/components/ViewToggle/ViewToggle.tsx(1,30): error TS6133: 'useEffect' is declared but its value is never read.
+src/features/games/CultureMatchRush/GameContainer.tsx(17,21): error TS6133: 'startCountdown' is declared but its value is never read.
+src/features/map/adapters/simpleMapsWorld.ts(32,48): error TS2352: Conversion of type 'HTMLElement' to type 'SVGGElement | SVGPathElement' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type 'HTMLElement' is missing the following properties from type 'SVGPathElement': pathLength, getPointAtLength, getTotalLength, isPointInFill, and 9 more.
+src/features/map/adapters/simpleMapsWorld.ts(111,50): error TS2352: Conversion of type 'HTMLElement | null' to type 'SVGElement & { id?: string | undefined; }' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type 'HTMLElement' is not comparable to type 'SVGElement & { id?: string | undefined; }'.
+    Type 'HTMLElement' is missing the following properties from type 'SVGElement': ownerSVGElement, viewportElement
+src/features/map/adapters/simpleMapsWorld.ts(126,50): error TS2352: Conversion of type 'HTMLElement | null' to type 'SVGElement & { id?: string | undefined; }' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type 'HTMLElement' is not comparable to type 'SVGElement & { id?: string | undefined; }'.
+    Type 'HTMLElement' is missing the following properties from type 'SVGElement': ownerSVGElement, viewportElement
+src/features/map/adapters/simpleMapsWorld.ts(200,27): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/features/map/adapters/simpleMapsWorld.ts(204,40): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/features/map/components/WorldMap/WorldMap.tsx(114,8): error TS2339: Property 'then' does not exist on type 'void | Promise<void>'.
+  Property 'then' does not exist on type 'void'.
+src/features/map/components/WorldMap/WorldMap.tsx(115,15): error TS7006: Parameter 'err' implicitly has an 'any' type.
+src/features/stats/components/PracticeTimeCard/PracticeTimeCard.tsx(26,7): error TS6133: 'DONUT_INNER_R' is declared but its value is never read.
+src/pages/app/Lesson/LessonPage.tsx(8,11): error TS6133: 'lessonId' is declared but its value is never read.
+src/pages/app/MapExplorer/MapExplorerPage.tsx(117,10): error TS6133: 'hoveredCountry' is declared but its value is never read.
+src/pages/app/SearchCountries/SearchCountriesPage.tsx(67,9): error TS6133: 'simulateError' is declared but its value is never read.
+src/utils/dom/loadScript.ts(58,20): error TS2339: Property 'readyState' does not exist on type 'HTMLScriptElement'.
+src/utils/dom/loadScript.ts(58,58): error TS2339: Property 'readyState' does not exist on type 'HTMLScriptElement'.

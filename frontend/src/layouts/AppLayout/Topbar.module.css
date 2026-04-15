@@ -1,0 +1,89 @@
+/* ==========================================================================
+   Topbar – Fixed top bar inside main column
+   ========================================================================== */
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  min-height: 56px;
+  padding: 0 var(--ne-3);
+  background-color: var(--ne-surface);
+  border-bottom: 1px solid var(--ne-border);
+  box-shadow: var(--ne-shadow-sm);
+  flex-shrink: 0;
+}
+
+/* ── Left: title + breadcrumbs stacked ─────────────────────────────────── */
+
+.left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  min-width: 0;
+}
+
+.title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--ne-text);
+  line-height: 1.25;
+}
+
+/* ── Right: actions ────────────────────────────────────────────────────── */
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--ne-2);
+}
+
+/* Language selector placeholder */
+.langSelect {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px var(--ne-1);
+  border: 1px solid var(--ne-border);
+  border-radius: var(--ne-radius-sm);
+  background-color: var(--ne-surface);
+  font-size: 0.8125rem;
+  color: var(--ne-text);
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+
+.langSelect:hover {
+  border-color: var(--ne-primary);
+}
+
+/* User dropdown trigger */
+.userTrigger {
+  display: flex;
+  align-items: center;
+  gap: var(--ne-1);
+  padding: 6px var(--ne-1);
+  border: 1px solid transparent;
+  border-radius: var(--ne-radius-sm);
+  background: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.userTrigger:hover {
+  background-color: var(--ne-bg);
+}
+
+.userName {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--ne-text);
+}
+
+.chevron {
+  font-size: 0.625rem;
+  color: var(--ne-muted);
+  margin-left: 2px;
+}

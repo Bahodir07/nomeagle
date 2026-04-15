@@ -1,0 +1,214 @@
+/* ==========================================================================
+   CourseNavigator — Edclub-style floating right-side rail
+   Hamburger (TOC) + Up/Down + track with current-section badge.
+   8px spacing system, tokens only.
+   ========================================================================== */
+
+/* ---- Outer rail (fixed right) ---- */
+
+.rail {
+  position: fixed;
+  right: var(--ne-3);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ne-1);
+  z-index: 100;
+}
+
+/* ---- Shared circle button ---- */
+
+.btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: var(--ne-surface);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--ne-text);
+  transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.12s ease;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.btn:hover {
+  background: var(--ne-bg);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: scale(1.06);
+}
+
+.btn:active {
+  transform: scale(0.96);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--ne-primary);
+  outline-offset: 2px;
+}
+
+.btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.btnDisabled {
+  opacity: 0.35;
+  cursor: default;
+  pointer-events: none;
+}
+
+/* ---- Vertical track between Up and Down ---- */
+
+.trackWrap {
+  position: relative;
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--ne-1) 0;
+}
+
+.track {
+  width: 6px;
+  height: 100%;
+  min-height: 80px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.35);
+}
+
+/* ---- Current-section badge on the track ---- */
+
+.badge {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--ne-surface);
+  border: 2px solid var(--ne-border);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.10);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--ne-text);
+  transition: top 0.3s ease;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ---- TOC popup ---- */
+
+.tocBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+}
+
+.tocPanel {
+  position: absolute;
+  right: calc(100% + var(--ne-1));
+  top: 0;
+  width: 240px;
+  background: var(--ne-surface);
+  border-radius: var(--ne-radius-md);
+  box-shadow: var(--ne-shadow-lg);
+  padding: var(--ne-1) 0;
+  z-index: 101;
+  max-height: 360px;
+  overflow-y: auto;
+}
+
+.tocTitle {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--ne-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: var(--ne-1) var(--ne-2);
+  margin: 0;
+}
+
+.tocList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tocItem {
+  display: flex;
+  align-items: center;
+  gap: var(--ne-1);
+  padding: var(--ne-1) var(--ne-2);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--ne-text);
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  transition: background 0.12s ease;
+  line-height: 1.3;
+}
+
+.tocItem:hover {
+  background: var(--ne-bg);
+}
+
+.tocItem:focus-visible {
+  outline: 2px solid var(--ne-primary);
+  outline-offset: -2px;
+}
+
+.tocItemActive {
+  color: var(--ne-primary);
+  font-weight: 700;
+  background: rgba(59, 130, 246, 0.06);
+}
+
+.tocItemIndex {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--ne-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--ne-muted);
+  flex-shrink: 0;
+}
+
+.tocItemActive .tocItemIndex {
+  background: var(--ne-primary);
+  color: var(--ne-surface);
+}
+
+.tocItemLabel {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+/* ---- Responsive: hide on small screens ---- */
+
+@media (max-width: 600px) {
+  .rail {
+    right: var(--ne-1);
+  }
+
+  .tocPanel {
+    width: 200px;
+  }
+}

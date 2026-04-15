@@ -1,0 +1,44 @@
+/* ==========================================================================
+   ProfileStatsCard
+   Compact level, xp, streak, countries count.
+   ========================================================================== */
+
+.card {
+  background-color: var(--ne-surface);
+  border: 1px solid var(--ne-border);
+  border-radius: var(--ne-radius-md);
+  box-shadow: var(--ne-shadow-md);
+  padding: var(--ne-2) var(--ne-3);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--ne-2);
+}
+
+@media (min-width: 640px) {
+  .grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ne-1);
+}
+
+.value {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--ne-text);
+  line-height: 1.2;
+}
+
+.label {
+  font-size: 0.75rem;
+  color: var(--ne-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}

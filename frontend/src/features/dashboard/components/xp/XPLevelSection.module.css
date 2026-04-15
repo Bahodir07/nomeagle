@@ -1,0 +1,118 @@
+/* ==========================================================================
+   XPLevelSection
+   Gamified progress bar — solid green fill, runner icon at fill edge.
+   The runner extends above the bar; the bar's top edge aligns with the
+   runner's legs, matching the reference design.
+   ========================================================================== */
+
+/* ---------- Root ---------- */
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ne-2); /* 16px */
+}
+
+/* ==========================================================================
+   Header — level badge + XP count
+   ========================================================================== */
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ne-1); /* 8px */
+}
+
+/* ---- Level badge ---- */
+.levelBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ne-1); /* 8px */
+  padding: var(--ne-1) var(--ne-2); /* 8px 16px */
+  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+  border-radius: 9999px;
+}
+
+.levelIcon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.levelText {
+  font-size: 0.875rem;
+  font-weight: 800;
+  color: #065f46; /* dark emerald — high contrast on green bg */
+  letter-spacing: -0.01em;
+}
+
+/* ---- XP count ---- */
+.xpCount {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--ne-text);
+}
+
+.xpSeparator {
+  color: var(--ne-muted);
+  margin: 0 2px;
+  font-weight: 400;
+}
+
+/* ==========================================================================
+   Progress bar
+   ========================================================================== */
+
+/* ---- Bar wrapper — extra top padding so the runner can overflow above ---- */
+.barWrapper {
+  position: relative;
+  /* Reserve space above the track for the runner icon to extend into */
+  padding-top: 20px;
+}
+
+/* ---- Track (sharp rectangle, 90° corners) ---- */
+.track {
+  position: relative;
+  width: 100%;
+  height: 14px; /* thin bar — runner's feet/legs sit at this level */
+  background-color: var(--ne-bg);
+  border-radius: 0; /* sharp 90° rectangle */
+}
+
+/* ---- Fill (solid green, sharp edges) ---- */
+.fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background-color: var(--ne-success); /* solid #10b981 */
+  border-radius: 0; /* sharp 90° rectangle */
+  transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  min-width: 28px; /* ensure runner is always visible */
+}
+
+/* ==========================================================================
+   Runner icon — positioned at the fill's right edge, body extends above bar
+   ========================================================================== */
+
+.runner {
+  position: absolute;
+  /* Bottom-align with the track — legs at bar level, body above */
+  bottom: 0;
+  right: 0;
+  transform: translateX(50%);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 1;
+}
+
+/* ==========================================================================
+   Remaining text
+   ========================================================================== */
+
+.remaining {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--ne-muted);
+  text-align: right;
+}

@@ -1,0 +1,27 @@
+/* ==========================================================================
+   AppLayout – Root shell (Sidebar + Topbar + Content)
+   ========================================================================== */
+
+.layout {
+  display: flex;
+  height: 100vh;
+  background-color: var(--ne-bg);
+  overflow: hidden;
+}
+
+/* ── Main column (Topbar + Content) ─────────────────────────────────────── */
+
+.main {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0; /* prevent flex blow-out */
+}
+
+/* ── Scrollable content area ────────────────────────────────────────────── */
+
+.content {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--ne-3);
+}

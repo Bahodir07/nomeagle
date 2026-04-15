@@ -1,0 +1,233 @@
+.wrapper {
+  position: relative;
+  font-family: inherit;
+  margin-top: 32px;
+}
+
+.topRightText {
+  position: absolute;
+  top: -24px;
+  right: 0;
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: row;
+}
+
+@media (max-width: 1024px) {
+  .card {
+    flex-direction: column;
+  }
+}
+
+.leftSidebar {
+  width: 320px;
+  flex-shrink: 0;
+  padding: 32px;
+}
+
+.headerTitle {
+  font-size: 1.25rem;
+  color: #4b5563;
+  font-weight: 500;
+  margin: 0 0 16px 0;
+}
+
+.headerDesc {
+  font-size: 0.8125rem;
+  color: #4b5563;
+  line-height: 1.5;
+  margin: 0 0 32px 0;
+}
+
+.summaryList {
+  display: flex;
+  flex-direction: column;
+}
+
+.summaryRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.summaryRow:first-child {
+  border-top: 1px solid #e5e7eb;
+}
+
+.summaryLabel {
+  font-size: 0.8125rem;
+  color: #6b7280;
+}
+
+.summaryValue {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.tipBox {
+  margin-top: 32px;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  padding: 16px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.tipIconContainer {
+  margin-top: 2px;
+}
+
+.tipIcon {
+  color: #fb923c;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.tipText {
+  font-size: 0.75rem;
+  color: #6b7280;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.rightContent {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  min-width: 0;
+}
+
+.controlsTop {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 32px;
+}
+
+.rangeGroup {
+  display: inline-flex;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+}
+
+.rangeButton {
+  padding: 6px 14px;
+  background: #f9fafb;
+  border: none;
+  border-right: 1px solid #e5e7eb;
+  font-size: 0.75rem;
+  color: #9ca3af;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.rangeButton:hover {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+.rangeButton:last-child {
+  border-right: none;
+}
+
+.rangeButtonActive {
+  background: white;
+  color: #4b5563;
+  box-shadow: inset 0 2px 0 0 #d1d5db;
+}
+
+.legendArea {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8125rem;
+  color: #6b7280;
+  cursor: pointer;
+  user-select: none;
+}
+
+.legendItemOff {
+  opacity: 0.4;
+}
+
+.legendColor {
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.chartContainer {
+  flex-grow: 1;
+  position: relative;
+  min-height: 320px;
+  width: 100%;
+}
+
+.chartSvg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.gridLine {
+  stroke: #e5e7eb;
+  stroke-width: 1;
+}
+
+.axisText {
+  fill: #9ca3af;
+  font-size: 11px;
+}
+
+.tooltip {
+  position: absolute;
+  pointer-events: none;
+  background: rgba(55, 65, 81, 0.95);
+  color: #f3f4f6;
+  font-size: 0.75rem;
+  padding: 10px 14px;
+  border-radius: 4px;
+  line-height: 1.6;
+  white-space: nowrap;
+  z-index: 10;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transform: translate(-100%, -50%);
+  margin-left: -12px;
+}
+
+.tooltipRow {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.noDataText {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.5rem;
+  color: #9ca3af;
+  font-weight: 500;
+}

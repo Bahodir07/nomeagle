@@ -1,0 +1,88 @@
+/* ==========================================================================
+   BadgeModal — detail view for a single badge
+   8px spacing system, tokens only.
+   ========================================================================== */
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ne-3);
+}
+
+.imageWrap {
+  aspect-ratio: 1;
+  max-width: 200px;
+  margin: 0 auto;
+  background-color: var(--ne-bg);
+  border-radius: var(--ne-radius-md);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.imageWrapLocked {
+  filter: grayscale(1);
+  opacity: 0.8;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: var(--ne-3);
+}
+
+.description {
+  font-size: 0.9375rem;
+  color: var(--ne-text);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.statusUnlocked {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ne-2);
+  padding: var(--ne-2);
+  background-color: var(--ne-bg);
+  border-radius: var(--ne-radius-sm);
+}
+
+.statusLabel {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ne-success);
+}
+
+.date {
+  font-size: 0.8125rem;
+  color: var(--ne-muted);
+}
+
+.statusLocked {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ne-2);
+  padding: var(--ne-2);
+  background-color: var(--ne-bg);
+  border-radius: var(--ne-radius-sm);
+}
+
+.howToUnlock {
+  font-size: 0.875rem;
+  color: var(--ne-muted);
+  margin: 0;
+}
+
+.progressBlock {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ne-1);
+}
+
+.progressDetail {
+  font-size: 0.8125rem;
+  color: var(--ne-muted);
+}

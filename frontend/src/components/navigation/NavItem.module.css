@@ -1,0 +1,128 @@
+/* ==========================================================================
+   NavItem – Single sidebar navigation row
+   ========================================================================== */
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: var(--ne-1);
+  padding: var(--ne-1) var(--ne-2);
+  margin: 0 var(--ne-1);
+  border-radius: var(--ne-radius-sm);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--ne-muted);
+  text-decoration: none;
+  position: relative;
+  transition: background-color 0.15s ease, color 0.15s ease;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* ── Hover ──────────────────────────────────────────────────────────────── */
+
+.navItem:hover {
+  background-color: var(--ne-bg);
+  color: var(--ne-text);
+}
+
+/* ── Active (route matches) ─────────────────────────────────────────────── */
+
+.active {
+  background-color: color-mix(in srgb, var(--ne-primary) 10%, transparent);
+  color: var(--ne-primary);
+  font-weight: 600;
+}
+
+.active:hover {
+  background-color: color-mix(in srgb, var(--ne-primary) 14%, transparent);
+  color: var(--ne-primary);
+}
+
+/* Left accent bar */
+.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: var(--ne-1);
+  bottom: var(--ne-1);
+  width: 3px;
+  border-radius: 0 2px 2px 0;
+  background-color: var(--ne-primary);
+}
+
+/* ── Collapsed (icon-only) ─────────────────────────────────────────────── */
+
+.collapsed {
+  justify-content: center;
+  padding-left: var(--ne-2);
+  padding-right: var(--ne-2);
+}
+
+.collapsed .label {
+  opacity: 0;
+  width: 0;
+  min-width: 0;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.collapsed .label,
+.label {
+  transition: opacity 0.2s ease, width 0.2s ease;
+}
+
+.collapsed .badge {
+  display: none;
+}
+
+/* ── Disabled ───────────────────────────────────────────────────────────── */
+
+.disabled {
+  opacity: 0.4;
+  pointer-events: none;
+  cursor: default;
+}
+
+/* ── Icon slot ──────────────────────────────────────────────────────────── */
+
+.icon {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  line-height: 0;
+}
+
+/* ── Label ──────────────────────────────────────────────────────────────── */
+
+.label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Badge pill ─────────────────────────────────────────────────────────── */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px var(--ne-1);
+  font-size: 0.625rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ne-primary);
+  background-color: color-mix(in srgb, var(--ne-primary) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--ne-primary) 20%, transparent);
+  border-radius: 999px;
+  flex-shrink: 0;
+}

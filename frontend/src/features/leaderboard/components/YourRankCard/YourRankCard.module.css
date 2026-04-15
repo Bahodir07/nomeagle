@@ -1,0 +1,51 @@
+/* ==========================================================================
+   YourRankCard
+   Compact card for current user rank + stats. Token spacing only.
+   ========================================================================== */
+
+.wrapper {
+  padding: var(--ne-2);
+  background-color: var(--ne-surface);
+  border: 1px solid var(--ne-border);
+  border-radius: var(--ne-radius-md);
+  box-shadow: var(--ne-shadow-sm);
+}
+
+.title {
+  margin: 0 0 var(--ne-2);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ne-text);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--ne-2);
+}
+
+.streak {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ne-1);
+}
+
+.streakIcon {
+  flex-shrink: 0;
+  opacity: 0.9;
+}
+
+/* ---------- Fallback (user not on leaderboard) ---------- */
+.fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80px;
+}
+
+.fallbackText {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--ne-muted);
+  text-align: center;
+}

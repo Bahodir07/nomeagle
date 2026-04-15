@@ -1,0 +1,70 @@
+.layoutContainer {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--ne-bg, #f5f6f8);
+  font-family: inherit;
+}
+
+.brandSection {
+  flex: 1;
+  display: none;
+  background-color: var(--ne-surface, #ffffff);
+  position: relative;
+  overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .brandSection {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.brandContent {
+  text-align: center;
+  color: var(--ne-text);
+  padding: var(--ne-5);
+  animation: fadeIn 1s ease-out;
+}
+
+.logo {
+  width: 120px;
+  height: auto;
+  margin-bottom: var(--ne-2);
+}
+
+.logoText {
+  display: block;
+  width: 200px;
+  height: auto;
+  margin: 0 auto;
+  margin-bottom: var(--ne-2);
+}
+
+.subtitle {
+  font-size: 1.125rem;
+  color: var(--ne-muted);
+  margin: 0;
+}
+
+.formSection {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--ne-4);
+  background-color: var(--ne-surface, #ffffff);
+}
+
+.formContainer {
+  width: 100%;
+  max-width: 440px;
+  max-height: 100%;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

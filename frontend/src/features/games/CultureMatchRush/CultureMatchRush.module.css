@@ -1,0 +1,496 @@
+.container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  user-select: none;
+  background-size: cover;
+  background-position: center;
+  font-family: 'Inter', sans-serif;
+}
+
+.countdownOverlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.countdownText {
+  color: white;
+  font-size: 10rem;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.hud {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.5) 0%, transparent 100%);
+  pointer-events: auto;
+}
+
+.hudLeft {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.hudCenter {
+  display: flex;
+  justify-content: center;
+}
+
+.hudRight {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.hudButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: white;
+  font-weight: 800;
+  font-size: 1.125rem;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.hudButton:hover {
+  opacity: 0.8;
+}
+
+.timer {
+  font-size: 2.25rem;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.025em;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+
+.timerLow {
+  color: #f87171;
+}
+
+.timerNormal {
+  color: white;
+}
+
+.scoreCombo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: white;
+  font-weight: 800;
+  font-size: 1.125rem;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.gameArea {
+  position: absolute;
+  inset: 0;
+  padding-top: 5rem;
+  padding-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.board {
+  flex: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.dropZonesRow {
+  display: flex;
+  gap: 1.25rem;
+  align-items: flex-end;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  width: 100%;
+}
+
+.dropZone {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 1rem;
+  transition: all 0.2s ease;
+  overflow: hidden;
+  user-select: none;
+  width: 200px;
+  height: 220px;
+}
+
+.dropZoneInner {
+  padding: 1.25rem 0.75rem 0.5rem;
+  text-align: center;
+  pointer-events: none;
+}
+
+.dropZoneTitle {
+  font-size: 1.125rem;
+  font-weight: 800;
+  color: white;
+  line-height: 1.25;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  margin: 0;
+}
+
+.dropZoneLabel {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-top: 0.25rem;
+}
+
+.dropZoneOutline {
+  position: absolute;
+  inset: 0;
+  border-radius: 1rem;
+  border: 4px solid rgba(255, 255, 255, 0.6);
+  pointer-events: none;
+}
+
+.deckLabel {
+  color: white;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.025em;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  margin-bottom: 1rem;
+}
+
+.activeCardArea {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 160px;
+  width: 100%;
+}
+
+.card {
+  width: 140px;
+  background-color: white;
+  border-radius: 1rem;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  cursor: grab;
+  text-align: center;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.25rem 0.75rem;
+  border: 2px solid rgba(255,255,255,0.8);
+  transition: box-shadow 0.2s;
+}
+
+.card:active {
+  cursor: grabbing;
+}
+
+.card:hover {
+  box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+}
+
+.cardEmoji {
+  font-size: 3rem;
+  margin-bottom: 0.75rem;
+  pointer-events: none;
+}
+
+.cardText {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #334155;
+  line-height: 1.25;
+  pointer-events: none;
+  margin: 0;
+}
+
+.overlayCard {
+  width: 140px;
+  background-color: white;
+  border-radius: 1rem;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  text-align: center;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.25rem 0.75rem;
+  border: 2px solid #60a5fa;
+  outline: 4px solid rgba(191, 219, 254, 0.5);
+  transform: rotate(3deg);
+}
+
+.toast {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  right: 1rem;
+  z-index: 40;
+  background-color: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(4px);
+  color: white;
+  padding: 1rem 1.25rem;
+  border-radius: 1rem;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+@media (min-width: 640px) {
+  .toast {
+    left: 1.5rem;
+    right: auto;
+    max-width: 24rem;
+  }
+}
+
+.toastTitle {
+  font-weight: 800;
+  color: #4ade80;
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.toastContent {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.375;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.bookmarkBtn {
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+  color: rgba(255, 255, 255, 0.6);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s;
+  padding: 0;
+}
+
+.bookmarkBtn:hover {
+  color: white;
+}
+
+.floatingPoints {
+  position: absolute;
+  top: 33%;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 30;
+  font-size: 1.875rem;
+  font-weight: 900;
+  color: #4ade80;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+}
+
+.overlayScreen {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  padding: 1rem;
+}
+
+.modalBox {
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(4px);
+  border-radius: 1.5rem;
+  padding: 2rem;
+  max-width: 28rem;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+
+.iconTrophy {
+  color: #eab308;
+  margin: 0 auto 0.75rem;
+}
+
+.modalTitle {
+  font-size: 1.875rem;
+  font-weight: 900;
+  color: #1e293b;
+  margin-bottom: 0.75rem;
+}
+
+.starsRow {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.starFilled {
+  fill: #facc15;
+  color: #facc15;
+}
+
+.starEmpty {
+  color: #e2e8f0;
+}
+
+.finalScore {
+  font-size: 3rem;
+  font-weight: 900;
+  color: #2563eb;
+  margin-bottom: 1.5rem;
+}
+
+.finalScorePts {
+  font-size: 1rem;
+  color: #94a3b8;
+  font-weight: 700;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  text-align: left;
+  border-top: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 1rem 0;
+  margin-bottom: 1rem;
+}
+
+.statItem {
+  margin-bottom: 0.5rem;
+}
+
+.statLabel {
+  color: #94a3b8;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  margin: 0;
+}
+
+.statValue {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.perfectRound {
+  grid-column: span 2;
+  text-align: center;
+  padding: 0.5rem;
+  background-color: #f0fdf4;
+  border-radius: 0.5rem;
+  color: #15803d;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.modalButtons {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  font-weight: 700;
+  border-radius: 0.75rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btnSecondary {
+  background-color: #f1f5f9;
+  color: #334155;
+}
+
+.btnSecondary:hover {
+  background-color: #e2e8f0;
+}
+
+.btnPrimary {
+  background-color: #2563eb;
+  color: white;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
+}
+
+.btnPrimary:hover {
+  background-color: #1d4ed8;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.closeBtn {
+  padding: 0.25rem;
+  color: #94a3b8;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.closeBtn:hover {
+  color: #475569;
+}
+
+.modalText {
+  color: #475569;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+.modalSubText {
+  color: #64748b;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  text-align: left;
+}
+
+.modalFooterNote {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin-top: 1rem;
+}

@@ -1,0 +1,104 @@
+/* ==========================================================================
+   AttemptsCard — Heatmap grids (Edclub style)
+   ========================================================================== */
+
+.card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  padding: var(--ne-2) var(--ne-3);
+}
+
+.title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ne-text);
+}
+
+.content {
+  padding: var(--ne-2) var(--ne-3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ne-4);
+}
+
+/* ---------- Section ---------- */
+.section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+/* Inner wrapper: shrinks to the calendar width so the header edges align with the grid edges */
+.sectionInner {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  gap: var(--ne-1);
+}
+
+/* Text line: label flush-left with grid, attempts count flush-right with grid */
+.sectionHeader {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--ne-text);
+  flex-shrink: 0;
+}
+
+.attemptsCount {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--ne-text);
+  flex-shrink: 0;
+}
+
+/* CSS Grid layout — gap is handled by the grid engine so every column gets
+   exactly 1px spacing and every row exactly 2px, even on fractional-DPI screens. */
+.grid {
+  display: grid;
+  column-gap: 1px;
+  row-gap: 2px;
+}
+
+.cell {
+  width: 10px;
+  height: 10px;
+  transition: background 0.15s ease;
+}
+
+/* Contribution tiers: more attempts = greener (streak / gamification) */
+.cellTier0 {
+  background: rgb(238, 238, 238);
+}
+
+.cellTier1 {
+  background: #d3d3d3;
+}
+
+.cellTier2 {
+  background: #d6e685;
+}
+
+.cellTier3 {
+  background: #44a340;
+}
+
+.cellTier4 {
+  background: #1e6823;
+}

@@ -1,0 +1,63 @@
+/* ==========================================================================
+   SegmentedControl — connected segment buttons (Edclub tab style)
+   ========================================================================== */
+
+.wrapper {
+  display: inline-flex;
+  align-items: stretch;
+  background: var(--ne-bg);
+  border: 1px solid var(--ne-border);
+  border-radius: var(--ne-radius-sm);
+  box-shadow: var(--ne-shadow-sm);
+  padding: var(--ne-1);
+  gap: 0;
+}
+
+.segment {
+  font-family: inherit;
+  font-weight: 600;
+  color: var(--ne-muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+  white-space: nowrap;
+}
+
+.segment:hover:not([aria-selected="true"]) {
+  color: var(--ne-text);
+}
+
+.segment:focus-visible {
+  outline: 2px solid var(--ne-primary);
+  outline-offset: 2px;
+}
+
+.segment.first {
+  border-radius: 6px 0 0 6px;
+}
+
+.segment.last {
+  border-radius: 0 6px 6px 0;
+}
+
+.segment.first.last {
+  border-radius: 6px;
+}
+
+.segment.active {
+  background: var(--ne-surface);
+  color: var(--ne-text);
+  box-shadow: var(--ne-shadow-sm);
+}
+
+/* ---- Sizes (8px system) ---- */
+.sm .segment {
+  padding: 6px var(--ne-2);
+  font-size: 0.8125rem;
+}
+
+.md .segment {
+  padding: var(--ne-1) var(--ne-2);
+  font-size: 0.875rem;
+}

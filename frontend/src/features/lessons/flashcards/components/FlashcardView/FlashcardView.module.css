@@ -1,0 +1,148 @@
+.cardContainer {
+    perspective: 1000px;
+    width: 100%;
+    max-width: 520px;
+    min-height: 320px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+}
+
+.cardInner {
+    position: relative;
+    width: 100%;
+    min-height: 320px;
+    transform-style: preserve-3d;
+    transition: transform 0.5s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+.cardInner.flipped {
+    transform: rotateY(180deg);
+}
+
+.cardFace {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    background-color: var(--ne-surface);
+    border-radius: var(--ne-radius-lg);
+    box-shadow: var(--ne-shadow-lg);
+    padding: var(--ne-5);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.front {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: var(--ne-2);
+}
+
+.back {
+    transform: rotateY(180deg);
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: var(--ne-3);
+}
+
+.image {
+    width: calc(100% + var(--ne-5) * 2);
+    margin: calc(-1 * var(--ne-5)) calc(-1 * var(--ne-5)) 0;
+    border-radius: var(--ne-radius-lg) var(--ne-radius-lg) 0 0;
+    max-height: 200px;
+    object-fit: cover;
+    display: block;
+    flex-shrink: 0;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--ne-text);
+    margin: 0;
+    line-height: 1.3;
+}
+
+.subtitle {
+    font-size: 16px;
+    color: var(--ne-muted);
+    margin: 0;
+    line-height: 1.5;
+}
+
+.tapHint {
+    font-size: 13px;
+    color: var(--ne-muted);
+    margin-top: var(--ne-2);
+    opacity: 0.7;
+    letter-spacing: 0.02em;
+}
+
+.backLabel {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ne-primary);
+    margin: 0;
+}
+
+.explanation {
+    font-size: 17px;
+    color: var(--ne-text);
+    line-height: 1.6;
+    margin: 0;
+}
+
+.examplesList {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--ne-1);
+    width: 100%;
+}
+
+.exampleItem {
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--ne-text);
+    padding: var(--ne-1) var(--ne-2);
+    background: var(--ne-bg);
+    border-radius: var(--ne-radius-sm);
+    position: relative;
+    padding-left: var(--ne-4);
+}
+
+.exampleItem::before {
+    content: '';
+    position: absolute;
+    left: var(--ne-2);
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--ne-primary);
+    opacity: 0.5;
+}
+
+@media (max-width: 600px) {
+    .cardContainer {
+        max-width: 100%;
+        min-height: 280px;
+    }
+
+    .cardInner {
+        min-height: 280px;
+    }
+
+    .title {
+        font-size: 20px;
+    }
+}

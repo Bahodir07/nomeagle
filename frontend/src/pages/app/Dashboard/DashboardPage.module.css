@@ -1,0 +1,64 @@
+/* ==========================================================================
+   DashboardPage
+   Two-column Edclub-style layout: countries (left) + stats (right).
+   ========================================================================== */
+
+/* ---------- Top-level grid ---------- */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--ne-3); /* 24px */
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+@media (min-width: 960px) {
+  .grid {
+    grid-template-columns: 2fr 1fr; /* ~66 % / ~33 % */
+  }
+}
+
+/* ---------- Left column ---------- */
+.left {
+  min-width: 0; /* prevent grid blowout */
+}
+
+/* Card header with title + view toggle */
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ne-2); /* 16px */
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--ne-text);
+}
+
+/* Country cards inside the left Card — Grid view (responsive 2-col) */
+.countryGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--ne-2); /* 16px */
+}
+
+@media (min-width: 640px) {
+  .countryGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Country cards — List view (single column, full width) */
+.countryList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ne-2); /* 16px */
+}
+
+/* ---------- Right column ---------- */
+.right {
+  min-width: 0;
+}

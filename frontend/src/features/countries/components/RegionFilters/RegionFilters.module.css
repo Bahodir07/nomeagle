@@ -1,0 +1,63 @@
+/* ==========================================================================
+   RegionFilters
+   Left or top panel: title "Filters", REGION section, checkbox list.
+   Token-based spacing (8px system).
+   ========================================================================== */
+
+.card {
+  width: 100%;
+}
+
+.content {
+  padding: var(--ne-2); /* 16px */
+  display: flex;
+  flex-direction: column;
+  gap: var(--ne-2);
+}
+
+.title {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--ne-text);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ne-1); /* 8px */
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--ne-muted);
+  text-transform: uppercase;
+}
+
+.sectionHint {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--ne-muted);
+  line-height: 1.4;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ne-1); /* 8px */
+}
+
+.item {
+  margin: 0;
+}
+
+.checkbox {
+  display: flex;
+  width: 100%;
+}

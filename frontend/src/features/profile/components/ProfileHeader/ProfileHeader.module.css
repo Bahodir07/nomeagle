@@ -1,0 +1,76 @@
+/* ==========================================================================
+   ProfileHeader
+   Avatar, display name, subtitle, edit avatar button.
+   ========================================================================== */
+
+.wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ne-2);
+  padding: var(--ne-2) var(--ne-3);
+  max-width: 320px;
+  width: fit-content;
+  align-self: flex-start;
+  background-color: var(--ne-surface);
+  border: 1px solid var(--ne-border);
+  border-radius: var(--ne-radius-md);
+  box-shadow: var(--ne-shadow-md);
+}
+
+.avatarWrap {
+  position: relative;
+}
+
+.avatar {
+  display: block;
+}
+
+.editBtn {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 2px solid var(--ne-surface);
+  border-radius: 50%;
+  background-color: var(--ne-primary);
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.15s ease;
+  box-shadow: var(--ne-shadow-sm);
+}
+
+.editBtn:hover {
+  background-color: var(--ne-primary-600);
+}
+
+.editBtn:focus-visible {
+  outline: 2px solid var(--ne-primary);
+  outline-offset: 2px;
+}
+
+.editBtn img {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
+.name {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--ne-text);
+  text-align: center;
+}
+
+.subtitle {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--ne-muted);
+  text-align: center;
+}

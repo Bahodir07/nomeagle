@@ -1,0 +1,54 @@
+/* ==========================================================================
+   ProgressRing
+   Circular progress indicator — Edclub-style rings.
+   ========================================================================== */
+
+/* ---------- Wrapper ---------- */
+.wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ---------- SVG ---------- */
+.svg {
+  transform: rotate(-90deg);
+}
+
+/* Background track circle */
+.bg {
+  fill: none;
+  stroke: var(--ne-bg);
+}
+
+/* Animated fill arc */
+.fill {
+  fill: none;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.3s ease;
+}
+
+/* ---------- Fill Colours ---------- */
+.fill-primary {
+  stroke: var(--ne-primary);
+}
+
+.fill-success {
+  stroke: var(--ne-success);
+}
+
+.fill-warning {
+  stroke: var(--ne-warning);
+}
+
+.fill-danger {
+  stroke: var(--ne-danger);
+}
+
+/* ---------- Centre Label ---------- */
+.label {
+  position: absolute;
+  font-weight: 700;
+  color: var(--ne-text);
+}

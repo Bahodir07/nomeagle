@@ -1,0 +1,62 @@
+/* ==========================================================================
+   SearchInput
+   Rounded input, white background, icon on right (end), Edclub-style shadow/border.
+   ========================================================================== */
+
+.wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+/* ---------- Search icon (right / end, inside padding) ---------- */
+.icon {
+  position: absolute;
+  right: var(--ne-2); /* 16px */
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.icon img {
+  width: 24px;
+  height: 24px;
+  opacity: 0.5;
+}
+
+/* ---------- Input field ---------- */
+.input {
+  width: 100%;
+  padding: var(--ne-1) calc(var(--ne-2) + 24px + var(--ne-1)) var(--ne-1) var(--ne-2); /* top right bottom left: right = icon + gap */
+  font-size: 0.875rem;
+  font-family: inherit;
+  color: var(--ne-text);
+  background-color: var(--ne-surface);
+  border: 1px solid var(--ne-border);
+  border-radius: var(--ne-radius-md);
+  box-shadow: var(--ne-shadow-sm);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.input::placeholder {
+  color: var(--ne-muted);
+}
+
+.input:hover:not(:disabled) {
+  border-color: var(--ne-border);
+}
+
+.input:focus {
+  border-color: var(--ne-primary);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

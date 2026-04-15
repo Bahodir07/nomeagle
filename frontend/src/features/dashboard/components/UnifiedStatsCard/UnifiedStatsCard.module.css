@@ -1,0 +1,27 @@
+/* ==========================================================================
+   UnifiedStatsCard
+   Single vertically-stacked stats card with dividers between sections.
+   ========================================================================== */
+
+/* ---------- Card shell ---------- */
+.card {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- Section ---------- */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ne-1); /* 8px — tight vertical rhythm inside each section */
+  padding: var(--ne-3); /* 24px — breathing room around content */
+}
+
+/* ---------- Divider ---------- */
+.divider {
+  border: none;
+  border-top: 1px solid var(--ne-border);
+  margin: 0;
+}
+
+/* (All section internals moved to standalone components) */

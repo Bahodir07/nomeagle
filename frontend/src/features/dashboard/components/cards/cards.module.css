@@ -1,0 +1,118 @@
+/* ==========================================================================
+   Stat Cards — Shared Styles
+   Used by XPLevelCard, TimeSpentCard, AccuracyCard, StreakCard.
+   ========================================================================== */
+
+/* ---------- Common card body ---------- */
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ne-2);
+}
+
+/* ---------- Title row (icon + heading) ---------- */
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: var(--ne-1);
+}
+
+.icon {
+  font-size: 1.25rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.title {
+  margin: 0;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--ne-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ---------- Big value ---------- */
+.bigValue {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--ne-text);
+  line-height: 1;
+}
+
+/* ---------- Help / secondary text ---------- */
+.help {
+  font-size: 0.8125rem;
+  color: var(--ne-muted);
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* ---------- XP progress row ---------- */
+.xpRow {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ne-1);
+}
+
+.xpLabel {
+  font-size: 0.75rem;
+  color: var(--ne-muted);
+  text-align: right;
+}
+
+/* ---------- Rings row (TimeSpent) ---------- */
+.ringsRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: var(--ne-2);
+}
+
+.ringItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ne-1);
+}
+
+.ringLabel {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--ne-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+/* ---------- Streak emphasis ---------- */
+.streakValue {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.streakUnit {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ne-muted);
+}
+
+/* ---------- Accuracy value row ---------- */
+.accuracyRow {
+  display: flex;
+  align-items: baseline;
+  gap: var(--ne-1);
+}
+
+.accuracyPct {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--ne-text);
+  line-height: 1;
+}
+
+.accuracySuffix {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ne-muted);
+}

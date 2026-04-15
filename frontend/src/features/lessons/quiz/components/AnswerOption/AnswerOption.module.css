@@ -1,0 +1,140 @@
+/* AnswerOption — Edclub-style pill radio */
+
+.option {
+    display: flex;
+    align-items: center;
+    gap: var(--ne-2);
+    width: 100%;
+    padding: var(--ne-2) var(--ne-3);
+    border: 2px solid var(--ne-border);
+    border-radius: var(--ne-5);
+    background: var(--ne-surface);
+    cursor: pointer;
+    transition:
+        border-color 0.15s ease,
+        background-color 0.15s ease,
+        box-shadow 0.15s ease;
+    font-family: inherit;
+    font-size: 15px;
+    line-height: 1.4;
+    color: var(--ne-text);
+    text-align: left;
+    position: relative;
+    box-sizing: border-box;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.option:focus-visible {
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.35);
+}
+
+.option:not(:disabled):hover {
+    border-color: var(--ne-primary);
+    background: #f0f6ff;
+}
+
+.option:disabled {
+    cursor: default;
+}
+
+/* --- Radio circle --- */
+
+.radio {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid var(--ne-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+        border-color 0.15s ease,
+        background-color 0.15s ease;
+    box-sizing: border-box;
+}
+
+.radioDot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--ne-primary);
+}
+
+/* --- Label --- */
+
+.label {
+    flex: 1;
+    min-width: 0;
+}
+
+/* --- Badge (check / x icon after answer check) --- */
+
+.badge {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.badgeIcon {
+    display: block;
+    width: 16px;
+    height: 16px;
+}
+
+/* ===========================================================
+   Visual states
+   =========================================================== */
+
+/* Selected (before check) */
+.selected {
+    border-color: var(--ne-primary);
+    background: #eef4ff;
+}
+
+.selected .radio {
+    border-color: var(--ne-primary);
+}
+
+/* Correct */
+.correct {
+    border-color: var(--ne-success);
+    background: #ecfdf5;
+}
+
+.correct .radio {
+    border-color: var(--ne-success);
+    background: var(--ne-success);
+}
+
+.correct .badge {
+    background: var(--ne-success);
+}
+
+.correct .badgeIcon {
+    filter: brightness(0) invert(1);
+}
+
+/* Wrong */
+.wrong {
+    border-color: var(--ne-danger);
+    background: #fef2f2;
+}
+
+.wrong .radio {
+    border-color: var(--ne-danger);
+    background: var(--ne-danger);
+}
+
+.wrong .badge {
+    background: var(--ne-danger);
+}
+
+.wrong .badgeIcon {
+    filter: brightness(0) invert(1);
+}

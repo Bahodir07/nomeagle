@@ -1,0 +1,561 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
+
+/* ── Container ── */
+.container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    user-select: none;
+    background: radial-gradient(circle at center, #4b5563 0%, #1e293b 100%);
+    font-family: 'Fredoka One', 'Inter', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ── Game Board Main Layout ── */
+.gameBoard {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.boardLayout {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background: #2d160f;
+    border-radius: 1.5rem;
+    padding: 1.5rem;
+    border: 4px solid #4a2818;
+    box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.8);
+}
+
+/* ── HUD ── */
+.hudContainer {
+    background: #4a2818;
+    border: 4px solid #facc15;
+    border-radius: 20px;
+    padding: 0.5rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+}
+
+.hudLogo .phoenixLogo {
+    font-size: 2.5rem;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+}
+
+.hudCenter {
+    flex: 1;
+    text-align: center;
+}
+
+.targetCountryText {
+    color: white;
+    margin: 0;
+    font-size: 2rem;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.targetFlag {
+    font-size: 2rem;
+}
+
+.hudStats {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.scoreText,
+.timeText {
+    color: white;
+    font-size: 1.25rem;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    border: 2px solid #78350f;
+}
+
+.timeLow {
+    color: #ef4444;
+    animation: pulseWarning 1s infinite alternate;
+}
+
+/* ── Timeline Board (Drop Zones) ── */
+.boardContainer {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.boardTitle {
+    color: white;
+    font-size: 1.25rem;
+    margin: 0 0 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.seasonGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    flex: 1;
+}
+
+.calendarGrid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 0.75rem;
+    flex: 1;
+}
+
+.timelineSlot {
+    background: var(--slot-color);
+    border-radius: 1.5rem;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 4px solid transparent;
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+.slotActive {
+    transform: scale(1.02);
+    border-color: #facc15;
+    box-shadow: 0 0 30px rgba(250, 204, 21, 0.4), inset 0 0 20px rgba(255, 255, 255, 0.2);
+    filter: brightness(1.2);
+}
+
+.slotHeader {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    text-align: center;
+    padding: 0.75rem;
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.slotBody {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.slotIcon {
+    font-size: 4rem;
+    opacity: 0.3;
+    filter: grayscale(100%);
+}
+
+.slotCompact .slotHeader {
+    font-size: 0.9rem;
+    padding: 0.5rem;
+}
+
+.slotCompact .slotIcon {
+    font-size: 2.5rem;
+}
+
+/* ── Festival Card Tray ── */
+.trayContainer {
+    height: 220px;
+    background: #3a1d12;
+    border-radius: 1.5rem;
+    padding: 1rem 1.5rem;
+    border-top: 4px solid #4a2818;
+}
+
+.trayGrid {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* ── Festival Card (Draggables) ── */
+.festivalCard {
+    width: 140px;
+    height: 140px;
+    background: white;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    cursor: grab;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+    border: 3px solid #e2e8f0;
+    transition: transform 0.1s;
+    overflow: hidden;
+    position: relative;
+}
+
+.festivalCard:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
+    border-color: #3b82f6;
+}
+
+.festivalCard:active {
+    cursor: grabbing;
+}
+
+.cardDragging {
+    transform: scale(1.05) rotate(2deg);
+    opacity: 0.9;
+    z-index: 100;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+    border-color: #facc15;
+}
+
+.cardImage {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+}
+
+.cardLabel {
+    background: white;
+    color: #1e293b;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-align: center;
+    padding: 0.5rem;
+    border-top: 2px solid #e2e8f0;
+}
+
+/* ── Micro Lesson Popup ── */
+.microLessonPopup {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fefce8;
+    border: 3px solid #eab308;
+    border-radius: 1rem;
+    padding: 1rem 1.5rem;
+    max-width: 320px;
+    z-index: 200;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    animation: lessonPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.microLessonPopup::after {
+    content: '';
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 15px 15px 0;
+    border-style: solid;
+    border-color: #eab308 transparent transparent transparent;
+}
+
+.microLessonTitle {
+    margin: 0 0 0.5rem 0;
+    color: #a16207;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+}
+
+.microLessonText {
+    margin: 0;
+    color: #422006;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    font-family: 'Inter', sans-serif;
+}
+
+/* ── Setup & Result Prompts ── */
+.setupOverlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    z-index: 50;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+}
+
+.setupCard {
+    background: #361b12;
+    /* Deep Wood color */
+    border: 4px solid #facc15;
+    /* Gold border */
+    border-radius: 1.5rem;
+    padding: 2rem 2.5rem;
+    max-width: 520px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), inset 0 0 100px rgba(0, 0, 0, 0.5);
+}
+
+.setupTitle {
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: white;
+    text-align: center;
+    margin: 0 0 0.25rem;
+    text-shadow: 2px 2px 0 #000;
+}
+
+.setupSubtitle {
+    color: #fbbf24;
+    text-align: center;
+    font-size: 1.1rem;
+    margin: 0 0 2rem;
+}
+
+.sectionLabel {
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #94a3b8;
+    margin: 0 0 0.5rem;
+}
+
+/* Grids for Setup Menu */
+.countryGrid,
+.modeGrid,
+.difficultyGrid {
+    display: grid;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.countryGrid {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.modeGrid {
+    grid-template-columns: 1fr 1fr;
+}
+
+.difficultyGrid {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.countryChip,
+.modeCard,
+.diffCard {
+    background: #4b2618;
+    border: 3px solid #78350f;
+    border-radius: 1rem;
+    padding: 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: white;
+}
+
+.countryChip:hover,
+.modeCard:hover,
+.diffCard:hover {
+    transform: translateY(-2px);
+    border-color: #d97706;
+}
+
+.countryChipActive,
+.modeCardActive,
+.diffCardActive {
+    background: #78350f;
+    border-color: #facc15;
+    box-shadow: 0 0 15px rgba(250, 204, 21, 0.4);
+}
+
+.countryChipFlag {
+    font-size: 1.5rem;
+    display: block;
+}
+
+.countryChipName {
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.modeEmoji {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.modeTitle {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.modeDesc {
+    margin: 0;
+    font-size: 0.75rem;
+    color: #cbd5e1;
+}
+
+.diffLevel {
+    margin: 0;
+    font-size: 1.25rem;
+}
+
+.diffLabel {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #fbbf24;
+}
+
+.playBtn {
+    width: 100%;
+    padding: 1rem;
+    border: 4px solid #facc15;
+    border-radius: 1rem;
+    background: linear-gradient(180deg, #3b82f6, #1d4ed8);
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 900;
+    cursor: pointer;
+    font-family: 'Fredoka One', sans-serif;
+    text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+    box-shadow: 0 6px 0 #1e3a8a, 0 10px 20px rgba(0, 0, 0, 0.5);
+    transition: transform 0.1s, box-shadow 0.1s;
+    margin-top: 1rem;
+}
+
+.playBtn:active {
+    transform: translateY(6px);
+    box-shadow: 0 0 0 #1e3a8a, 0 0 0 rgba(0, 0, 0, 0.5);
+}
+
+/* Results Screen specific */
+.starsRow {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    font-size: 3rem;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
+}
+
+.starEmpty {
+    opacity: 0.3;
+    filter: grayscale(100%);
+}
+
+.scoreBig {
+    font-size: 4rem;
+    color: white;
+    text-align: center;
+    margin: 0 0 1.5rem;
+    text-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.scorePts {
+    font-size: 1.5rem;
+    color: #facc15;
+}
+
+.statsGrid {
+    display: flex;
+    justify-content: space-around;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 1rem;
+    border-radius: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.statItem {
+    text-align: center;
+}
+
+.statLabel {
+    color: #94a3b8;
+    font-size: 0.8rem;
+    margin: 0 0 0.25rem;
+}
+
+.statValue {
+    color: white;
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.accuracyBarContainer {
+    margin-bottom: 1.5rem;
+}
+
+.accuracyLabel {
+    color: white;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.accuracyBar {
+    background: rgba(0, 0, 0, 0.4);
+    height: 12px;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.accuracyFill {
+    background: linear-gradient(90deg, #3b82f6, #60a5fa);
+    height: 100%;
+    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sharpshooter {
+    background: #fef08a;
+    color: #854d0e;
+    padding: 0.75rem;
+    text-align: center;
+    border-radius: 0.75rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    animation: pulseWarning 2s infinite;
+}
+
+/* Keyframes */
+@keyframes pulseWarning {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.6;
+    }
+}
+
+@keyframes lessonPop {
+    0% {
+        transform: translate(-50%, -40%) scale(0.8);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+}

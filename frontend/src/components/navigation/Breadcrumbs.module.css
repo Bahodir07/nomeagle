@@ -1,0 +1,51 @@
+/* ==========================================================================
+   Breadcrumbs – Lightweight path trail
+   ========================================================================== */
+
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: var(--ne-1);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── Single crumb ───────────────────────────────────────────────────────── */
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: var(--ne-1);
+  font-size: 0.75rem;
+  line-height: 1;
+  color: var(--ne-muted);
+}
+
+/* ── Link crumb ─────────────────────────────────────────────────────────── */
+
+.link {
+  color: var(--ne-muted);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.link:hover {
+  color: var(--ne-primary);
+  text-decoration: underline;
+}
+
+/* ── Current (last) crumb ───────────────────────────────────────────────── */
+
+.current {
+  color: var(--ne-text);
+  font-weight: 600;
+}
+
+/* ── Separator ──────────────────────────────────────────────────────────── */
+
+.separator {
+  color: var(--ne-border);
+  font-size: 0.6875rem;
+  user-select: none;
+}
