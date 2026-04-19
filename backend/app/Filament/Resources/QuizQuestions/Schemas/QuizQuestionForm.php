@@ -8,6 +8,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\FileUpload;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
@@ -33,6 +34,18 @@ class QuizQuestionForm
                             ->rows(4)
                             ->columnSpanFull()
                             ->placeholder('Enter the quiz question...'),
+
+                        FileUpload::make('question_image_path')
+                            ->label('Question image')
+                            ->image()
+                            ->disk('public')
+                            ->directory('quiz-question-images')
+                            ->columnSpanFull(),
+
+                        TextInput::make('question_image_alt')
+                            ->label('Image alt text')
+                            ->maxLength(255)
+                            ->columnSpanFull(),
 
                         Repeater::make('options')
                             ->label('Answer options')

@@ -19,7 +19,7 @@ class DashboardController extends Controller
     {
         $user = request()->user();
 
-        if (! $user) {
+        if (!$user) {
             return response()->json([
                 'message' => 'Authentication required for progress tracking.',
             ], 401);
@@ -28,10 +28,10 @@ class DashboardController extends Controller
         $countries = Country::query()
             ->where('is_active', true)
             ->with([
-                'modules' => fn ($query) => $query
+                'modules' => fn($query) => $query
                     ->where('is_active', true)
                     ->with([
-                        'lessons' => fn ($lessonQuery) => $lessonQuery
+                        'lessons' => fn($lessonQuery) => $lessonQuery
                             ->where('is_active', true)
                             ->orderBy('order'),
                     ])
@@ -47,7 +47,7 @@ class DashboardController extends Controller
 
         $activeCountries = $countries->map(function (Country $country) use ($lessonProgressRows) {
             $lessons = $country->modules
-                ->flatMap(fn ($module) => $module->lessons)
+                ->flatMap(fn($module) => $module->lessons)
                 ->values();
 
             $totalLessons = $lessons->count();
@@ -65,7 +65,7 @@ class DashboardController extends Controller
             });
 
             $progressPct = $totalLessons > 0
-                ? (int) floor(($completedLessons->count() / $totalLessons) * 100)
+                ? (int)floor(($completedLessons->count() / $totalLessons) * 100)
                 : 0;
 
             $status = match (true) {
@@ -116,7 +116,7 @@ class DashboardController extends Controller
             ->count();
 
         $lessonsCompletedPct = $totalActiveLessons > 0
-            ? (int) floor(($completedLessonCount / $totalActiveLessons) * 100)
+            ? (int)floor(($completedLessonCount / $totalActiveLessons) * 100)
             : 0;
 
         $quizAttempts = QuizQuestionAttempt::query()
@@ -129,7 +129,7 @@ class DashboardController extends Controller
             ->count();
 
         $quizAccuracyPct = $quizTotalAttempts > 0
-            ? (int) floor(($quizCorrectAttempts / $quizTotalAttempts) * 100)
+            ? (int)floor(($quizCorrectAttempts / $quizTotalAttempts) * 100)
             : 0;
 
         $todayStart = now()->startOfDay();
@@ -200,12 +200,14 @@ class DashboardController extends Controller
                 'xp' => $xp,
                 'level' => $level,
                 'xpToNextLevel' => $xpToNextLevel,
-                'streakDays' => 0,
+                'streakDays' => (int)($user->current_streak ?? 0),
+                'longestStreak' => (int)($user->longest_streak ?? 0),
+                'isCompletedToday' => $user->last_activity_date === now()->toDateString(),
                 'accuracy' => $quizAccuracyPct,
                 'lessonsCompletedPct' => $lessonsCompletedPct,
-                'timeTodayMinutes' => (int) floor($timeSpentTodaySeconds / 60),
-                'timeWeekMinutes' => (int) floor($timeSpentWeekSeconds / 60),
-                'timeTotalMinutes' => (int) floor($timeSpentTotalSeconds / 60),
+                'timeTodayMinutes' => (int)floor($timeSpentTodaySeconds / 60),
+                'timeWeekMinutes' => (int)floor($timeSpentWeekSeconds / 60),
+                'timeTotalMinutes' => (int)floor($timeSpentTotalSeconds / 60),
             ],
             'activeCountries' => $activeCountries,
         ]);

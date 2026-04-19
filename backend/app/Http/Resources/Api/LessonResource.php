@@ -25,6 +25,11 @@ class LessonResource extends JsonResource
             'description' => $this->description,
             'content' => $this->content,
 
+            'video_source' => $this->video_source,
+            'video_file' => $this->video_file,
+            'external_video_url' => $this->external_video_url,
+            'video_disk' => $this->video_disk,
+
             'order' => $this->order,
 
             'xp_reward' => $this->xp_reward,

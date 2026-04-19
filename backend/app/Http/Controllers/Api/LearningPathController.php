@@ -13,36 +13,35 @@ class LearningPathController extends Controller
 {
     public function show(Request $request, Country $country): JsonResponse
     {
+
         abort_unless($country->is_active, 404);
+
 
         $user = $request->user();
 
-        if (! $user) {
-            return response()->json([
-                'message' => 'Authentication required for learning path.',
-            ], 401);
-        }
 
         $country->load([
-            'modules' => fn ($query) => $query
+            'modules' => fn($query) => $query
                 ->where('is_active', true)
                 ->orderBy('order')
                 ->with([
-                    'lessons' => fn ($lessonQuery) => $lessonQuery
+                    'lessons' => fn($lessonQuery) => $lessonQuery
                         ->where('is_active', true)
                         ->orderBy('order'),
                 ]),
         ]);
 
         $allLessons = $country->modules
-            ->flatMap(fn ($module) => $module->lessons)
+            ->flatMap(fn($module) => $module->lessons)
             ->values();
+
 
         $progressRows = UserLessonProgress::query()
             ->where('user_id', $user->id)
             ->whereIn('lesson_id', $allLessons->pluck('id'))
             ->get()
             ->keyBy('lesson_id');
+
 
         $modulesPayload = [];
         $lessonsPayload = [];
@@ -53,6 +52,9 @@ class LearningPathController extends Controller
 
         $globalLessonIndex = 1;
         $countryCode = $this->mapCountryCode($country->slug);
+
+
+        $isNextUnlocked = true;
 
         foreach ($country->modules as $moduleIndex => $module) {
             $moduleUiId = sprintf('%s-m%d', $countryCode, $moduleIndex + 1);
@@ -66,25 +68,38 @@ class LearningPathController extends Controller
                 /** @var UserLessonProgress|null $progress */
                 $progress = $rawProgress instanceof UserLessonProgress ? $rawProgress : null;
 
-                if ($progress?->status === 'completed') {
+                $isCompleted = $progress?->status === 'completed';
+
+
+                if ($isCompleted) {
+                    $lessonStatus = 'completed';
+                } elseif ($isNextUnlocked) {
+                    $lessonStatus = 'unlocked';
+                    $isNextUnlocked = false;
+                } else {
+                    $lessonStatus = 'locked';
+                }
+
+                if ($isCompleted) {
                     $completedLessonIds[] = $lessonUiId;
                 }
 
-                $stars = $this->resolveStars($lesson->type?->value ?? (string) $lesson->type, $progress);
+                $stars = $this->resolveStars($lesson->type?->value ?? (string)$lesson->type, $progress);
                 if ($stars > 0) {
                     $starsByLessonId[$lessonUiId] = $stars;
                 }
 
                 if (
                     $progress?->last_activity_at &&
-                    $progress?->status !== 'completed' &&
+                    !$isCompleted &&
                     ($lastOpenedAt === null || $progress->last_activity_at->gt($lastOpenedAt))
                 ) {
                     $lastOpenedAt = $progress->last_activity_at;
                     $lastOpenedLessonId = $lessonUiId;
                 }
 
-                $lessonType = $lesson->type?->value ?? (string) $lesson->type;
+                $lessonType = $lesson->type?->value ?? (string)$lesson->type;
+
 
                 $lessonsPayload[$lessonUiId] = [
                     'id' => $lessonUiId,
@@ -96,9 +111,9 @@ class LearningPathController extends Controller
                     'type' => $lessonType,
                     'title' => $lesson->title,
                     'shortLabel' => $this->makeShortLabel($lessonType, $lesson->title),
-                    'status' => $progress?->status === 'completed' ? 'completed' : 'locked',
-                    'xpReward' => (int) $lesson->xp_reward,
-                    'estimatedMinutes' => $lesson->estimated_minutes ? (int) $lesson->estimated_minutes : null,
+                    'status' => $lessonStatus,
+                    'xpReward' => (int)$lesson->xp_reward,
+                    'estimatedMinutes' => $lesson->estimated_minutes ? (int)$lesson->estimated_minutes : null,
                 ];
 
                 $moduleLessonIds[] = $lessonUiId;
@@ -113,24 +128,26 @@ class LearningPathController extends Controller
                 'slug' => $module->slug,
                 'title' => $module->title,
                 'rangeLabel' => $moduleFirstIndex === $moduleLastIndex
-                    ? (string) $moduleFirstIndex
+                    ? (string)$moduleFirstIndex
                     : "{$moduleFirstIndex} - {$moduleLastIndex}",
                 'lessonIds' => $moduleLessonIds,
             ];
         }
 
+
         $totalLessons = count($lessonsPayload);
         $completedCount = count($completedLessonIds);
         $progressPct = $totalLessons > 0
-            ? (int) round(($completedCount / $totalLessons) * 100)
+            ? (int)round(($completedCount / $totalLessons) * 100)
             : 0;
 
         $starsTotal = array_sum($starsByLessonId);
 
         $pointsTotal = collect($completedLessonIds)
             ->sum(function (string $lessonUiId) use ($lessonsPayload) {
-                return (int) ($lessonsPayload[$lessonUiId]['xpReward'] ?? 0);
+                return (int)($lessonsPayload[$lessonUiId]['xpReward'] ?? 0);
             });
+
 
         return response()->json([
             'course' => [
@@ -179,7 +196,7 @@ class LearningPathController extends Controller
 
     private function resolveStars(string $lessonType, ?UserLessonProgress $progress): int
     {
-        if (! $progress || $progress->status !== 'completed') {
+        if (!$progress || $progress->status !== 'completed') {
             return 0;
         }
 
@@ -187,8 +204,8 @@ class LearningPathController extends Controller
             return 0;
         }
 
-        $attempts = max((int) $progress->total_attempts, 0);
-        $correct = max((int) $progress->correct_answers, 0);
+        $attempts = max((int)$progress->total_attempts, 0);
+        $correct = max((int)$progress->correct_answers, 0);
 
         if ($attempts <= 0) {
             return 3;

@@ -63,7 +63,7 @@ Route::middleware('auth:sanctum')->group(function () {
         [LessonCompletionController::class, 'complete']
     );
 
-    Route::post('/scenarios/{scenario:slug}/submit', [ScenarioController::class, 'submit']);
+    Route::post('/scenarios/{scenario}/submit', [ScenarioController::class, 'submit']);
     Route::post('/quiz-questions/{quizQuestion}/submit', [QuizQuestionController::class, 'submit']);
     Route::post('/flashcards/{flashcard}/review', [FlashcardController::class, 'review']);
 });

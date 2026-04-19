@@ -156,9 +156,16 @@ export const LearningPathPage: React.FC = () => {
             return;
         }
 
-        navigate(`/app/lesson/${lessonId}`);
+        navigate(`/app/lesson/${lessonId}`, {
+            state: {
+                countrySlug: course.countrySlug,
+                moduleSlug: lesson.moduleSlug,
+                lessonSlug: lesson.slug,
+                lessonType: lesson.type,
+                lessonTitle: lesson.title,
+            },
+        });
     };
-
     /* ---- Render states ---- */
 
     if (state.status === "loading") {

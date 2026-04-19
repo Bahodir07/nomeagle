@@ -3,12 +3,12 @@
 namespace App\Filament\Resources\Scenarios\Schemas;
 
 use App\Models\Scenario;
-use Filament\Forms\Components\KeyValue;
+use Filament\Forms\Components\Repeater;
+use Filament\Schemas\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
 class ScenarioForm
@@ -62,11 +62,38 @@ class ScenarioForm
                             ->columnSpanFull()
                             ->placeholder('Describe the situation that the learner should respond to.'),
 
-                        KeyValue::make('payload')
+                        Repeater::make('payload.options')
+                            ->label('Answer options')
                             ->columnSpanFull()
-                            ->keyLabel('Key')
-                            ->valueLabel('Value')
-                            ->helperText('Temporary payload editor. Example: options_1_text, options_1_is_correct, options_1_explanation.'),
+                            ->defaultItems(0)
+                            ->minItems(2)
+                            ->reorderable(false)
+                            ->addActionLabel('Add option')
+                            ->schema([
+                                TextInput::make('id')
+                                    ->label('Option ID')
+                                    ->helperText('Example: accept-and-drink')
+                                    ->maxLength(255),
+
+                                Textarea::make('text')
+                                    ->label('Option text')
+                                    ->required()
+                                    ->rows(2)
+                                    ->columnSpanFull(),
+
+                                Toggle::make('is_correct')
+                                    ->label('Correct answer')
+                                    ->default(false)
+                                    ->inline(false),
+
+                                Textarea::make('explanation')
+                                    ->label('Explanation')
+                                    ->rows(3)
+                                    ->columnSpanFull()
+                                    ->placeholder('Why is this option correct or incorrect?'),
+                            ])
+                            ->columns()
+                            ->helperText('Create the answer choices shown to the learner.'),
 
                         TextInput::make('order')
                             ->numeric()
@@ -86,7 +113,7 @@ class ScenarioForm
                             ->default(true)
                             ->inline(false),
                     ])
-                    ->columns(2),
+                    ->columns(),
             ]);
     }
 }

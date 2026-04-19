@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, CardHeader, CardContent } from '../../../components/ui/Card';
+import { Card, CardHeader, CardContent } from '../../../components/ui';
 import { Loading, ErrorState } from '../../../components/feedback';
 import {
     CountryLearningCard,

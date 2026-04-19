@@ -22,7 +22,7 @@ class ScenarioResource extends JsonResource
             'slug' => $this->slug,
             'type' => $this->type,
             'prompt' => $this->prompt,
-            'payload' => $this->payload,
+            'payload' => $this->normalizedPayload(),
             'order' => $this->order,
             'xp_reward' => $this->xp_reward,
             'is_active' => $this->is_active,

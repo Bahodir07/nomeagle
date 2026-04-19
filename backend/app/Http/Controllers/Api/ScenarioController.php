@@ -62,7 +62,7 @@ class ScenarioController extends Controller
 
         $user = $request->user();
 
-        if (!$user) {
+        if (! $user) {
             return response()->json([
                 'message' => 'Authentication required for progress tracking.',
             ], 401);
@@ -73,9 +73,9 @@ class ScenarioController extends Controller
             'duration_seconds' => ['nullable', 'integer', 'min:0'],
         ]);
 
-        $payload = $scenario->payload;
+        $payload = $scenario->normalizedPayload();
 
-        if (!isset($payload['options']) || !is_array($payload['options'])) {
+        if (! isset($payload['options']) || ! is_array($payload['options'])) {
             return response()->json([
                 'error' => 'Invalid scenario payload',
             ], 500);
@@ -84,15 +84,15 @@ class ScenarioController extends Controller
         $selected = collect($payload['options'])
             ->firstWhere('id', $request->input('answer'));
 
-        if (!$selected) {
+        if (! $selected) {
             return response()->json([
                 'error' => 'Invalid answer',
             ], 422);
         }
 
-        $isCorrect = (bool)($selected['is_correct'] ?? false);
+        $isCorrect = (bool) ($selected['is_correct'] ?? false);
         $lesson = $scenario->lesson;
-        $durationSeconds = (int)$request->input('duration_seconds', 0);
+        $durationSeconds = (int) $request->input('duration_seconds', 0);
 
         $result = DB::transaction(function () use ($user, $scenario, $selected, $isCorrect, $lesson, $durationSeconds) {
             $scenarioIds = $lesson->scenarios()
@@ -105,7 +105,7 @@ class ScenarioController extends Controller
                 ->where('is_correct', true)
                 ->exists();
 
-            $xpEarned = ($isCorrect && !$alreadySolvedCorrectly)
+            $xpEarned = ($isCorrect && ! $alreadySolvedCorrectly)
                 ? $scenario->xp_reward
                 : 0;
 
@@ -146,7 +146,7 @@ class ScenarioController extends Controller
                 ->sum('xp_earned');
 
             $progressPct = $totalItems > 0
-                ? (int)floor(($completedItems / $totalItems) * 100)
+                ? (int) floor(($completedItems / $totalItems) * 100)
                 : 0;
 
             $status = match (true) {

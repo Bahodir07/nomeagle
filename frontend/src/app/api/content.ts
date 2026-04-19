@@ -1,63 +1,67 @@
 import { http } from "./http";
 
+function unwrapResource<T>(payload: any): T {
+    if (payload && typeof payload === "object" && "data" in payload) {
+        return payload.data as T;
+    }
+
+    return payload as T;
+}
+
 export async function getCountries() {
     const { data } = await http.get("/api/countries");
-    return data;
+    return unwrapResource(data);
 }
 
 export async function getCountry(countrySlug: string) {
     const { data } = await http.get(`/api/countries/${countrySlug}`);
-    return data;
+    return unwrapResource(data);
 }
 
 export async function getModules(countrySlug: string) {
     const { data } = await http.get(`/api/countries/${countrySlug}/modules`);
-    return data;
+    return unwrapResource(data);
 }
 
 export async function getModule(countrySlug: string, moduleSlug: string) {
     const { data } = await http.get(`/api/countries/${countrySlug}/modules/${moduleSlug}`);
-    return data;
+    return unwrapResource(data);
 }
 
 export async function getLessons(countrySlug: string, moduleSlug: string) {
     const { data } = await http.get(
         `/api/countries/${countrySlug}/modules/${moduleSlug}/lessons`
     );
-    return data;
+    return unwrapResource(data);
 }
 
 export async function getLesson(countrySlug: string, moduleSlug: string, lessonSlug: string) {
     const { data } = await http.get(
         `/api/countries/${countrySlug}/modules/${moduleSlug}/lessons/${lessonSlug}`
     );
-    return data;
+    return unwrapResource(data);
 }
 
 export async function getScenarios(countrySlug: string, moduleSlug: string, lessonSlug: string) {
     const { data } = await http.get(
         `/api/countries/${countrySlug}/modules/${moduleSlug}/lessons/${lessonSlug}/scenarios`
     );
-    return data;
+    return unwrapResource(data);
 }
 
 export async function getQuizQuestions(countrySlug: string, moduleSlug: string, lessonSlug: string) {
     const { data } = await http.get(
         `/api/countries/${countrySlug}/modules/${moduleSlug}/lessons/${lessonSlug}/quiz-questions`
     );
-    return data;
+    return unwrapResource(data);
 }
 
 export async function getFlashcards(countrySlug: string, moduleSlug: string, lessonSlug: string) {
     const { data } = await http.get(
         `/api/countries/${countrySlug}/modules/${moduleSlug}/lessons/${lessonSlug}/flashcards`
     );
-    return data;
+    return unwrapResource(data);
 }
-
-/* -------------------------------------------------------------------------- */
-/* Learning Path                                                              */
-/* -------------------------------------------------------------------------- */
 
 export interface LearningPathResponse {
     course: import("../../features/lessons/types").CountryCourse;

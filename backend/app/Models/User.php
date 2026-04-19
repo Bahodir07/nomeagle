@@ -2,20 +2,23 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Database\Factories\UserFactory;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Carbon;
 
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
+    /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable, HasApiTokens;
 
     /**
-     * The attributes that are mass assignable.
+     * The attributes that are mass-assignable.
      *
      * @var list<string>
      */
@@ -23,6 +26,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'is_admin',
+        'current_streak',
+        'longest_streak',
+        'last_activity_date'
     ];
 
     /**
@@ -45,7 +52,39 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_admin' => 'boolean',
         ];
+    }
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return $panel->getId() === 'admin'
+            && $this->is_admin;
+    }
+
+    public function updateStreak(): void
+    {
+        $today = now()->startOfDay();
+        $lastActivity = $this->last_activity_date
+            ? Carbon::parse($this->last_activity_date)->startOfDay()
+            : null;
+
+
+        if (!$lastActivity) {
+            $this->current_streak = 1;
+        } elseif ($lastActivity->isYesterday()) {
+            $this->current_streak++;
+        } elseif ($lastActivity->isBefore(now()->subDay()->startOfDay())) {
+            $this->current_streak = 1;
+        }
+
+
+        $this->longest_streak = max($this->current_streak, $this->longest_streak);
+
+
+        $this->last_activity_date = $today->toDateString();
+
+        $this->save();
     }
 
 

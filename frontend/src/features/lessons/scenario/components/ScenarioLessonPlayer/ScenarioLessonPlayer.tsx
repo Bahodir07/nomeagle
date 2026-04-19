@@ -9,8 +9,8 @@ import {
     dismissWrong,
     getCurrentStep,
     getFeedbackMessage,
-} from '../../engine/scenarioSession.utils';
-import type { ScenarioSessionState } from '../../engine/scenarioSession.types';
+} from '../../engine';
+import type { ScenarioSessionState } from '../../engine';
 import { ScenarioIntro } from '../ScenarioIntro';
 import { ScenarioDecision } from '../ScenarioDecision';
 import { ScenarioFeedbackModal } from '../ScenarioFeedbackModal';
@@ -31,9 +31,9 @@ export interface ScenarioLessonPlayerProps {
 type Phase = 'intro' | 'playing' | 'complete';
 
 export const ScenarioLessonPlayer: React.FC<ScenarioLessonPlayerProps> = ({
-    lesson,
-    onComplete,
-}) => {
+                                                                              lesson,
+                                                                              onComplete,
+                                                                          }) => {
     const [phase, setPhase] = useState<Phase>('intro');
     const [session, setSession] = useState<ScenarioSessionState>(() =>
         createSession(lesson),

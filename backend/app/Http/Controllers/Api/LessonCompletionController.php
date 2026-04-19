@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Country;
 use App\Models\LessonCompletionEvent;
-use App\Models\User;
 use App\Models\UserLessonProgress;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -19,29 +18,34 @@ class LessonCompletionController extends Controller
 
         $user = $request->user();
 
-        if (! $user) {
-            return response()->json([
-                'message' => 'Authentication required for progress tracking.',
-            ], 401);
-        }
 
         $moduleRecord = $country->modules()
             ->where('slug', $module)
             ->where('is_active', true)
             ->firstOrFail();
 
+
         $lessonRecord = $moduleRecord->lessons()
             ->where('slug', $lesson)
             ->where('is_active', true)
             ->firstOrFail();
 
-        abort_unless(in_array($lessonRecord->type->value ?? $lessonRecord->type, ['video', 'article', 'summary'], true), 422);
+
+        $allowedTypes = [
+            'video', 'article', 'summary', 'quiz', 'scenario',
+            'flashcards', 'flashcard', 'matching', 'open_response'
+        ];
+
+        $currentType = $lessonRecord->type->value ?? $lessonRecord->type;
+
+
+        abort_unless(in_array($currentType, $allowedTypes, true), 422);
 
         $request->validate([
             'duration_seconds' => ['nullable', 'integer', 'min:0'],
         ]);
 
-        $durationSeconds = (int) $request->input('duration_seconds', 0);
+        $durationSeconds = (int)$request->input('duration_seconds', 0);
 
         $result = DB::transaction(function () use ($user, $lessonRecord, $durationSeconds) {
             $alreadyCompleted = LessonCompletionEvent::query()
@@ -49,7 +53,7 @@ class LessonCompletionController extends Controller
                 ->where('lesson_id', $lessonRecord->id)
                 ->exists();
 
-            $xpEarned = $alreadyCompleted ? 0 : (int) $lessonRecord->xp_reward;
+            $xpEarned = $alreadyCompleted ? 0 : (int)$lessonRecord->xp_reward;
 
             LessonCompletionEvent::create([
                 'user_id' => $user->id,
@@ -88,6 +92,10 @@ class LessonCompletionController extends Controller
                     'last_activity_at' => now(),
                 ]
             );
+
+            if ($xpEarned > 0) {
+                $user->updateStreak();
+            }
 
             return compact('xpEarned', 'progress');
         });
