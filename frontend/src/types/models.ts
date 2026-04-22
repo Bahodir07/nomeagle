@@ -44,6 +44,8 @@ export interface UserStats {
     timeWeekMinutes: number;
     /** Total minutes practised all-time */
     timeTotalMinutes: number;
+    /** True for each Mon–Sun day this week where the user completed at least one lesson */
+    weekProgress?: boolean[];
 }
 
 /* --------------------------------------------------------------------------

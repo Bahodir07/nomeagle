@@ -1,9 +1,8 @@
 import React, {useEffect, useMemo, useRef, useState, Suspense, lazy} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
 import styles from "./LessonPage.module.css";
+import { PageLoader } from "../../../components/feedback";
 
-// 1. ЛЕНИВАЯ ЗАГРУЗКА ПЛЕЕРОВ (Code Splitting)
-// Импортируем типы синхронно (они не попадают в JS-бандл)
 import type {ArticleLesson} from "../../../features/lessons/article";
 import type {FlashcardsLesson, FlashcardsLessonResult} from "../../../features/lessons/flashcards";
 import type {QuizLesson} from "../../../features/lessons/quiz";
@@ -11,7 +10,6 @@ import type {ScenarioLesson} from "../../../features/lessons/scenario";
 import type {SummaryLesson} from "../../../features/lessons/summary";
 import type {VideoLesson, VideoTranscriptBlock} from "../../../features/lessons/video";
 
-// Компоненты загружаем лениво (динамические импорты)
 const ArticleLessonPlayer = lazy(() => import("../../../features/lessons/article").then(m => ({default: m.ArticleLessonPlayer})));
 const FlashcardsLessonPlayer = lazy(() => import("../../../features/lessons/flashcards").then(m => ({default: m.FlashcardsLessonPlayer})));
 const QuizLessonPlayer = lazy(() => import("../../../features/lessons/quiz").then(m => ({default: m.QuizLessonPlayer})));
@@ -31,6 +29,7 @@ import {
     submitScenario,
     type ProgressSnapshot,
 } from "../../../app/api/progress";
+import { useAuth } from "../../../app/store/auth.store";
 
 type LessonType =
     | "article"
@@ -108,8 +107,6 @@ type CompletionSummary = {
     totalCount?: number;
 };
 
-// 2. ДИСКРИМИНАНТНОЕ ОБЪЕДИНЕНИЕ (Discriminated Unions)
-// Теперь TypeScript точно знает, что если lessonType === "video", то payload — это VideoLesson.
 type LoadState =
     | { status: "loading" }
     | { status: "error"; error: string }
@@ -291,7 +288,7 @@ function mapQuizLesson(
             return {
                 id: String(question?.id ?? `question-${index + 1}`),
                 prompt: String(question?.question ?? ""),
-                options: normalizedOptions,
+                options: normalizedOptions as [any, any, any, any],
                 correctOptionId: String(correctOption?.id ?? normalizedOptions[0]?.id ?? ""),
                 explanation: question?.explanation || undefined,
             };
@@ -353,6 +350,9 @@ export const LessonPage: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const routeState = (location.state ?? {}) as LocationState;
+    const { user } = useAuth();
+    const displayName = user?.name ?? 'User';
+    const displayInitial = displayName.charAt(0).toUpperCase();
 
     const [state, setState] = useState<LoadState>({status: "loading"});
     const [isSaving, setIsSaving] = useState(false);
@@ -582,17 +582,15 @@ export const LessonPage: React.FC = () => {
         try {
             setIsSaving(true);
 
-            // Собираем статистику, которую нам любезно посчитал плеер
             let totalXp = result.xpEarned || 0;
             let finalStars = computeStarsFromProgress({
                 correct_answers: result.correctCount || result.correctSteps || 0,
-                total_attempts: result.totalSteps || result.totalCount || 1
+                total_attempts: result.totalSteps || result.totalCount || 1,
             });
 
-            // 1. Пытаемся сохранить пошагово (ЕСЛИ плеер в будущем начнет отдавать массив answers)
             if (result.answers && Array.isArray(result.answers) && result.answers.length > 0) {
                 let lastProgress: ProgressSnapshot | null = null;
-                totalXp = 0; // Сбросим, чтобы посчитать реальный XP с бэкенда
+                totalXp = 0;
 
                 for (const answer of result.answers) {
                     const targetScenario = answer.scenarioSlug || answer.scenarioId || answer.id;
@@ -604,32 +602,25 @@ export const LessonPage: React.FC = () => {
                     lastProgress = response?.progress ?? null;
                 }
                 if (lastProgress) finalStars = computeStarsFromProgress(lastProgress);
-            }
-            // 2. ФОЛЛБЕК (Сработает сейчас): У нас нет ответов, поэтому завершаем урок целиком!
-            else {
-                const {countrySlug, moduleSlug, lessonSlug} = routeState;
+            } else {
+                const { countrySlug, moduleSlug, lessonSlug } = routeState;
                 if (countrySlug && moduleSlug && lessonSlug) {
-                    // Вызываем тот самый обновленный контроллер Laravel (он вернет 200 OK!)
                     const response = await completeLesson(countrySlug, moduleSlug, lessonSlug, durationSeconds());
-
-                    // Берем XP с бэкенда, либо оставляем то, что посчитал плеер
                     totalXp = normalizeXp(response?.xp_earned) || totalXp;
                 }
             }
 
-            // 3. Радостно показываем экран результатов
             setCompletionSummary({
                 title: state.status === "success" ? state.lessonTitle : "Scenario completed",
                 xpEarned: totalXp,
                 starsEarned: finalStars,
-                progressPct: 100, // Урок завершен на 100%
+                progressPct: 100,
                 correctCount: result.correctCount || result.correctSteps || 0,
                 totalCount: result.totalSteps || result.totalCount || 0,
             });
 
         } catch (error) {
             console.error("Failed to submit scenario answers", error);
-            alert("Сбой сети или сервера. Проверьте вкладку Network.");
             goBackToLearningPath();
         } finally {
             setIsSaving(false);
@@ -638,58 +629,52 @@ export const LessonPage: React.FC = () => {
     const handleQuizComplete = async (result: any) => {
         if (isSaving) return;
 
-        console.log("Данные от плеера Квиза:", result);
-
         try {
             setIsSaving(true);
 
-            // 1. Умный поиск массива с ответами от плеера
             const rawAnswers = Array.isArray(result) ? result
                 : Array.isArray(result?.answers) ? result.answers
                     : Array.isArray(result?.responses) ? result.responses
                         : Array.isArray(result?.selectedAnswers) ? result.selectedAnswers
                             : [];
 
-            // 2. Если массив пустой, значит ответов нет.
-            // МЫ БОЛЬШЕ НЕ ВЫЗЫВАЕМ savePlainCompletion(), чтобы не дать халявные XP!
             if (rawAnswers.length === 0) {
-                console.warn("Массив ответов пуст! Формируем заглушку результатов.");
+                const { countrySlug, moduleSlug, lessonSlug } = routeState;
+                if (countrySlug && moduleSlug && lessonSlug) {
+                    await completeLesson(countrySlug, moduleSlug, lessonSlug, durationSeconds());
+                }
+
                 setCompletionSummary({
                     title: state.status === "success" ? state.lessonTitle : "Quiz completed",
-                    xpEarned: result?.xpEarned || 0, // Берем 0, если юзер ошибся
+                    xpEarned: result?.xpEarned || 0,
                     starsEarned: computeStarsFromProgress({
                         correct_answers: result?.correctCount || result?.correctAnswers || 0,
-                        total_attempts: result?.totalCount || result?.totalQuestions || 1
+                        total_attempts: result?.totalCount || result?.totalQuestions || 1,
                     }),
                     progressPct: result?.progressPct || 100,
                     correctCount: result?.correctCount || result?.correctAnswers || 0,
                     totalCount: result?.totalCount || result?.totalQuestions || 0,
                 });
-                return; // Прерываем выполнение
+                return;
             }
 
-            // 3. Если ответы есть, отправляем каждый в твой QuizQuestionController
             let totalXp = 0;
             let lastProgress: ProgressSnapshot | null = null;
 
             for (const answer of rawAnswers) {
                 if (!answer) continue;
 
-                // Подстраиваемся под возможные ключи от плеера
                 const targetQuestion = answer.questionId || answer.id || answer.quizQuestionId;
                 const targetAnswer = answer.answerId || answer.selectedOptionId || answer.optionId;
 
                 if (!targetQuestion || !targetAnswer) continue;
 
-                // Этот запрос пойдет напрямую в твой идеальный контроллер,
-                // который выдаст 0 XP за неверный ответ!
                 const response = await submitQuizQuestion(targetQuestion, targetAnswer, durationSeconds());
 
                 totalXp += normalizeXp(response?.xp_earned);
                 lastProgress = response?.progress ?? null;
             }
 
-            // 4. Показываем финальный экран с честными результатами
             setCompletionSummary({
                 title: state.status === "success" ? state.lessonTitle : "Quiz completed",
                 xpEarned: totalXp,
@@ -701,7 +686,6 @@ export const LessonPage: React.FC = () => {
 
         } catch (error) {
             console.error("Failed to submit quiz answers", error);
-            alert("Ошибка сохранения квиза. Проверьте F12 -> Network.");
             goBackToLearningPath();
         } finally {
             setIsSaving(false);
@@ -717,8 +701,6 @@ export const LessonPage: React.FC = () => {
         navigate(-1);
     };
 
-    // 3. ФАБРИКА КОМПОНЕНТОВ ПЛЕЕРА (Pattern Matching)
-    // Больше никаких кастов типов "as VideoLesson" благодаря Discriminated Unions!
     const renderPlayer = () => {
         if (state.status !== "success") return null;
 
@@ -758,8 +740,8 @@ export const LessonPage: React.FC = () => {
                     <div className={styles.titleSpacer} aria-hidden="true"/>
 
                     <div className={styles.userInfo}>
-                        <span className={styles.userName}>Learner</span>
-                        <div className={styles.userAvatar}>L</div>
+                        <span className={styles.userName}>{displayName}</span>
+                        <div className={styles.userAvatar}>{displayInitial}</div>
                     </div>
                 </header>
 
@@ -835,21 +817,20 @@ export const LessonPage: React.FC = () => {
 
                 <div className={styles.userInfo}>
                     <span className={styles.userName}>
-                        {isSaving ? "Saving..." : "Learner"}
+                        {isSaving ? "Saving..." : displayName}
                     </span>
-                    <div className={styles.userAvatar}>{isSaving ? "…" : "L"}</div>
+                    <div className={styles.userAvatar}>{isSaving ? "…" : displayInitial}</div>
                 </div>
             </header>
 
             <main className={styles.content}>
                 {state.status === "loading" ? (
-                    <div style={{padding: 24}}>Loading lesson...</div>
+                    <PageLoader text="Loading lesson..." />
                 ) : state.status === "error" ? (
                     <div style={{padding: 24}}>
                         <p>{state.error}</p>
                     </div>
                 ) : (
-                    // 4. Обертка Suspense показывает fallback, пока нужный бандл (например, квиз) скачивается
                     <Suspense fallback={<div style={{padding: 24}}>Preparing player...</div>}>
                         {renderPlayer()}
                     </Suspense>

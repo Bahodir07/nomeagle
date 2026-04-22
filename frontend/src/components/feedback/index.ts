@@ -11,3 +11,5 @@ export type { EmptyStateProps } from './EmptyState/EmptyState';
 
 export { ErrorState } from './ErrorState/ErrorState';
 export type { ErrorStateProps } from './ErrorState/ErrorState';
+
+export { PageLoader } from './PageLoader/PageLoader';

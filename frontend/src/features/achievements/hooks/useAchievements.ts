@@ -1,12 +1,10 @@
 import { useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
 import type { BadgeCategory, BadgeDefinition, BadgeStatus } from "../types";
 import { BADGE_DEFINITIONS } from "../config";
 import { evaluateBadges } from "../engine";
-import { MOCK_ACHIEVEMENTS_CONTEXT } from "../mock/achievementsContext.mock";
+import { getAchievements } from "../../../app/api/achievements";
 
-/**
- * Badge status merged with definition fields for UI (title, images, etc.).
- */
 export interface BadgeWithDefinition extends BadgeStatus {
   category: BadgeCategory;
   title: string;
@@ -35,6 +33,9 @@ export interface UseAchievementsReturn {
   badges: BadgeWithDefinition[];
   groupedByCategory: GroupedBadges;
   summary: AchievementsSummary;
+  isLoading: boolean;
+  isError: boolean;
+  refetch: () => void;
 }
 
 function mergeStatusWithDefinition(
@@ -53,42 +54,66 @@ function mergeStatusWithDefinition(
   };
 }
 
-function groupByCategory(
-  badges: BadgeWithDefinition[]
-): GroupedBadges {
+function groupByCategory(badges: BadgeWithDefinition[]): GroupedBadges {
   const order = (a: BadgeWithDefinition, b: BadgeWithDefinition) =>
     a.order - b.order;
-  const explorer = badges.filter((b) => b.category === "explorer").sort(order);
-  const country = badges.filter((b) => b.category === "country").sort(order);
-  const mastery = badges.filter((b) => b.category === "mastery").sort(order);
-  const streak = badges.filter((b) => b.category === "streak").sort(order);
-  return { explorer, country, mastery, streak };
+  return {
+    explorer: badges.filter((b) => b.category === "explorer").sort(order),
+    country: badges.filter((b) => b.category === "country").sort(order),
+    mastery: badges.filter((b) => b.category === "mastery").sort(order),
+    streak: badges.filter((b) => b.category === "streak").sort(order),
+  };
 }
 
-/**
- * Provides badge statuses with definitions merged, and grouped by category.
- * Uses mock context; replace with API/context when available.
- */
+const EMPTY_GROUPED: GroupedBadges = {
+  explorer: [],
+  country: [],
+  mastery: [],
+  streak: [],
+};
+
 export function useAchievements(): UseAchievementsReturn {
-  const context = MOCK_ACHIEVEMENTS_CONTEXT;
+  const { data: context, isLoading, isError, refetch } = useQuery({
+    queryKey: ["achievements"],
+    queryFn: getAchievements,
+  });
 
   return useMemo(() => {
+    if (!context) {
+      return {
+        badges: [],
+        groupedByCategory: EMPTY_GROUPED,
+        summary: {
+          unlockedCount: 0,
+          totalCount: BADGE_DEFINITIONS.length,
+          currentStreakDays: 0,
+          completedCountriesCount: 0,
+        },
+        isLoading,
+        isError,
+        refetch,
+      };
+    }
+
     const statuses = evaluateBadges(BADGE_DEFINITIONS, context);
     const defById = new Map(BADGE_DEFINITIONS.map((d) => [d.id, d]));
     const badges: BadgeWithDefinition[] = statuses.map((status) => {
-      const definition = defById.get(status.id);
-      if (!definition) {
-        throw new Error(`Missing definition for badge: ${status.id}`);
-      }
+      const definition = defById.get(status.id)!;
       return mergeStatusWithDefinition(status, definition);
     });
-    const groupedByCategory = groupByCategory(badges);
-    const summary: AchievementsSummary = {
-      unlockedCount: badges.filter((b) => b.unlocked).length,
-      totalCount: badges.length,
-      currentStreakDays: context.currentStreakDays,
-      completedCountriesCount: context.completedCountriesCount,
+
+    return {
+      badges,
+      groupedByCategory: groupByCategory(badges),
+      summary: {
+        unlockedCount: badges.filter((b) => b.unlocked).length,
+        totalCount: badges.length,
+        currentStreakDays: context.currentStreakDays,
+        completedCountriesCount: context.completedCountriesCount,
+      },
+      isLoading,
+      isError,
+      refetch,
     };
-    return { badges, groupedByCategory, summary };
-  }, []);
+  }, [context, isLoading, isError, refetch]);
 }

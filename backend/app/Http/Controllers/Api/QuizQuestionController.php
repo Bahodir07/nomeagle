@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\SubmitQuizQuestionRequest;
 use App\Http\Resources\Api\QuizQuestionResource;
 use App\Models\Country;
 use App\Models\QuizQuestion;
 use App\Models\QuizQuestionAttempt;
-use App\Models\User;
 use App\Models\UserLessonProgress;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -58,7 +58,7 @@ class QuizQuestionController extends Controller
         return new QuizQuestionResource($quizQuestion);
     }
 
-    public function submit(Request $request, QuizQuestion $quizQuestion): JsonResponse
+    public function submit(SubmitQuizQuestionRequest $request, QuizQuestion $quizQuestion): JsonResponse
     {
         abort_unless($quizQuestion->is_active, 404);
 
@@ -69,11 +69,6 @@ class QuizQuestionController extends Controller
                 'message' => 'Authentication required for progress tracking.',
             ], 401);
         }
-
-        $request->validate([
-            'answer' => ['required', 'string'],
-            'duration_seconds' => ['nullable', 'integer', 'min:0'],
-        ]);
 
         $options = $quizQuestion->options;
 
@@ -100,15 +95,17 @@ class QuizQuestionController extends Controller
                 ->where('is_active', true)
                 ->pluck('id');
 
-            $alreadySolvedCorrectly = QuizQuestionAttempt::query()
-                ->where('user_id', $user->id)
-                ->where('quiz_question_id', $quizQuestion->id)
-                ->where('is_correct', true)
-                ->exists();
-
-            $xpEarned = ($isCorrect && ! $alreadySolvedCorrectly)
-                ? $quizQuestion->xp_reward
-                : 0;
+            $xpEarned = 0;
+            if ($isCorrect) {
+                $granted = DB::table('user_xp_grants')->insertOrIgnore([
+                    'user_id'        => $user->id,
+                    'grantable_type' => 'quiz_question',
+                    'grantable_id'   => $quizQuestion->id,
+                    'created_at'     => now(),
+                    'updated_at'     => now(),
+                ]);
+                $xpEarned = $granted ? $quizQuestion->xp_reward : 0;
+            }
 
             QuizQuestionAttempt::create([
                 'user_id' => $user->id,

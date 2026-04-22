@@ -10,7 +10,11 @@ use App\Http\Controllers\Api\LessonProgressController;
 use App\Http\Controllers\Api\ModuleController;
 use App\Http\Controllers\Api\QuizQuestionController;
 use App\Http\Controllers\Api\ScenarioController;
+use App\Http\Controllers\Api\AchievementsController;
 use App\Http\Controllers\Api\LearningPathController;
+use App\Http\Controllers\Api\ProfileController;
+use App\Http\Controllers\Api\StatisticsController;
+use App\Http\Controllers\Api\LeaderboardController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -49,7 +53,19 @@ Route::prefix('countries')->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
 
+    Route::get('/profile', [ProfileController::class, 'show']);
+    Route::patch('/profile', [ProfileController::class, 'updateBasics']);
+    Route::patch('/profile/preferences', [ProfileController::class, 'updatePreferences']);
+    Route::patch('/profile/password', [ProfileController::class, 'updatePassword']);
+    Route::post('/profile/avatar', [ProfileController::class, 'uploadAvatar']);
+
     Route::get('/dashboard', [DashboardController::class, 'index']);
+
+    Route::get('/statistics', [StatisticsController::class, 'index']);
+
+    Route::get('/achievements', [AchievementsController::class, 'index']);
+
+    Route::get('/leaderboard', [LeaderboardController::class, 'index']);
 
     Route::get('/countries/{country:slug}/learning-path', [LearningPathController::class, 'show']);
 

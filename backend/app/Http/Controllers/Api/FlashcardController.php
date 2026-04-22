@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\ReviewFlashcardRequest;
 use App\Http\Resources\Api\FlashcardResource;
 use App\Models\Country;
 use App\Models\Flashcard;
@@ -56,7 +57,7 @@ class FlashcardController extends Controller
         return new FlashcardResource($flashcard);
     }
 
-    public function review(Request $request, Flashcard $flashcard)
+    public function review(ReviewFlashcardRequest $request, Flashcard $flashcard)
     {
         abort_unless($flashcard->is_active, 404);
 
@@ -68,27 +69,22 @@ class FlashcardController extends Controller
             ], 401);
         }
 
-        $request->validate([
-            'rating' => ['required', 'in:again,good,easy'],
-            'shown_at' => ['nullable', 'date'],
-            'flipped_at' => ['nullable', 'date'],
-            'duration_seconds' => ['nullable', 'integer', 'min:0'],
-        ]);
-
         $lesson = $flashcard->lesson;
         $rating = $request->string('rating')->toString();
         $durationSeconds = (int) $request->input('duration_seconds', 0);
 
         $result = DB::transaction(function () use ($user, $flashcard, $lesson, $rating, $request, $durationSeconds) {
-            $alreadyRewarded = FlashcardReview::query()
-                ->where('user_id', $user->id)
-                ->where('flashcard_id', $flashcard->id)
-                ->whereIn('rating', ['good', 'easy'])
-                ->exists();
+            $granted = DB::table('user_xp_grants')->insertOrIgnore([
+                'user_id'        => $user->id,
+                'grantable_type' => 'flashcard',
+                'grantable_id'   => $flashcard->id,
+                'created_at'     => now(),
+                'updated_at'     => now(),
+            ]);
 
             $xpEarned = match ($rating) {
-                'good' => $alreadyRewarded ? 0 : 1,
-                'easy' => $alreadyRewarded ? 0 : 2,
+                'good'  => $granted ? 1 : 0,
+                'easy'  => $granted ? 2 : 0,
                 default => 0,
             };
 

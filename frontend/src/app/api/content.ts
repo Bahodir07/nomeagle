@@ -1,8 +1,8 @@
 import { http } from "./http";
 
-function unwrapResource<T>(payload: any): T {
-    if (payload && typeof payload === "object" && "data" in payload) {
-        return payload.data as T;
+function unwrapResource<T>(payload: unknown): T {
+    if (payload !== null && typeof payload === "object" && "data" in payload) {
+        return (payload as { data: T }).data;
     }
 
     return payload as T;

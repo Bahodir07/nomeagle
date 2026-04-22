@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\CompleteLessonRequest;
 use App\Models\Country;
 use App\Models\LessonCompletionEvent;
 use App\Models\UserLessonProgress;
@@ -12,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 
 class LessonCompletionController extends Controller
 {
-    public function complete(Request $request, Country $country, string $module, string $lesson): JsonResponse
+    public function complete(CompleteLessonRequest $request, Country $country, string $module, string $lesson): JsonResponse
     {
         abort_unless($country->is_active, 404);
 
@@ -41,19 +42,18 @@ class LessonCompletionController extends Controller
 
         abort_unless(in_array($currentType, $allowedTypes, true), 422);
 
-        $request->validate([
-            'duration_seconds' => ['nullable', 'integer', 'min:0'],
-        ]);
-
         $durationSeconds = (int)$request->input('duration_seconds', 0);
 
         $result = DB::transaction(function () use ($user, $lessonRecord, $durationSeconds) {
-            $alreadyCompleted = LessonCompletionEvent::query()
-                ->where('user_id', $user->id)
-                ->where('lesson_id', $lessonRecord->id)
-                ->exists();
+            $granted = DB::table('user_xp_grants')->insertOrIgnore([
+                'user_id'        => $user->id,
+                'grantable_type' => 'lesson',
+                'grantable_id'   => $lessonRecord->id,
+                'created_at'     => now(),
+                'updated_at'     => now(),
+            ]);
 
-            $xpEarned = $alreadyCompleted ? 0 : (int)$lessonRecord->xp_reward;
+            $xpEarned = $granted ? (int) $lessonRecord->xp_reward : 0;
 
             LessonCompletionEvent::create([
                 'user_id' => $user->id,

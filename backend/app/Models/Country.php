@@ -25,6 +25,7 @@ class Country extends Model
     protected $fillable = [
         'name',
         'slug',
+        'iso_code',
         'region',
         'description',
         'flag_path',
@@ -107,6 +108,30 @@ class Country extends Model
     | Relationships
     |--------------------------------------------------------------------------
     */
+
+    public function flagEmoji(): string
+    {
+        // Generate flag emoji from ISO 3166-1 alpha-2 code via Unicode Regional Indicator Symbols
+        if ($this->iso_code && strlen($this->iso_code) === 2) {
+            $code = strtoupper($this->iso_code);
+            return mb_chr(ord($code[0]) - ord('A') + 0x1F1E6)
+                 . mb_chr(ord($code[1]) - ord('A') + 0x1F1E6);
+        }
+
+        return match ($this->slug) {
+            'japan'                => '🇯🇵',
+            'germany'              => '🇩🇪',
+            'kazakhstan'           => '🇰🇿',
+            'france'               => '🇫🇷',
+            'italy'                => '🇮🇹',
+            'brazil'               => '🇧🇷',
+            'usa', 'united-states' => '🇺🇸',
+            'china'                => '🇨🇳',
+            'turkey'               => '🇹🇷',
+            'south-korea', 'korea' => '🇰🇷',
+            default                => '🏳️',
+        };
+    }
 
     public function modules()
     {

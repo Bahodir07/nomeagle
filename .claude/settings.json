@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(php -l app/Http/Controllers/Api/StatisticsController.php)",
+      "Bash(npx tsc *)",
+      "Bash(git add *)"
+    ]
+  }
+}

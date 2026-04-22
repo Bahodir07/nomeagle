@@ -1,4 +1,7 @@
 import { http } from "./http";
+import type { XpLevel, AccuracyCoverage, PracticeTimeBreakdown, AttemptsHeatmap, TimeRangeShort } from "../../features/stats/types";
+import type { MasteryData } from "../../features/statistics/components/CulturalMasteryCard/CulturalMasteryCard";
+import type { LeaderboardResponse, LeaderboardTimeRange } from "../../features/leaderboard/types";
 
 export type ProgressStatus = "not_started" | "in_progress" | "completed";
 
@@ -24,6 +27,19 @@ export interface QuizSubmitResponse {
     explanation?: string | null;
     xp_earned: number;
     progress: ProgressSnapshot;
+}
+
+export interface StatisticsApiResponse {
+    xpLevel: XpLevel;
+    accuracyCoverage: AccuracyCoverage;
+    practiceTime: Record<TimeRangeShort, PracticeTimeBreakdown>;
+    attempts: AttemptsHeatmap;
+    countryMastery: MasteryData[];
+}
+
+export async function getStatistics(): Promise<StatisticsApiResponse> {
+    const { data } = await http.get<StatisticsApiResponse>("/api/statistics");
+    return data;
 }
 
 export async function getDashboard() {
@@ -87,5 +103,37 @@ export async function submitQuizQuestion(
         }
     );
 
+    return data;
+}
+
+export interface FlashcardReviewResponse {
+    rating: string;
+    xp_earned: number;
+    progress: ProgressSnapshot;
+}
+
+export async function reviewFlashcard(
+    flashcardId: number,
+    rating: 'again' | 'good' | 'easy',
+    durationSeconds = 0,
+    shownAt?: string,
+    flippedAt?: string
+): Promise<FlashcardReviewResponse> {
+    const { data } = await http.post<FlashcardReviewResponse>(
+        `/api/flashcards/${flashcardId}/review`,
+        {
+            rating,
+            duration_seconds: durationSeconds,
+            shown_at: shownAt,
+            flipped_at: flippedAt,
+        }
+    );
+    return data;
+}
+
+export async function getLeaderboard(timeRange: LeaderboardTimeRange = 'week'): Promise<LeaderboardResponse> {
+    const { data } = await http.get<LeaderboardResponse>('/api/leaderboard', {
+        params: { time_range: timeRange },
+    });
     return data;
 }

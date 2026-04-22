@@ -1,40 +1,14 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React from "react";
 import { Loading, ErrorState } from "../../../components/feedback";
 import { Skeleton } from "../../../components/ui/Skeleton";
 import { useAchievements, CategorySection } from "../../../features/achievements";
 import styles from "./AchievementsPage.module.css";
 
-type PageStatus = "loading" | "success" | "error";
-
-/* ==========================================================================
-   Achievements Page
-   Title, subtitle, summary bar (unlocked/total, streak, countries), categories.
-   States: loading skeleton, error with retry, success content.
-   ========================================================================== */
-
 export const AchievementsPage: React.FC = () => {
-  const [status, setStatus] = useState<PageStatus>("loading");
-  const [errorMessage, setErrorMessage] = useState<string>("");
+  const { groupedByCategory, summary, isLoading, isError, refetch } =
+    useAchievements();
 
-  const { groupedByCategory, summary } = useAchievements();
-
-  const load = useCallback(() => {
-    setStatus("loading");
-    setErrorMessage("");
-    // Simulate fetch; replace with real API when available.
-    const t = setTimeout(() => setStatus("success"), 600);
-    return () => clearTimeout(t);
-  }, []);
-
-  useEffect(() => {
-    return load();
-  }, [load]);
-
-  const handleRetry = useCallback(() => {
-    load();
-  }, [load]);
-
-  if (status === "loading") {
+  if (isLoading) {
     return (
       <div className={styles.wrapper}>
         <div className={styles.header}>
@@ -55,7 +29,7 @@ export const AchievementsPage: React.FC = () => {
     );
   }
 
-  if (status === "error") {
+  if (isError) {
     return (
       <div className={styles.wrapper}>
         <div className={styles.header}>
@@ -65,8 +39,8 @@ export const AchievementsPage: React.FC = () => {
           </p>
         </div>
         <ErrorState
-          message={errorMessage || "Failed to load achievements."}
-          onRetry={handleRetry}
+          message="Failed to load achievements."
+          onRetry={refetch}
         />
       </div>
     );
@@ -109,4 +83,3 @@ export const AchievementsPage: React.FC = () => {
     </div>
   );
 };
-

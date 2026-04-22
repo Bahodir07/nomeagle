@@ -158,7 +158,7 @@ class LearningPathController extends Controller
                 'flagUrl' => $country->flag_path
                     ? Storage::disk('public')->url($country->flag_path)
                     : null,
-                'flagEmoji' => $this->getFlagEmoji($country->slug),
+                'flagEmoji' => $country->flagEmoji(),
 
                 'totalLessons' => $totalLessons,
                 'progressPct' => $progressPct,
@@ -239,20 +239,4 @@ class LearningPathController extends Controller
         };
     }
 
-    private function getFlagEmoji(string $slug): string
-    {
-        return match ($slug) {
-            'japan' => '🇯🇵',
-            'kazakhstan' => '🇰🇿',
-            'germany' => '🇩🇪',
-            'france' => '🇫🇷',
-            'italy' => '🇮🇹',
-            'brazil' => '🇧🇷',
-            'china' => '🇨🇳',
-            'turkey' => '🇹🇷',
-            'south-korea', 'korea' => '🇰🇷',
-            'usa', 'united-states' => '🇺🇸',
-            default => '🏳️',
-        };
-    }
 }

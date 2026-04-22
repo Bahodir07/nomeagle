@@ -1,6 +1,7 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { Avatar } from '../../components/ui/Avatar/Avatar';
+import { useAuth } from '../../app/store/auth.store';
 import styles from './Topbar.module.css';
 
 /* ── Route → Page title map ─────────────────────────────────────────────── */
@@ -22,6 +23,8 @@ const pageTitles: Record<string, string> = {
 export const Topbar: React.FC = () => {
   const { pathname } = useLocation();
   const title = pageTitles[pathname] ?? 'NomEagle';
+  const { user } = useAuth();
+  const displayName = user?.name ?? 'User';
 
   return (
     <header className={styles.topbar} role="banner">
@@ -51,8 +54,8 @@ export const Topbar: React.FC = () => {
           className={styles.userTrigger}
           aria-label="User menu"
         >
-          <Avatar name="Nurlybek" size="sm" />
-          <span className={styles.userName}>Nurlybek</span>
+          <Avatar name={displayName} size="sm" />
+          <span className={styles.userName}>{displayName}</span>
           <span className={styles.chevron} aria-hidden="true">
             ▾
           </span>

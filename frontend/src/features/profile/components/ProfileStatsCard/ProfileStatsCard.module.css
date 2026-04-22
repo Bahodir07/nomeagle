@@ -1,15 +1,6 @@
 /* ==========================================================================
-   ProfileStatsCard
-   Compact level, xp, streak, countries count.
+   ProfileStatsCard — modern individual stat tiles
    ========================================================================== */
-
-.card {
-  background-color: var(--ne-surface);
-  border: 1px solid var(--ne-border);
-  border-radius: var(--ne-radius-md);
-  box-shadow: var(--ne-shadow-md);
-  padding: var(--ne-2) var(--ne-3);
-}
 
 .grid {
   display: grid;
@@ -17,28 +8,85 @@
   gap: var(--ne-2);
 }
 
-@media (min-width: 640px) {
-  .grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
+.tile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: var(--ne-surface);
+  border: 1px solid var(--ne-border);
+  border-radius: var(--ne-radius-md);
+  padding: 14px 16px;
+  box-shadow: var(--ne-shadow-sm);
+  border-left-width: 3px;
 }
 
-.stat {
+.iconWrap {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.iconWrap svg {
+  width: 18px;
+  height: 18px;
+}
+
+.textWrap {
   display: flex;
   flex-direction: column;
-  gap: var(--ne-1);
+  gap: 2px;
+  min-width: 0;
 }
 
 .value {
-  font-size: 1.125rem;
-  font-weight: 600;
+  font-size: 1.25rem;
+  font-weight: 700;
   color: var(--ne-text);
   line-height: 1.2;
 }
 
 .label {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
+  font-weight: 500;
   color: var(--ne-muted);
   text-transform: uppercase;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.06em;
+}
+
+/* ---- Accent variants ---- */
+
+.accentBlue {
+  border-left-color: #3b82f6;
+}
+.accentBlue .iconWrap {
+  background-color: #eff6ff;
+  color: #3b82f6;
+}
+
+.accentAmber {
+  border-left-color: #f59e0b;
+}
+.accentAmber .iconWrap {
+  background-color: #fffbeb;
+  color: #f59e0b;
+}
+
+.accentOrange {
+  border-left-color: #f97316;
+}
+.accentOrange .iconWrap {
+  background-color: #fff7ed;
+  color: #f97316;
+}
+
+.accentGreen {
+  border-left-color: #10b981;
+}
+.accentGreen .iconWrap {
+  background-color: #ecfdf5;
+  color: #10b981;
 }

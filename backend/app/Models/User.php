@@ -5,10 +5,12 @@ namespace App\Models;
 use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Carbon;
 
@@ -27,6 +29,11 @@ class User extends Authenticatable implements FilamentUser
         'email',
         'password',
         'is_admin',
+        'bio',
+        'avatar_path',
+        'selected_countries',
+        'interests',
+        'difficulty',
         'current_streak',
         'longest_streak',
         'last_activity_date'
@@ -53,6 +60,8 @@ class User extends Authenticatable implements FilamentUser
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_admin' => 'boolean',
+            'selected_countries' => 'array',
+            'interests' => 'array',
         ];
     }
 
@@ -60,6 +69,15 @@ class User extends Authenticatable implements FilamentUser
     {
         return $panel->getId() === 'admin'
             && $this->is_admin;
+    }
+
+    protected function avatarUrl(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->avatar_path
+                ? Storage::disk('public')->url($this->avatar_path)
+                : null,
+        );
     }
 
     public function updateStreak(): void

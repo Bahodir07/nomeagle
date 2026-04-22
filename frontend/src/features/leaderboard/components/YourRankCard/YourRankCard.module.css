@@ -1,51 +1,144 @@
 /* ==========================================================================
-   YourRankCard
-   Compact card for current user rank + stats. Token spacing only.
+   YourRankCard — Modern redesign
    ========================================================================== */
 
 .wrapper {
-  padding: var(--ne-2);
-  background-color: var(--ne-surface);
+  background: var(--ne-surface);
   border: 1px solid var(--ne-border);
-  border-radius: var(--ne-radius-md);
-  box-shadow: var(--ne-shadow-sm);
+  border-radius: var(--ne-radius-lg);
+  box-shadow: var(--ne-shadow-md);
+  overflow: hidden;
 }
 
-.title {
-  margin: 0 0 var(--ne-2);
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--ne-text);
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+/* ---------- Hero banner ---------- */
+.hero {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 60%, #1d4ed8 100%);
+  padding: var(--ne-3) var(--ne-3) var(--ne-2);
+  display: flex;
+  align-items: center;
   gap: var(--ne-2);
+}
+
+.rankBadge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  flex-shrink: 0;
+}
+
+.rankBadgeGold {
+  background: rgba(251, 191, 36, 0.25);
+  border-color: rgba(251, 191, 36, 0.6);
+}
+
+.rankLabel {
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1;
+  margin-bottom: 1px;
+}
+
+.rankNumber {
+  font-size: 1.375rem;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1;
+}
+
+.rankNumberGold {
+  color: #fcd34d;
+}
+
+.heroText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.heroTitle {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.heroName {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+/* ---------- Stats grid ---------- */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--ne-border);
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: var(--ne-2) var(--ne-1);
+  background: var(--ne-surface);
+}
+
+.statLabel {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ne-muted);
+}
+
+.statValue {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--ne-text);
+  line-height: 1;
 }
 
 .streak {
   display: inline-flex;
   align-items: center;
-  gap: var(--ne-1);
+  gap: 3px;
 }
 
 .streakIcon {
   flex-shrink: 0;
-  opacity: 0.9;
 }
 
-/* ---------- Fallback (user not on leaderboard) ---------- */
+/* ---------- Fallback ---------- */
 .fallback {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 80px;
+  gap: var(--ne-1);
+  padding: var(--ne-4) var(--ne-3);
+  text-align: center;
+}
+
+.fallbackIcon {
+  font-size: 2rem;
+  line-height: 1;
 }
 
 .fallbackText {
   margin: 0;
   font-size: 0.875rem;
   color: var(--ne-muted);
-  text-align: center;
 }

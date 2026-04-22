@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\SubmitScenarioRequest;
 use App\Http\Resources\Api\ScenarioResource;
 use App\Models\Country;
 use App\Models\Scenario;
@@ -56,7 +57,7 @@ class ScenarioController extends Controller
         return new ScenarioResource($scenario);
     }
 
-    public function submit(Request $request, Scenario $scenario)
+    public function submit(SubmitScenarioRequest $request, Scenario $scenario)
     {
         abort_unless($scenario->is_active, 404);
 
@@ -67,11 +68,6 @@ class ScenarioController extends Controller
                 'message' => 'Authentication required for progress tracking.',
             ], 401);
         }
-
-        $request->validate([
-            'answer' => ['required', 'string'],
-            'duration_seconds' => ['nullable', 'integer', 'min:0'],
-        ]);
 
         $payload = $scenario->normalizedPayload();
 
@@ -99,15 +95,17 @@ class ScenarioController extends Controller
                 ->where('is_active', true)
                 ->pluck('id');
 
-            $alreadySolvedCorrectly = ScenarioAttempt::query()
-                ->where('user_id', $user->id)
-                ->where('scenario_id', $scenario->id)
-                ->where('is_correct', true)
-                ->exists();
-
-            $xpEarned = ($isCorrect && ! $alreadySolvedCorrectly)
-                ? $scenario->xp_reward
-                : 0;
+            $xpEarned = 0;
+            if ($isCorrect) {
+                $granted = DB::table('user_xp_grants')->insertOrIgnore([
+                    'user_id'        => $user->id,
+                    'grantable_type' => 'scenario',
+                    'grantable_id'   => $scenario->id,
+                    'created_at'     => now(),
+                    'updated_at'     => now(),
+                ]);
+                $xpEarned = $granted ? $scenario->xp_reward : 0;
+            }
 
             ScenarioAttempt::create([
                 'user_id' => $user->id,

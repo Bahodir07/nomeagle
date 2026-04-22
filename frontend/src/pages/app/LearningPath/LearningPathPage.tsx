@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams, useLocation } from "react-router-dom";
 import {
     CourseHeader,
     ModuleSection,
@@ -17,6 +17,7 @@ import type { UserCourseProgress } from "../../../features/lessons/engine";
 import type { CountryCourse } from "../../../features/lessons/types";
 import { getLearningPath } from "../../../app/api/content";
 import styles from "./LearningPathPage.module.css";
+import { PageLoader } from "../../../components/feedback";
 
 /* ---------- Inline SVG ---------- */
 
@@ -54,6 +55,7 @@ const EMPTY_PROGRESS: UserCourseProgress = {
 export const LearningPathPage: React.FC = () => {
     const { countryCode } = useParams<{ countryCode: string }>();
     const navigate = useNavigate();
+    const location = useLocation();
 
     const [state, setState] = useState<LoadState>({ status: "loading" });
 
@@ -95,7 +97,7 @@ export const LearningPathPage: React.FC = () => {
         };
 
         void load();
-    }, [countryCode]);
+    }, [countryCode, (location.state as any)?.refreshAt]);
 
     const course = state.status === "success" ? state.course : null;
     const progress = state.status === "success" ? state.progress : EMPTY_PROGRESS;
@@ -177,7 +179,7 @@ export const LearningPathPage: React.FC = () => {
                 </Link>
 
                 <div className={styles.container}>
-                    <p>Loading learning path...</p>
+                    <PageLoader text="Loading learning path..." variant="inverted" />
                 </div>
             </div>
         );

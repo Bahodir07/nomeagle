@@ -11,6 +11,7 @@ use App\Models\QuizQuestionAttempt;
 use App\Models\ScenarioAttempt;
 use App\Models\UserLessonProgress;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class DashboardController extends Controller
@@ -94,7 +95,7 @@ class DashboardController extends Controller
                 'lastLessonTitle' => $lastLessonTitle,
                 'flagPath' => $country->flag_path,
                 'flagUrl' => $flagUrl,
-                'flagEmoji' => $this->getFlagEmoji($country->slug),
+                'flagEmoji' => $country->flagEmoji(),
             ];
         })->values();
 
@@ -195,6 +196,15 @@ class DashboardController extends Controller
         $timeSpentWeekSeconds = $scenarioTimeWeek + $quizTimeWeek + $flashcardTimeWeek + $lessonTimeWeek;
         $timeSpentTotalSeconds = $scenarioTimeTotal + $quizTimeTotal + $flashcardTimeTotal + $lessonTimeTotal;
 
+        $weekStart = now()->startOfWeek(); // Monday
+        $weekProgress = collect(range(0, 6))->map(function (int $offset) use ($user, $weekStart) {
+            $day = $weekStart->copy()->addDays($offset);
+            return DB::table('lesson_completion_events')
+                ->where('user_id', $user->id)
+                ->whereDate('created_at', $day)
+                ->exists();
+        })->values()->all();
+
         return response()->json([
             'user' => [
                 'xp' => $xp,
@@ -208,25 +218,10 @@ class DashboardController extends Controller
                 'timeTodayMinutes' => (int)floor($timeSpentTodaySeconds / 60),
                 'timeWeekMinutes' => (int)floor($timeSpentWeekSeconds / 60),
                 'timeTotalMinutes' => (int)floor($timeSpentTotalSeconds / 60),
+                'weekProgress' => $weekProgress,
             ],
             'activeCountries' => $activeCountries,
         ]);
     }
 
-    private function getFlagEmoji(string $slug): string
-    {
-        return match ($slug) {
-            'japan' => '🇯🇵',
-            'germany' => '🇩🇪',
-            'kazakhstan' => '🇰🇿',
-            'france' => '🇫🇷',
-            'italy' => '🇮🇹',
-            'brazil' => '🇧🇷',
-            'usa', 'united-states' => '🇺🇸',
-            'china' => '🇨🇳',
-            'turkey' => '🇹🇷',
-            'south-korea', 'korea' => '🇰🇷',
-            default => '🏳️',
-        };
-    }
 }

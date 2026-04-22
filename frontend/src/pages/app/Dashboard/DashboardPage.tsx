@@ -9,7 +9,6 @@ import {
     ViewToggle,
 } from '../../../features/dashboard/components';
 import type { ViewMode } from '../../../features/dashboard/components';
-import { MOCK_WEEK_PROGRESS } from '../../../features/dashboard/mock/dashboard.mock';
 import type { DashboardResponse, AsyncState } from '../../../features/dashboard/types';
 import { getDashboard } from '../../../app/api/progress';
 import styles from './DashboardPage.module.css';
@@ -60,18 +59,6 @@ export const DashboardPage: React.FC = () => {
         } catch (err) {
             setState({ status: 'error', error: String(err) });
         }
-    }, []);
-
-    /** Handle reset progress action from card menu */
-    const handleResetProgress = useCallback((countryId: string) => {
-        // TODO: Implement reset progress API call
-        console.log('Reset progress for country:', countryId);
-    }, []);
-
-    /** Handle remove from dashboard action from card menu */
-    const handleRemoveFromDashboard = useCallback((countryId: string) => {
-        // TODO: Implement remove-from-dashboard API call if needed
-        console.log('Remove from dashboard:', countryId);
     }, []);
 
     useEffect(() => {
@@ -130,8 +117,6 @@ export const DashboardPage: React.FC = () => {
                                         country={country}
                                         variant={viewMode}
                                         onAction={(id) => navigate(`/app/countries/${id}/learn`)}
-                                        onReset={handleResetProgress}
-                                        onRemove={handleRemoveFromDashboard}
                                     />
                                 ))}
                             </div>
@@ -149,7 +134,7 @@ export const DashboardPage: React.FC = () => {
 
             {/* ── Right column: stats ───────────────────────────────────── */}
             <section className={styles.right}>
-                <StatsPanel stats={user} weekProgress={MOCK_WEEK_PROGRESS} />
+                <StatsPanel stats={user} weekProgress={user.weekProgress} />
             </section>
         </div>
     );

@@ -1,5 +1,6 @@
-import { createBrowserRouter, Navigate } from 'react-router-dom';
+import { createBrowserRouter } from 'react-router-dom';
 import { appRoutes } from './routes.app';
+import { ProtectedRoute } from './guards';
 import { LearningPathPage } from '../../pages/app/LearningPath';
 import { CultureMatchRushPage } from '../../pages/app/Game/CultureMatchRushPage';
 import { StreetFoodSprintPage } from '../../pages/app/Game/StreetFoodSprintPage';
@@ -9,21 +10,25 @@ import { LessonPage } from '../../pages/app/Lesson';
 import { CountryRoadmapPage } from '../../pages/app/CountryRoadmap/CountryRoadmapPage';
 import { AuthLayout } from '../../layouts/AuthLayout';
 import { LoginPage, RegisterPage } from '../../pages/auth';
+import { LandingPage } from '../../pages/LandingPage';
 
 /**
  * Application router.
  *
  * Route groups:
- *   /app/*    → authenticated app shell (AppLayout)
- *   /app/countries/:countryCode/learn → full-screen lesson page (no shell)
- *   /app/countries/:countryCode/game  → full-screen Culture Match Rush game (no shell)
- *   /         → redirect to /app/dashboard
+ *   /         → public LandingPage
+ *   /login    → LoginPage (public)
+ *   /register → RegisterPage (public)
+ *   /app/*    → authenticated app shell (AppLayout, ProtectedRoute)
+ *   /app/countries/:countryCode/* → full-screen pages (ProtectedRoute, no shell)
+ *   /app/lesson/:lessonId         → full-screen lesson (ProtectedRoute, no shell)
+ *   /learn/:countryCode           → public visual roadmap preview
  */
 export const router = createBrowserRouter([
-  /* Root redirect */
+  /* Public landing page */
   {
     path: '/',
-    element: <Navigate to="/app/dashboard" replace />,
+    element: <LandingPage />,
   },
 
   /* Auth Routes */
@@ -41,46 +46,70 @@ export const router = createBrowserRouter([
     ],
   },
 
-  /* New full-screen visual roadmap page */
+  /* Public full-screen visual roadmap preview */
   {
     path: '/learn/:countryCode',
     element: <CountryRoadmapPage />,
   },
 
-  /* Full-screen lesson roadmap (no sidebar/topbar) */
+  /* Full-screen lesson roadmap (protected, no sidebar/topbar) */
   {
     path: '/app/countries/:countryCode/learn',
-    element: <LearningPathPage />,
+    element: (
+      <ProtectedRoute>
+        <LearningPathPage />
+      </ProtectedRoute>
+    ),
   },
 
-  /* Full-screen Culture Match Rush game */
+  /* Full-screen Culture Match Rush game (protected) */
   {
     path: '/app/countries/:countryCode/game',
-    element: <CultureMatchRushPage />,
+    element: (
+      <ProtectedRoute>
+        <CultureMatchRushPage />
+      </ProtectedRoute>
+    ),
   },
 
-  /* Full-screen Street Food Sprint game */
+  /* Full-screen Street Food Sprint game (protected) */
   {
     path: '/app/countries/:countryCode/sprint',
-    element: <StreetFoodSprintPage />,
+    element: (
+      <ProtectedRoute>
+        <StreetFoodSprintPage />
+      </ProtectedRoute>
+    ),
   },
 
-  /* Full-screen Festival Timeline game */
+  /* Full-screen Festival Timeline game (protected) */
   {
     path: '/app/countries/:countryCode/festival',
-    element: <FestivalTimelinePage />,
+    element: (
+      <ProtectedRoute>
+        <FestivalTimelinePage />
+      </ProtectedRoute>
+    ),
   },
 
-  /* Full-screen Guess the Landmark game */
+  /* Full-screen Guess the Landmark game (protected) */
   {
     path: '/app/countries/:countryCode/landmarks',
-    element: <GuessTheLandmarkPage />,
+    element: (
+      <ProtectedRoute>
+        <GuessTheLandmarkPage />
+      </ProtectedRoute>
+    ),
   },
 
-  /* Full-screen Article Lesson */
+  /* Full-screen Article Lesson (protected) */
   {
     path: '/app/lesson/:lessonId',
-    element: <LessonPage />,
+    element: (
+      <ProtectedRoute>
+        <LessonPage />
+      </ProtectedRoute>
+    ),
   },
 
   /* App routes (protected section) */

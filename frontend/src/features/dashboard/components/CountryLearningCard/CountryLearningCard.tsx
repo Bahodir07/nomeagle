@@ -22,11 +22,9 @@ const ICONS = {
     moreVertical: '/assets/icons/actions/menu_three_vertical_dot.svg',
 } as const;
 
-/* ---------- Menu items ---------- */
-const MENU_ITEMS = [
-    { id: 'reset', label: 'Reset Progress' },
-    { id: 'remove', label: 'Remove from\nDashboard', danger: true },
-] as const;
+/* ---------- Menu item definitions ---------- */
+const MENU_ITEM_RESET = { id: 'reset', label: 'Reset Progress' } as const;
+const MENU_ITEM_REMOVE = { id: 'remove', label: 'Remove from\nDashboard', danger: true } as const;
 
 /* ---------- Helpers ---------- */
 
@@ -90,6 +88,11 @@ export const CountryLearningCard: React.FC<CountryLearningCardProps> = ({
 
     /** First letter of the country name, used as fallback */
     const initial = countryName.charAt(0).toUpperCase();
+
+    const menuItems = [
+        ...(onReset ? [MENU_ITEM_RESET] : []),
+        ...(onRemove ? [MENU_ITEM_REMOVE] : []),
+    ];
 
     /** Handle menu item selection */
     const handleMenuSelect = useCallback(
@@ -181,7 +184,7 @@ export const CountryLearningCard: React.FC<CountryLearningCardProps> = ({
                             <img src={ICONS.moreVertical} alt="" aria-hidden="true" />
                         </button>
                     }
-                    items={[...MENU_ITEMS]}
+                    items={menuItems}
                     onSelect={handleMenuSelect}
                     position="bottom-left"
                 />
@@ -202,7 +205,7 @@ export const CountryLearningCard: React.FC<CountryLearningCardProps> = ({
                             <img src={ICONS.settings} alt="" aria-hidden="true" />
                         </button>
                     }
-                    items={[...MENU_ITEMS]}
+                    items={menuItems}
                     onSelect={handleMenuSelect}
                     position="right"
                 />

@@ -43,6 +43,12 @@ class CountryForm
                             ->unique(ignoreRecord: true)
                             ->helperText('Used in URLs, for example: /countries/japan'),
 
+                        TextInput::make('iso_code')
+                            ->label('ISO Code (2-letter)')
+                            ->maxLength(2)
+                            ->placeholder('e.g. jp, kz, fr')
+                            ->helperText('2-letter ISO 3166-1 alpha-2 code used for achievements (e.g. jp, kz, fr).'),
+
                         Select::make('region')
                             ->required()
                             ->searchable()

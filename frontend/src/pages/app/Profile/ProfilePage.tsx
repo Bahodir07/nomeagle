@@ -8,37 +8,16 @@ import {
   SecurityCard,
   ProfileStatsCard,
 } from '../../../features/profile/components';
-import { getMockProfile } from '../../../features/profile/mock/profile.mock';
+import {
+  getProfile,
+  updateProfileBasics,
+  updateProfilePreferences,
+  updateProfilePassword,
+  uploadAvatar,
+} from '../../../app/api/profile';
 import type { UserProfile } from '../../../features/profile/types';
 import type { AsyncState } from '../../../features/dashboard/types';
 import styles from './ProfilePage.module.css';
-
-/* --------------------------------------------------------------------------
-   Simulated fetch (for loading/error state demo)
-   -------------------------------------------------------------------------- */
-
-function fetchProfile(): Promise<UserProfile> {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      try {
-        resolve(getMockProfile());
-      } catch (e) {
-        reject(e);
-      }
-    }, 600);
-  });
-}
-
-/* ==========================================================================
-   Profile Page
-
-   Title "Profile"
-   ProfileHeader (full width)
-   Grid: Left 2/3 — ProfileBasicsForm, LearningPreferencesForm, SecurityCard
-         Right 1/3 — ProfileStatsCard
-
-   States: loading → skeletons  |  error → ErrorState  |  success → content
-   ========================================================================== */
 
 export const ProfilePage: React.FC = () => {
   const [state, setState] = useState<AsyncState<UserProfile>>({
@@ -47,7 +26,7 @@ export const ProfilePage: React.FC = () => {
 
   const loadProfile = useCallback(() => {
     setState({ status: 'loading' });
-    fetchProfile()
+    getProfile()
       .then((data) => setState({ status: 'success', data }))
       .catch((err) => setState({ status: 'error', error: String(err) }));
   }, []);
@@ -108,8 +87,7 @@ export const ProfilePage: React.FC = () => {
             email={profile.email}
             bio={profile.bio}
             onSave={(payload) => {
-              // Placeholder: API call
-              console.log('Profile basics save', payload);
+              updateProfileBasics(payload).then(loadProfile);
             }}
           />
           <LearningPreferencesForm
@@ -117,14 +95,16 @@ export const ProfilePage: React.FC = () => {
             interests={profile.interests}
             difficulty={profile.difficulty}
             onSave={(payload) => {
-              // Placeholder: API call
-              console.log('Learning preferences save', payload);
+              updateProfilePreferences(payload);
             }}
           />
           <SecurityCard
-            onUpdatePassword={(payload) => {
-              // Placeholder: API call
-              console.log('Update password', payload);
+            onUpdatePassword={({ currentPassword, newPassword }) => {
+              updateProfilePassword({
+                currentPassword,
+                newPassword,
+                newPassword_confirmation: newPassword,
+              });
             }}
           />
         </section>
@@ -135,8 +115,8 @@ export const ProfilePage: React.FC = () => {
             displayName={profile.displayName}
             subtitle={profile.email}
             avatarUrl={profile.avatarUrl}
-            onEditAvatar={() => {
-              // Placeholder: open avatar picker / upload
+            onAvatarUpload={(file) => {
+              uploadAvatar(file).then(loadProfile);
             }}
           />
           <ProfileStatsCard

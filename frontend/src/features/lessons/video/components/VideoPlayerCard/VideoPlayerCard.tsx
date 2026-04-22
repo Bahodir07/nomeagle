@@ -37,13 +37,15 @@ export const VideoPlayerCard: React.FC<VideoPlayerCardProps> = ({
         const time = video.currentTime;
         setCurrentTime(time);
 
-        if (isVideoCompleted(time, lesson.durationSeconds, lesson.completionThresholdPct)) {
+        const duration = lesson.durationSeconds > 0 ? lesson.durationSeconds : video.duration;
+        if (duration > 0 && isVideoCompleted(time, duration, lesson.completionThresholdPct)) {
             markComplete();
         }
     }, [lesson.durationSeconds, lesson.completionThresholdPct, markComplete]);
 
     const handleEnded = useCallback(() => {
-        setCurrentTime(lesson.durationSeconds);
+        const video = videoRef.current;
+        setCurrentTime(lesson.durationSeconds > 0 ? lesson.durationSeconds : (video?.duration ?? 0));
         markComplete();
     }, [lesson.durationSeconds, markComplete]);
 
