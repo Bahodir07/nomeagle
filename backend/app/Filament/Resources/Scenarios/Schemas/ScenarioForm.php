@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Scenarios\Schemas;
 
 use App\Models\Scenario;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
 use Filament\Schemas\Components\Section;
 use Filament\Forms\Components\Select;
@@ -61,6 +62,18 @@ class ScenarioForm
                             ->rows(6)
                             ->columnSpanFull()
                             ->placeholder('Describe the situation that the learner should respond to.'),
+
+                        FileUpload::make('image_path')
+                            ->label('Hint image')
+                            ->image()
+                            ->disk('public')
+                            ->directory('scenario-images')
+                            ->columnSpanFull(),
+
+                        TextInput::make('image_alt')
+                            ->label('Image alt text')
+                            ->maxLength(255)
+                            ->columnSpanFull(),
 
                         Repeater::make('payload.options')
                             ->label('Answer options')

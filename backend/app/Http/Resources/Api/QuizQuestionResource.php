@@ -4,6 +4,7 @@ namespace App\Http\Resources\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class QuizQuestionResource extends JsonResource
 {
@@ -17,6 +18,10 @@ class QuizQuestionResource extends JsonResource
                 'slug' => $this->lesson?->slug,
             ],
             'question' => $this->question,
+            'image_url' => $this->question_image_path
+                ? Storage::disk('public')->url($this->question_image_path)
+                : null,
+            'image_alt' => $this->question_image_alt,
             'options' => $this->options,
             'explanation' => $this->explanation,
             'order' => $this->order,

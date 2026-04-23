@@ -15,6 +15,8 @@ class Scenario extends Model
         'slug',
         'type',
         'prompt',
+        'image_path',
+        'image_alt',
         'payload',
         'order',
         'xp_reward',

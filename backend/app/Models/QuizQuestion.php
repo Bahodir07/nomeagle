@@ -10,6 +10,8 @@ class QuizQuestion extends Model
     protected $fillable = [
         'lesson_id',
         'question',
+        'question_image_path',
+        'question_image_alt',
         'options',
         'explanation',
         'order',

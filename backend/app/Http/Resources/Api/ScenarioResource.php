@@ -4,6 +4,7 @@ namespace App\Http\Resources\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class ScenarioResource extends JsonResource
 {
@@ -22,6 +23,10 @@ class ScenarioResource extends JsonResource
             'slug' => $this->slug,
             'type' => $this->type,
             'prompt' => $this->prompt,
+            'image_url' => $this->image_path
+                ? Storage::disk('public')->url($this->image_path)
+                : null,
+            'image_alt' => $this->image_alt,
             'payload' => $this->normalizedPayload(),
             'order' => $this->order,
             'xp_reward' => $this->xp_reward,
