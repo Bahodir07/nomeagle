@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Lessons\Schemas;
 
 use App\Enums\LessonType;
 use App\Models\Lesson;
+use App\Models\Country;
 use App\Models\Module;
 use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Select;
@@ -23,10 +24,35 @@ class LessonForm
                     ->description('Basic lesson content and gamification settings.')
                     ->schema([
                         Select::make('module_id')
-                            ->relationship('module', 'title')
-                            ->searchable()
-                            ->preload()
+                            ->label('Module')
                             ->required()
+                            ->searchable()
+                            ->options(function (): array {
+                                return Country::query()
+                                    ->with(['modules' => fn ($q) => $q->orderBy('order')])
+                                    ->orderBy('name')
+                                    ->get()
+                                    ->mapWithKeys(fn (Country $country) => [
+                                        $country->name => $country->modules
+                                            ->pluck('title', 'id')
+                                            ->all(),
+                                    ])
+                                    ->all();
+                            })
+                            ->getSearchResultsUsing(function (string $search): array {
+                                return Country::query()
+                                    ->with(['modules' => fn ($q) => $q->where('title', 'like', "%{$search}%")->orderBy('order')])
+                                    ->orderBy('name')
+                                    ->get()
+                                    ->mapWithKeys(fn (Country $country) => [
+                                        $country->name => $country->modules
+                                            ->pluck('title', 'id')
+                                            ->all(),
+                                    ])
+                                    ->filter(fn (array $opts) => count($opts) > 0)
+                                    ->all();
+                            })
+                            ->getOptionLabelUsing(fn ($value): ?string => Module::with('country')->find($value)?->title)
                             ->hiddenOn(\App\Filament\Resources\Modules\RelationManagers\LessonsRelationManager::class),
 
                         TextInput::make('title')
