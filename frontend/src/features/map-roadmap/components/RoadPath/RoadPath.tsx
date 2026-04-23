@@ -1,9 +1,9 @@
 import React from "react";
 import styles from "./RoadPath.module.css";
-import { GameNode } from "../../types";
+import { LessonNode } from "../../types";
 
 interface RoadPathProps {
-  nodes: GameNode[];
+  nodes: LessonNode[];
 }
 
 export const RoadPath: React.FC<RoadPathProps> = ({ nodes }) => {

@@ -19,6 +19,7 @@ export const NAVIGATION_ICONS = {
   leaderboard:  '/assets/icons/navigation/leaderboard_sidebar.svg',
   profile:      '/assets/icons/navigation/profile_sidebar.svg',
   settings:     '/assets/icons/navigation/settings_sidebar.svg',
+  games:        '/assets/icons/navigation/games_sidebar.svg',
 } as const;
 
 export type NavigationIconName = keyof typeof NAVIGATION_ICONS;

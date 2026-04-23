@@ -24,7 +24,7 @@ interface GameOverlayProps {
 
 export const GameOverlay: React.FC<GameOverlayProps> = ({
   gameType,
-  title,
+  title: _title,
   onClose,
   onComplete,
 }) => {

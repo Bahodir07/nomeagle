@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./CourseHeader.module.css";
 
-interface CourseHeaderProps {
+export interface CourseHeaderProps {
     countryCode: string;
     countryName: string;
     completedCount: number;

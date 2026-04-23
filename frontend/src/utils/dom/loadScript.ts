@@ -55,7 +55,7 @@ export function loadScript(src: string): Promise<void> {
       loadedScripts.add(normalizedSrc);
       return Promise.resolve();
     }
-    if (existingEl.readyState === 'loaded' || existingEl.readyState === 'complete') {
+    if ((existingEl as HTMLScriptElement & { readyState?: string }).readyState === 'loaded' || (existingEl as HTMLScriptElement & { readyState?: string }).readyState === 'complete') {
       existingEl.setAttribute(LOADED_KEY, 'true');
       loadedScripts.add(normalizedSrc);
       return Promise.resolve();

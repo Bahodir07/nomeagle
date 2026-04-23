@@ -115,9 +115,7 @@ export function evaluateRule(
         context,
         typeof rule.value === "number" ? rule.value : Number(rule.value)
       );
-    default: {
-      const _: never = rule;
+    default:
       return { satisfied: false };
-    }
   }
 }

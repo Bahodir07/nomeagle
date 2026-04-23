@@ -19,6 +19,7 @@ export interface ScenarioLesson {
     lessonId: string;
     title: string;
     introText: string;
+    introImage?: string;
     xpReward: number;
     steps: ScenarioStep[];
 }

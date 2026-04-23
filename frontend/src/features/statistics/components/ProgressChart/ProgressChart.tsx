@@ -306,7 +306,7 @@ export const ProgressChart: React.FC<ProgressChartProps> = ({
                 )}
 
                 {/* Invisible hit areas for mouse events */}
-                {points.map((p, i) => {
+                {points.map((_p, i) => {
                   const x0 = i === 0 ? 0 : (getPtX(i) + getPtX(i - 1)) / 2;
                   const x1 = i === points.length - 1 ? CHART_W : (getPtX(i) + getPtX(i + 1)) / 2;
                   return (

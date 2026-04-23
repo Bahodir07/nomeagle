@@ -21,6 +21,7 @@ const mainNavItems: NavItemProps[] = [
   { label: 'Search',       to: '/app/search',       iconName: 'search' },
   { label: 'Stats',        to: '/app/stats',        iconName: 'statistics' },
   { label: 'Dashboard',    to: '/app/dashboard',    iconName: 'dashboard', end: true },
+  { label: 'Games',        to: '/app/games',        iconName: 'games' },
   { label: 'Achievements', to: '/app/achievements', iconName: 'achievements' },
   { label: 'Leaderboard',  to: '/app/leaderboard',  iconName: 'leaderboard' },
   { label: 'Profile',      to: '/app/profile',      iconName: 'profile' },

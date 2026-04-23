@@ -3,6 +3,7 @@ import type { RouteObject } from 'react-router-dom';
 import { AppLayout } from '../../layouts/AppLayout';
 import { ProtectedRoute } from './guards';
 import { AchievementsPage } from '../../pages/app/Achievements';
+import { GamesPage } from '../../pages/app/Games';
 import { DashboardPage } from '../../pages/app/Dashboard';
 import { LeaderboardPage } from '../../pages/app/Leaderboard';
 import { MapExplorerPage } from '../../pages/app/MapExplorer';
@@ -54,6 +55,9 @@ export const appRoutes: RouteObject[] = [
 
       /* /app/stats — Statistics */
       { path: 'stats', element: <StatisticsPage /> },
+
+      /* /app/games — Games hub */
+      { path: 'games', element: <GamesPage /> },
 
       /* /app/achievements — Achievements / Badges */
       { path: 'achievements', element: <AchievementsPage /> },

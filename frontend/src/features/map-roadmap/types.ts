@@ -4,6 +4,8 @@ export type GameType =
   | "GuessTheLandmark"
   | "StreetFoodSprint";
 
+export type LessonType = "article" | "video" | "summary";
+
 export interface Position {
   /** X coordinate as a percentage (0-100) for responsive positioning */
   x: number;
@@ -28,11 +30,22 @@ export interface GameNode {
   routePath?: string;
 }
 
+export interface LessonNode {
+  id: string;
+  title: string;
+  lessonType: LessonType;
+  /** ID used to route to /app/lesson/:lessonId */
+  lessonId: string;
+  position: Position;
+  isLocked: boolean;
+  isCompleted: boolean;
+}
+
 export interface CountryRoadmap {
   /** Unique country code (e.g., "kz" for Kazakhstan) */
   countryCode: string;
   /** URL or path to the background map image */
   mapImage: string;
-  /** List of all game nodes available on this country's map */
-  nodes: GameNode[];
+  /** List of all lesson nodes on this country's roadmap */
+  nodes: LessonNode[];
 }

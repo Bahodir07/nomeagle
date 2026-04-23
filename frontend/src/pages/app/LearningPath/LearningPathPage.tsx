@@ -37,6 +37,7 @@ const ArrowLeftIcon: React.FC = () => (
 
 type LoadState =
     | { status: "loading" }
+    | { status: "not_found" }
     | { status: "error"; error: string }
     | {
     status: "success";
@@ -84,15 +85,16 @@ export const LearningPathPage: React.FC = () => {
                     },
                 });
             } catch (error: any) {
+                if (error?.response?.status === 404) {
+                    setState({ status: "not_found" });
+                    return;
+                }
                 const message =
                     error?.response?.data?.message ||
                     error?.message ||
                     "Failed to load learning path.";
 
-                setState({
-                    status: "error",
-                    error: message,
-                });
+                setState({ status: "error", error: message });
             }
         };
 
@@ -180,6 +182,30 @@ export const LearningPathPage: React.FC = () => {
 
                 <div className={styles.container}>
                     <PageLoader text="Loading learning path..." variant="inverted" />
+                </div>
+            </div>
+        );
+    }
+
+    if (state.status === "not_found") {
+        return (
+            <div className={styles.page}>
+                <Link to="/app/map" className={styles.backLink}>
+                    <ArrowLeftIcon />
+                    Back to Map
+                </Link>
+                <div className={styles.container}>
+                    <div className={styles.comingSoon}>
+                        <span className={styles.comingSoonIcon}>🚧</span>
+                        <h2 className={styles.comingSoonTitle}>In Development</h2>
+                        <p className={styles.comingSoonText}>
+                            This country's learning path isn't available yet.<br />
+                            We're working on it — check back soon!
+                        </p>
+                        <Link to="/app/map" className={styles.comingSoonButton}>
+                            Explore other countries
+                        </Link>
+                    </div>
                 </div>
             </div>
         );

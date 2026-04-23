@@ -3,7 +3,20 @@
     "allow": [
       "Bash(php -l app/Http/Controllers/Api/StatisticsController.php)",
       "Bash(npx tsc *)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(curl -s http://localhost:8000/api/countries)",
+      "Bash(docker compose *)",
+      "Bash(git check-ignore *)",
+      "Bash(git subtree *)",
+      "Bash(git -C frontend remote -v)",
+      "Bash(npm install *)",
+      "Bash(npm ls *)",
+      "Bash(npm run *)"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\bahod\\.claude\\projects\\c--Users-bahod-PhpstormProjects-nomeagle\\memory"
     ]
   }
 }

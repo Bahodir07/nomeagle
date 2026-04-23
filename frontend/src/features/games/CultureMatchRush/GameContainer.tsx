@@ -14,7 +14,7 @@ export const GameContainer: React.FC = () => {
   const {
     gameState, countdownPhase, learnMoreOpen,
     lastMatchResult, lastPointsEarned,
-    initializeGame, startCountdown, tickCountdown, clearMatchFeedback, level,
+    initializeGame, tickCountdown, clearMatchFeedback, level,
   } = useGameStore();
 
   const [isShaking, setIsShaking] = React.useState(false);

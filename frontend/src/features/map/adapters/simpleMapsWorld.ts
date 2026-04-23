@@ -77,6 +77,8 @@ export class SimpleMapsWorldAdapter implements WorldMapAdapter {
     fill: '',
     code: null,
   };
+  private completedCodes: Set<string> = new Set();
+  private inProgressCodes: Set<string> = new Set();
 
   async init(
     container: HTMLElement,
@@ -123,6 +125,56 @@ export class SimpleMapsWorldAdapter implements WorldMapAdapter {
 
 
 
+  setCompletedCountries(iso2Codes: string[]): void {
+    const w = typeof window !== 'undefined' ? window : undefined;
+    if (!w?.simplemaps_worldmap_mapdata?.state_specific) return;
+
+    const stateSpecific = w.simplemaps_worldmap_mapdata.state_specific;
+    const refresh = w.simplemaps_worldmap?.refresh_state;
+
+    // Clear previous completions (skip currently selected — it shows flag pattern)
+    for (const code of this.completedCodes) {
+      if (code !== this.flagState.code && stateSpecific[code]) {
+        stateSpecific[code].color = 'default';
+        if (refresh) refresh(code);
+      }
+    }
+
+    this.completedCodes = new Set(iso2Codes.map((c) => c.toUpperCase()));
+
+    // Apply green to newly completed countries (skip currently selected)
+    for (const code of this.completedCodes) {
+      if (code !== this.flagState.code && stateSpecific[code]) {
+        stateSpecific[code].color = '#22c55e';
+        if (refresh) refresh(code);
+      }
+    }
+  }
+
+  setInProgressCountries(iso2Codes: string[]): void {
+    const w = typeof window !== 'undefined' ? window : undefined;
+    if (!w?.simplemaps_worldmap_mapdata?.state_specific) return;
+
+    const stateSpecific = w.simplemaps_worldmap_mapdata.state_specific;
+    const refresh = w.simplemaps_worldmap?.refresh_state;
+
+    for (const code of this.inProgressCodes) {
+      if (code !== this.flagState.code && stateSpecific[code] && !this.completedCodes.has(code)) {
+        stateSpecific[code].color = 'default';
+        if (refresh) refresh(code);
+      }
+    }
+
+    this.inProgressCodes = new Set(iso2Codes.map((c) => c.toUpperCase()));
+
+    for (const code of this.inProgressCodes) {
+      if (code !== this.flagState.code && stateSpecific[code] && !this.completedCodes.has(code)) {
+        stateSpecific[code].color = '#f97316';
+        if (refresh) refresh(code);
+      }
+    }
+  }
+
   destroy(): void {
     this.clickAbort?.abort();
     this.clickAbort = null;
@@ -151,7 +203,8 @@ export class SimpleMapsWorldAdapter implements WorldMapAdapter {
         state.path = null;
       }
       if (state.code && w.simplemaps_worldmap_mapdata?.state_specific?.[state.code] && w.simplemaps_worldmap?.refresh_state) {
-        w.simplemaps_worldmap_mapdata.state_specific[state.code].color = 'default';
+        const restoreColor = this.completedCodes.has(state.code) ? '#22c55e' : this.inProgressCodes.has(state.code) ? '#f97316' : 'default';
+        w.simplemaps_worldmap_mapdata.state_specific[state.code].color = restoreColor;
         if (w.simplemaps_worldmap_mapdata.locations) {
           w.simplemaps_worldmap_mapdata.locations = {};
           if (w.simplemaps_worldmap.refresh) w.simplemaps_worldmap.refresh();
@@ -168,7 +221,8 @@ export class SimpleMapsWorldAdapter implements WorldMapAdapter {
       state.path = null;
     }
     if (state.code && w.simplemaps_worldmap_mapdata?.state_specific?.[state.code] && w.simplemaps_worldmap?.refresh_state) {
-      w.simplemaps_worldmap_mapdata.state_specific[state.code].color = 'default';
+      const restoreColor = this.completedCodes.has(state.code) ? '#22c55e' : 'default';
+      w.simplemaps_worldmap_mapdata.state_specific[state.code].color = restoreColor;
       w.simplemaps_worldmap.refresh_state(state.code);
     }
 

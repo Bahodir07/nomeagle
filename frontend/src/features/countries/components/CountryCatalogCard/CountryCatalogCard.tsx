@@ -45,7 +45,7 @@ const FLAG_PLACEHOLDER =
    ========================================================================== */
 
 export interface CountryCatalogCardProps {
-  /** ISO 3166-1 alpha-2 code (lowercase), e.g. "jp" */
+  /** Slug used as key and navigation param */
   code: string;
   /** Display name, e.g. "Japan" */
   name: string;
@@ -53,6 +53,8 @@ export interface CountryCatalogCardProps {
   region?: string;
   /** Short description / tagline */
   description: string;
+  /** Full URL for the flag image from the backend */
+  flagUrl?: string | null;
   /** Called when the Learn button is clicked */
   onLearn: (code: string) => void;
   /** Optional extra className */
@@ -67,11 +69,12 @@ export const CountryCatalogCard: React.FC<CountryCatalogCardProps> = ({
   code,
   name,
   description,
+  flagUrl,
   onLearn,
   className,
 }) => {
   /* ---- State for flag image fallback ---- */
-  const [flagSrc, setFlagSrc] = useState(`/assets/icons/countries/${code}.svg`);
+  const [flagSrc, setFlagSrc] = useState(flagUrl ?? `/assets/icons/countries/${code}.svg`);
   const [flagError, setFlagError] = useState(false);
 
   /** Handle flag image load error — show fallback */

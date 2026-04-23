@@ -19,6 +19,12 @@ export interface WorldMapProps {
   onCountryClick?: (iso2: string) => void;
   /** Called when hover enters a country (iso2) or leaves (null). */
   onCountryHover?: (iso2: string | null) => void;
+  /** ISO2 codes of countries to paint green (100% complete). */
+  completedCountries?: string[];
+  /** ISO2 codes of countries to paint orange (in progress). */
+  inProgressCountries?: string[];
+  /** Per-country color overrides for heatmap visualizations. ISO2 → CSS color. */
+  heatmapColors?: Record<string, string>;
 }
 
 /* ---------- Component ---------- */
@@ -30,6 +36,8 @@ export const WorldMap: React.FC<WorldMapProps> = ({
   selectedCountry,
   onCountryClick,
   onCountryHover,
+  completedCountries,
+  inProgressCountries,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<HTMLDivElement>(null);
@@ -97,6 +105,16 @@ export const WorldMap: React.FC<WorldMapProps> = ({
     };
   }, [status, selectedCountry]);
 
+  useEffect(() => {
+    if (status !== 'ready') return;
+    adapterRef.current?.setCompletedCountries?.(completedCountries ?? []);
+  }, [status, completedCountries]);
+
+  useEffect(() => {
+    if (status !== 'ready') return;
+    adapterRef.current?.setInProgressCountries?.(inProgressCountries ?? []);
+  }, [status, inProgressCountries]);
+
   const loadMap = useCallback(() => {
     setStatus('loading');
     setErrorMessage('');
@@ -106,13 +124,14 @@ export const WorldMap: React.FC<WorldMapProps> = ({
     if (!mapEl) return;
     const adapter = createWorldMapAdapter();
     adapterRef.current = adapter;
-    adapter
-      .init(mapEl, { height }, {
+    Promise.resolve(
+      adapter.init(mapEl, { height }, {
         onCountryClick: (iso2) => handlersRef.current.onCountryClick?.(iso2),
         onCountryHover: (iso2) => handlersRef.current.onCountryHover?.(iso2 ?? null),
       })
+    )
       .then(() => setStatus('ready'))
-      .catch((err) => {
+      .catch((err: unknown) => {
         setErrorMessage(err instanceof Error ? err.message : 'Failed to load map.');
         setStatus('error');
       });

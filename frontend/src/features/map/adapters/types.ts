@@ -35,4 +35,9 @@ export interface WorldMapAdapter {
 
   /** Set the currently selected country (e.g. for highlight/flag fill). ISO2 or undefined to clear. */
   setSelectedCountry(iso2: string | undefined): void;
+
+  /** Paint completed countries green. ISO2 codes (e.g. ["JP", "DE"]). */
+  setCompletedCountries?(iso2Codes: string[]): void;
+  /** Paint in-progress countries orange. ISO2 codes. */
+  setInProgressCountries?(iso2Codes: string[]): void;
 }

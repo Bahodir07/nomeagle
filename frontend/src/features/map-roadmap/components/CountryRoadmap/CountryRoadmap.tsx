@@ -1,20 +1,16 @@
 import React from "react";
 import styles from "./CountryRoadmap.module.css";
-import { CountryRoadmap as CountryRoadmapType, GameType } from "../../types";
+import { CountryRoadmap as CountryRoadmapType, LessonType } from "../../types";
 import { RoadPath } from "../RoadPath/RoadPath";
 
-/* Maps each game type to an emoji/icon rendered inside the node */
-const GAME_ICONS: Record<GameType, string> = {
-  CultureMatchRush: "🃏",
-  FestivalTimeline: "🎉",
-  GuessTheLandmark: "🏛️",
-  StreetFoodSprint: "🍜",
+const LESSON_ICONS: Record<LessonType, string> = {
+  article: "📄",
+  video: "▶️",
+  summary: "📝",
 };
 
 interface CountryRoadmapProps {
-  /** The full roadmap model data (e.g. Kazakhstan) */
   roadmap: CountryRoadmapType;
-  /** Callback fired when an available/completed node is clicked */
   onNodeClick?: (nodeId: string) => void;
 }
 
@@ -32,11 +28,9 @@ export const CountryRoadmap: React.FC<CountryRoadmapProps> = ({
           draggable={false}
         />
 
-        {/* Nodes Overlay positioned relatively over the map image */}
         <div className={styles.nodesOverlay}>
           <RoadPath nodes={roadmap.nodes} />
           {roadmap.nodes.map((node, index) => {
-            // Determine the state class (Duolingo style)
             let stateClass = "";
             if (node.isCompleted) {
               stateClass = styles.isCompleted;
@@ -69,7 +63,7 @@ export const CountryRoadmap: React.FC<CountryRoadmapProps> = ({
                   aria-label={`Level ${index + 1}: ${node.title}`}
                 >
                   <span className={styles.nodeIcon} aria-hidden="true">
-                    {GAME_ICONS[node.gameType]}
+                    {LESSON_ICONS[node.lessonType]}
                   </span>
                 </div>
               </div>
@@ -80,4 +74,3 @@ export const CountryRoadmap: React.FC<CountryRoadmapProps> = ({
     </div>
   );
 };
-

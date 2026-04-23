@@ -240,6 +240,7 @@ export const SearchCountriesPage: React.FC = () => {
                       code={country.slug}
                       name={country.name}
                       description={country.description || ''}
+                      flagUrl={country.flagUrl}
                       onLearn={handleLearn}
                     />
                   ))}

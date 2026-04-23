@@ -1,4 +1,4 @@
-import { GameNode } from "../types";
+import { LessonNode } from "../types";
 
 const LOCAL_STORAGE_KEY = "road_map_progression_state";
 
@@ -25,7 +25,7 @@ const getCompletedNodeIds = (): string[] => {
  * @param nodes The original array of game nodes
  * @returns A new array of game nodes with updated isLocked and isCompleted states
  */
-export const getUnlockedNodes = (nodes: GameNode[]): GameNode[] => {
+export const getUnlockedNodes = (nodes: LessonNode[]): LessonNode[] => {
   const completedIds = new Set(getCompletedNodeIds());
   let isNextUnlocked = true; // The first node in the path is unlocked by default
 
