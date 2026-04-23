@@ -82,7 +82,7 @@ class DashboardController extends Controller
             };
 
             $flagUrl = $country->flag_path
-                ? Storage::url($country->flag_path)
+                ? Storage::disk('public')->url($country->flag_path)
                 : null;
 
             return [
