@@ -19,25 +19,24 @@ export type AuthUser = {
     email: string;
 };
 
-export async function csrfCookie() {
-    await http.get('/sanctum/csrf-cookie');
-}
+export type AuthResponse = {
+    message: string;
+    user: AuthUser;
+    token: string;
+};
 
-export async function loginRequest(payload: LoginPayload) {
-    await csrfCookie();
-    const { data } = await http.post('/login', payload);
+export async function loginRequest(payload: LoginPayload): Promise<AuthResponse> {
+    const { data } = await http.post<AuthResponse>('/api/login', payload);
     return data;
 }
 
-export async function registerRequest(payload: RegisterPayload) {
-    await csrfCookie();
-    const { data } = await http.post('/register', payload);
+export async function registerRequest(payload: RegisterPayload): Promise<AuthResponse> {
+    const { data } = await http.post<AuthResponse>('/api/register', payload);
     return data;
 }
 
-export async function logoutRequest() {
-    const { data } = await http.post('/logout');
-    return data;
+export async function logoutRequest(): Promise<void> {
+    await http.post('/api/logout');
 }
 
 export async function meRequest() {

@@ -18,17 +18,17 @@ class AuthController extends Controller
         $validated = $request->validated();
 
         $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
+            'name'     => $validated['name'],
+            'email'    => $validated['email'],
             'password' => Hash::make($validated['password']),
         ]);
 
-        Auth::login($user);
-        $request->session()->regenerate();
+        $token = $user->createToken('spa')->plainTextToken;
 
         return response()->json([
             'message' => 'Registered successfully.',
-            'user' => $user,
+            'user'    => $user,
+            'token'   => $token,
         ], 201);
     }
 
@@ -36,26 +36,26 @@ class AuthController extends Controller
     {
         $validated = $request->validated();
 
-        if (! Auth::attempt($validated, $request->boolean('remember'))) {
+        if (! Auth::attempt($validated)) {
             return response()->json([
                 'message' => 'Invalid credentials.',
             ], 422);
         }
 
-        $request->session()->regenerate();
+        /** @var User $user */
+        $user  = Auth::user();
+        $token = $user->createToken('spa')->plainTextToken;
 
         return response()->json([
             'message' => 'Logged in successfully.',
-            'user' => $request->user(),
+            'user'    => $user,
+            'token'   => $token,
         ]);
     }
 
     public function logout(Request $request): JsonResponse
     {
-        Auth::guard('web')->logout();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        $request->user()->currentAccessToken()->delete();
 
         return response()->json([
             'message' => 'Logged out successfully.',

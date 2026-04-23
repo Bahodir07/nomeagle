@@ -8,6 +8,10 @@ import {
     registerRequest,
 } from '../api/auth';
 
+const TOKEN_KEY = 'auth_token';
+const saveToken = (token: string) => localStorage.setItem(TOKEN_KEY, token);
+const clearToken = () => localStorage.removeItem(TOKEN_KEY);
+
 type AuthState = {
     user: AuthUser | null;
     isAuthenticated: boolean;
@@ -59,6 +63,11 @@ export const useAuth = create<AuthState>((set) => ({
     fetchMe: async () => {
         set({ isLoading: true, globalError: null });
 
+        if (!localStorage.getItem(TOKEN_KEY)) {
+            set({ isAuthChecked: true, isLoading: false });
+            return;
+        }
+
         try {
             const data = await meRequest();
 
@@ -70,6 +79,7 @@ export const useAuth = create<AuthState>((set) => ({
                 globalError: null,
             });
         } catch {
+            clearToken();
             set({
                 user: null,
                 isAuthenticated: false,
@@ -83,7 +93,8 @@ export const useAuth = create<AuthState>((set) => ({
         set({ isLoading: true, globalError: null });
 
         try {
-            await loginRequest(payload);
+            const authData = await loginRequest(payload);
+            saveToken(authData.token);
             const data = await meRequest();
 
             set({
@@ -94,6 +105,7 @@ export const useAuth = create<AuthState>((set) => ({
                 globalError: null,
             });
         } catch (error) {
+            clearToken();
             set({
                 user: null,
                 isAuthenticated: false,
@@ -110,7 +122,8 @@ export const useAuth = create<AuthState>((set) => ({
         set({ isLoading: true, globalError: null });
 
         try {
-            await registerRequest(payload);
+            const authData = await registerRequest(payload);
+            saveToken(authData.token);
             const data = await meRequest();
 
             set({
@@ -121,6 +134,7 @@ export const useAuth = create<AuthState>((set) => ({
                 globalError: null,
             });
         } catch (error) {
+            clearToken();
             set({
                 user: null,
                 isAuthenticated: false,
@@ -139,6 +153,7 @@ export const useAuth = create<AuthState>((set) => ({
         try {
             await logoutRequest();
         } finally {
+            clearToken();
             set({
                 user: null,
                 isAuthenticated: false,
