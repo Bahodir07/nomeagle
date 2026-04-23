@@ -54,7 +54,8 @@
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php -r \"foreach(['storage/framework/views','storage/framework/sessions','storage/framework/cache/data','storage/logs'] as \\$d){is_dir(\\$d)||mkdir(\\$d,0755,true);}\"",
             "@php artisan package:discover --ansi",
-            "@php artisan filament:upgrade"
+            "@php artisan filament:upgrade",
+            "@php artisan storage:link --force"
         ],
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
