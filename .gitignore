@@ -6,7 +6,6 @@
 /backend/storage/logs/
 /backend/storage/framework/
 /backend/storage/app/public/
-/backend/bootstrap/cache/
 
 # OS / IDE
 .DS_Store
