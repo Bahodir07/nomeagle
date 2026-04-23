@@ -4,7 +4,6 @@
 /backend/.env
 /backend/storage/*.key
 /backend/storage/logs/
-/backend/storage/framework/
 /backend/storage/app/public/
 
 # OS / IDE
