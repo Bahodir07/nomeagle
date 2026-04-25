@@ -9,7 +9,7 @@ import { GuessTheLandmarkPage } from '../../pages/app/Game/GuessTheLandmarkPage'
 import { LessonPage } from '../../pages/app/Lesson';
 import { CountryRoadmapPage } from '../../pages/app/CountryRoadmap/CountryRoadmapPage';
 import { AuthLayout } from '../../layouts/AuthLayout';
-import { LoginPage, RegisterPage } from '../../pages/auth';
+import { LoginPage, RegisterPage, ForgotPasswordPage, ResetPasswordPage } from '../../pages/auth';
 import { LandingPage } from '../../pages/LandingPage';
 
 /**
@@ -42,6 +42,14 @@ export const router = createBrowserRouter([
       {
         path: '/register',
         element: <RegisterPage />,
+      },
+      {
+        path: '/forgot-password',
+        element: <ForgotPasswordPage />,
+      },
+      {
+        path: '/reset-password',
+        element: <ResetPasswordPage />,
       },
     ],
   },

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import classes from './LoginPage.module.css';
 import { Card, CardHeader, CardContent, CardFooter } from '../../components/ui/Card';
 import { Input } from '../../components/ui/Input';
@@ -10,6 +10,8 @@ import axios from 'axios';
 
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const wasReset = searchParams.get('reset') === '1';
   const { login, isLoading, globalError, clearError } = useAuth();
   
   // Form State
@@ -75,6 +77,11 @@ export const LoginPage: React.FC = () => {
       </CardHeader>
       
       <CardContent>
+        {wasReset && (
+          <div style={{ color: '#166534', backgroundColor: '#dcfce7', padding: '12px', borderRadius: '8px', marginBottom: '16px', fontSize: '0.875rem' }}>
+            Password reset successfully. You can now sign in.
+          </div>
+        )}
         {/* Render global API errors like 'Invalid credentials' */}
         {globalError && (
           <div style={{ color: 'var(--ne-danger)', backgroundColor: '#fee2e2', padding: '12px', borderRadius: '8px', marginBottom: '16px', fontSize: '0.875rem' }}>
@@ -106,7 +113,7 @@ export const LoginPage: React.FC = () => {
               checked={rememberMe}
               onChange={(e) => setRememberMe(e.target.checked)}
             />
-            <a href="#" className={classes.forgotPasswordLink}>Forgot password?</a>
+            <Link to="/forgot-password" className={classes.forgotPasswordLink}>Forgot password?</Link>
           </div>
 
           <Button type="submit" variant="primary" size="lg" style={{ marginTop: 'var(--ne-2)' }} disabled={isLoading}>
