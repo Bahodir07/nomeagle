@@ -229,6 +229,13 @@
   border-color: #bbf7d0;
 }
 
+.comingSoonBox {
+  background-color: var(--ne-bg);
+  border-color: var(--ne-border);
+  border-style: dashed;
+  color: var(--ne-muted);
+}
+
 .reason,
 .funFact {
   margin: 0;

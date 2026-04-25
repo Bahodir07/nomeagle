@@ -10,6 +10,7 @@ enum LessonType: string
     case QUIZ = 'quiz';
     case SCENARIO = 'scenario';
     case SUMMARY = 'summary';
+    case MATCHING = 'matching';
 
     public function label(): string
     {
@@ -20,6 +21,7 @@ enum LessonType: string
             self::QUIZ => 'Quiz',
             self::SCENARIO => 'Scenario',
             self::SUMMARY => 'Summary',
+            self::MATCHING => 'Matching',
         };
     }
 

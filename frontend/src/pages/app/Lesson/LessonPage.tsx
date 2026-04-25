@@ -7,11 +7,13 @@ import type {ArticleLesson} from "../../../features/lessons/article";
 import type {FlashcardsLesson, FlashcardsLessonResult} from "../../../features/lessons/flashcards";
 import type {QuizLesson} from "../../../features/lessons/quiz";
 import type {ScenarioLesson} from "../../../features/lessons/scenario";
+import type {MatchingLesson} from "../../../features/lessons/matching";
 import type {SummaryLesson} from "../../../features/lessons/summary";
 import type {VideoLesson, VideoTranscriptBlock} from "../../../features/lessons/video";
 
 const ArticleLessonPlayer = lazy(() => import("../../../features/lessons/article").then(m => ({default: m.ArticleLessonPlayer})));
 const FlashcardsLessonPlayer = lazy(() => import("../../../features/lessons/flashcards").then(m => ({default: m.FlashcardsLessonPlayer})));
+const MatchingLessonPlayer = lazy(() => import("../../../features/lessons/matching").then(m => ({default: m.MatchingLessonPlayer})));
 const QuizLessonPlayer = lazy(() => import("../../../features/lessons/quiz").then(m => ({default: m.QuizLessonPlayer})));
 const ScenarioLessonPlayer = lazy(() => import("../../../features/lessons/scenario").then(m => ({default: m.ScenarioLessonPlayer})));
 const SummaryLessonPlayer = lazy(() => import("../../../features/lessons/summary").then(m => ({default: m.SummaryLessonPlayer})));
@@ -20,6 +22,7 @@ const VideoLessonPlayer = lazy(() => import("../../../features/lessons/video").t
 import {
     getFlashcards,
     getLesson,
+    getMatchingPairs,
     getQuizQuestions,
     getScenarios,
 } from "../../../app/api/content";
@@ -116,7 +119,7 @@ type LoadState =
     | { status: "success"; lessonType: "scenario"; lessonTitle: string; payload: ScenarioLesson }
     | { status: "success"; lessonType: "quiz"; lessonTitle: string; payload: QuizLesson }
     | { status: "success"; lessonType: "flashcards"; lessonTitle: string; payload: FlashcardsLesson }
-    | { status: "success"; lessonType: "matching"; lessonTitle: string; payload: any };
+    | { status: "success"; lessonType: "matching"; lessonTitle: string; payload: MatchingLesson };
 
 const ArrowLeftIcon: React.FC = () => (
     <svg
@@ -320,6 +323,39 @@ function mapFlashcardsLesson(
     };
 }
 
+type ApiMatchingPair = {
+    id?: number | string;
+    left_text?: string;
+    right_text?: string;
+};
+
+function mapMatchingLesson(
+    apiLesson: ApiLesson,
+    pairs: ApiMatchingPair[]
+): MatchingLesson {
+    return {
+        lessonId: String(apiLesson.id),
+        title: apiLesson.title,
+        instruction: apiLesson.description || "Match each item on the left with its pair on the right.",
+        contentType: "text",
+        xpReward: Number(apiLesson?.xp_reward ?? 0),
+        pairs: pairs.map((pair, index) => {
+            const pairId = String(pair?.id ?? `pair-${index + 1}`);
+            return {
+                pairId,
+                left: {
+                    id: `${pairId}-left`,
+                    text: String(pair?.left_text ?? ""),
+                },
+                right: {
+                    id: `${pairId}-right`,
+                    text: String(pair?.right_text ?? ""),
+                },
+            };
+        }),
+    };
+}
+
 function computeStarsFromProgress(progress?: Partial<ProgressSnapshot> | null): number {
     const correctAnswers = Number(progress?.correct_answers ?? 0);
     const totalAttempts = Number(progress?.total_attempts ?? 0);
@@ -466,6 +502,22 @@ export const LessonPage: React.FC = () => {
                         lessonType: "flashcards",
                         lessonTitle: normalizedTitle,
                         payload: mapFlashcardsLesson(apiLesson, cards),
+                    });
+                    return;
+                }
+
+                if (normalizedType === "matching") {
+                    const pairs = (await getMatchingPairs(
+                        countrySlug,
+                        moduleSlug,
+                        lessonSlug
+                    )) as ApiMatchingPair[];
+
+                    setState({
+                        status: "success",
+                        lessonType: "matching",
+                        lessonTitle: normalizedTitle,
+                        payload: mapMatchingLesson(apiLesson, pairs),
                     });
                     return;
                 }
@@ -697,6 +749,10 @@ export const LessonPage: React.FC = () => {
         await savePlainCompletion();
     };
 
+    const handleMatchingComplete = async (_result: any) => {
+        await savePlainCompletion();
+    };
+
     const handleGoBack = () => {
         navigate(-1);
     };
@@ -713,6 +769,8 @@ export const LessonPage: React.FC = () => {
                 return <QuizLessonPlayer lesson={state.payload} onComplete={handleQuizComplete}/>;
             case "flashcards":
                 return <FlashcardsLessonPlayer lesson={state.payload} onComplete={handleFlashcardsComplete}/>;
+            case "matching":
+                return <MatchingLessonPlayer lesson={state.payload} onComplete={handleMatchingComplete}/>;
             case "summary":
                 return <SummaryLessonPlayer lesson={state.payload} onComplete={handleComplete}/>;
             case "article":

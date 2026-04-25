@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\LessonController;
 use App\Http\Controllers\Api\LessonProgressController;
 use App\Http\Controllers\Api\ModuleController;
 use App\Http\Controllers\Api\QuizQuestionController;
+use App\Http\Controllers\Api\MatchingPairController;
 use App\Http\Controllers\Api\ScenarioController;
 use App\Http\Controllers\Api\AchievementsController;
 use App\Http\Controllers\Api\LearningPathController;
@@ -54,6 +55,8 @@ Route::prefix('countries')->group(function () {
 
     Route::get('/{country:slug}/modules/{module:slug}/lessons/{lesson:slug}/flashcards', [FlashcardController::class, 'index']);
     Route::get('/{country:slug}/modules/{module:slug}/lessons/{lesson:slug}/flashcards/{flashcard}', [FlashcardController::class, 'show']);
+
+    Route::get('/{country:slug}/modules/{module:slug}/lessons/{lesson:slug}/matching-pairs', [MatchingPairController::class, 'index']);
 });
 
 /*

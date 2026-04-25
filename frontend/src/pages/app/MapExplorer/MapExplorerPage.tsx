@@ -43,7 +43,33 @@ const BACKEND_SLUG: Record<string, string> = {
   RU: 'russian',
   KZ: 'kazakh',
   US: 'american',
+  CN: 'chinese',
+  CA: 'canadian',
 };
+
+function ComingSoonPanel({ details }: { details: MapCountryDetails }) {
+  return (
+    <>
+      <div className={styles.metaRow}>
+        <img
+          src={`/assets/icons/countries/${details.code}.svg`}
+          alt=""
+          className={styles.flag}
+        />
+        <div className={styles.metaText}>
+          <h2 className={styles.countryName}>{details.name}</h2>
+          <p className={styles.region}>{details.region}</p>
+        </div>
+      </div>
+      <p className={styles.hook}>{details.hookSentence}</p>
+      <div className={`${styles.infoBox} ${styles.comingSoonBox}`}>
+        <p className={styles.reason}>
+          This country isn't available in the platform yet. Check back soon!
+        </p>
+      </div>
+    </>
+  );
+}
 
 function CountryDetailsPanel({
   details,
@@ -192,6 +218,11 @@ export const MapExplorerPage: React.FC = () => {
     details = null;
   }
 
+  const hasCourseContent = useCallback(
+    (iso2: string) => Boolean(BACKEND_SLUG[iso2.toUpperCase()]),
+    [],
+  );
+
   const handleEnterCountry = useCallback(() => {
     if (!selectedCountry) return;
     const slug = BACKEND_SLUG[selectedCountry.toUpperCase()];
@@ -233,7 +264,11 @@ export const MapExplorerPage: React.FC = () => {
               </CardHeader>
               <CardContent className={styles.panelContent}>
                 {details ? (
-                  <CountryDetailsPanel details={details} onEnter={handleEnterCountry} />
+                  hasCourseContent(selectedCountry!) ? (
+                    <CountryDetailsPanel details={details} onEnter={handleEnterCountry} />
+                  ) : (
+                    <ComingSoonPanel details={details} />
+                  )
                 ) : (
                   <p className={styles.emptyHint}>
                     Loading details for {selectedCountry}…

@@ -63,6 +63,13 @@ export async function getFlashcards(countrySlug: string, moduleSlug: string, les
     return unwrapResource(data);
 }
 
+export async function getMatchingPairs(countrySlug: string, moduleSlug: string, lessonSlug: string) {
+    const { data } = await http.get(
+        `/api/countries/${countrySlug}/modules/${moduleSlug}/lessons/${lessonSlug}/matching-pairs`
+    );
+    return unwrapResource(data);
+}
+
 export interface LearningPathResponse {
     course: import("../../features/lessons/types").CountryCourse;
     progress: {
