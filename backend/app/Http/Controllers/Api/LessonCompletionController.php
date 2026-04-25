@@ -42,9 +42,11 @@ class LessonCompletionController extends Controller
 
         abort_unless(in_array($currentType, $allowedTypes, true), 422);
 
-        $durationSeconds = (int)$request->input('duration_seconds', 0);
+        $durationSeconds  = (int)$request->input('duration_seconds', 0);
+        $correctAnswers   = $request->has('correct_answers') ? (int)$request->input('correct_answers') : null;
+        $totalAttempts    = $request->has('total_attempts')  ? (int)$request->input('total_attempts')  : null;
 
-        $result = DB::transaction(function () use ($user, $lessonRecord, $durationSeconds) {
+        $result = DB::transaction(function () use ($user, $lessonRecord, $durationSeconds, $correctAnswers, $totalAttempts) {
             $granted = DB::table('user_xp_grants')->insertOrIgnore([
                 'user_id'        => $user->id,
                 'grantable_type' => 'lesson',
@@ -85,8 +87,8 @@ class LessonCompletionController extends Controller
                     'progress_pct' => 100,
                     'total_items' => 1,
                     'completed_items' => 1,
-                    'correct_answers' => 0,
-                    'total_attempts' => $completionCount,
+                    'correct_answers' => $correctAnswers ?? 0,
+                    'total_attempts' => $totalAttempts ?? $completionCount,
                     'xp_earned' => $xpTotal,
                     'completed_at' => $existingProgress?->completed_at ?? now(),
                     'last_activity_at' => now(),

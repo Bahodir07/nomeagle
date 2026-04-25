@@ -15,6 +15,8 @@ class CompleteLessonRequest extends FormRequest
     {
         return [
             'duration_seconds' => ['nullable', 'integer', 'min:0'],
+            'correct_answers'  => ['nullable', 'integer', 'min:0'],
+            'total_attempts'   => ['nullable', 'integer', 'min:0'],
         ];
     }
 }
