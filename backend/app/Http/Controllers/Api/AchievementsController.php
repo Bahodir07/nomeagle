@@ -83,6 +83,7 @@ class AchievementsController extends Controller
             ->where('q.is_active', true)
             ->groupBy('q.lesson_id')
             ->havingRaw('correct_count >= total')
+            ->get()
             ->count();
     }
 
