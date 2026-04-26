@@ -144,7 +144,14 @@ class LearningPathController extends Controller
         $starsTotal = array_sum($starsByLessonId);
 
         $pointsTotal = collect($completedLessonIds)
-            ->sum(function (string $lessonUiId) use ($lessonsPayload) {
+            ->sum(function (string $lessonUiId) use ($lessonsPayload, $progressRows) {
+                $dbId = $lessonsPayload[$lessonUiId]['db_id'] ?? null;
+                if ($dbId) {
+                    $prog = $progressRows->get($dbId);
+                    if ($prog !== null) {
+                        return (int)$prog->xp_earned;
+                    }
+                }
                 return (int)($lessonsPayload[$lessonUiId]['xpReward'] ?? 0);
             });
 

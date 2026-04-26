@@ -258,8 +258,8 @@ export const LearningPathPage: React.FC = () => {
                     completedCount={summary.completedCount}
                     totalCount={summary.totalCount}
                     progressPct={summary.progressPct}
-                    starsTotal={summary.starsTotal}
-                    pointsTotal={summary.pointsTotal}
+                    starsTotal={course.starsTotal}
+                    pointsTotal={course.pointsTotal}
                     flagUrl={course.flagUrl}
                     flagEmoji={course.flagEmoji}
                 />
