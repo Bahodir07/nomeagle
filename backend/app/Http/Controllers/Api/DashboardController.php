@@ -10,6 +10,7 @@ use App\Models\UserLessonProgress;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class DashboardController extends Controller
@@ -23,12 +24,20 @@ class DashboardController extends Controller
         }
 
         try {
-            $data = Cache::remember("dashboard:user:{$user->id}", 180, function () use ($user) {
-                return $this->buildDashboard($user);
-            });
-        } catch (\Exception $e) {
             $data = $this->buildDashboard($user);
+        } catch (\Exception $e) {
+            Log::error('Dashboard build failed', [
+                'user_id' => $user->id,
+                'error'   => $e->getMessage(),
+                'file'    => $e->getFile(),
+                'line'    => $e->getLine(),
+            ]);
+            throw $e;
         }
+
+        try {
+            Cache::put("dashboard:user:{$user->id}", $data, 180);
+        } catch (\Exception $ignored) {}
 
         return response()->json($data);
     }
