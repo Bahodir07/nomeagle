@@ -94,7 +94,7 @@ class AchievementsController extends Controller
             })
             ->where('q.is_active', true)
             ->groupBy('q.lesson_id')
-            ->havingRaw('correct_count >= total')
+            ->havingRaw('COUNT(DISTINCT CASE WHEN a.is_correct THEN a.quiz_question_id END) >= COUNT(DISTINCT q.id)')
             ->get()
             ->count();
     }
