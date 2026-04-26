@@ -22,9 +22,13 @@ class DashboardController extends Controller
             return response()->json(['message' => 'Authentication required for progress tracking.'], 401);
         }
 
-        $data = Cache::remember("dashboard:user:{$user->id}", 180, function () use ($user) {
-            return $this->buildDashboard($user);
-        });
+        try {
+            $data = Cache::remember("dashboard:user:{$user->id}", 180, function () use ($user) {
+                return $this->buildDashboard($user);
+            });
+        } catch (\Exception $e) {
+            $data = $this->buildDashboard($user);
+        }
 
         return response()->json($data);
     }

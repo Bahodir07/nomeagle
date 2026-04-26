@@ -26,14 +26,17 @@ class LeaderboardController extends Controller
             default => null,
         };
 
-        $totalActiveLessons = Cache::remember('leaderboard:total_lessons', 600, fn() =>
-            Lesson::where('is_active', true)->count()
-        );
+        try {
+            $totalActiveLessons = Cache::remember('leaderboard:total_lessons', 600, fn() =>
+                Lesson::where('is_active', true)->count()
+            );
+        } catch (\Exception $e) {
+            $totalActiveLessons = Lesson::where('is_active', true)->count();
+        }
 
         $cacheKey = "leaderboard:{$timeRange}:p{$page}:pp{$perPage}";
 
-        // Single JOIN query replaces 3 separate queries
-        $entries = Cache::remember($cacheKey, 120, fn() => UserLessonProgress::query()
+        $buildEntries = fn() => UserLessonProgress::query()
             ->join('users', 'user_lesson_progress.user_id', '=', 'users.id')
             ->select([
                 'users.id',
@@ -50,7 +53,7 @@ class LeaderboardController extends Controller
             ->offset(($page - 1) * $perPage)
             ->get()
             ->map(function ($row) use ($totalActiveLessons) {
-                $xp   = (int) $row->xp;
+                $xp        = (int) $row->xp;
                 $completed = (int) $row->completed_count;
                 $lessonsCompletedPct = $totalActiveLessons > 0
                     ? (int) floor(($completed / $totalActiveLessons) * 100)
@@ -68,8 +71,13 @@ class LeaderboardController extends Controller
                     'lessonsCompletedPct' => $lessonsCompletedPct,
                 ];
             })
-            ->values()
-        );
+            ->values();
+
+        try {
+            $entries = Cache::remember($cacheKey, 120, $buildEntries);
+        } catch (\Exception $e) {
+            $entries = $buildEntries();
+        }
 
         return response()->json([
             'timeRange'     => $timeRange,

@@ -20,7 +20,11 @@ class StatisticsController extends Controller
     {
         $user = request()->user();
 
-        $data = Cache::remember("statistics:user:{$user->id}", 300, fn() => $this->buildStatistics($user));
+        try {
+            $data = Cache::remember("statistics:user:{$user->id}", 300, fn() => $this->buildStatistics($user));
+        } catch (\Exception $e) {
+            $data = $this->buildStatistics($user);
+        }
 
         return response()->json($data);
     }

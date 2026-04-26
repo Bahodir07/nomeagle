@@ -15,7 +15,11 @@ class AchievementsController extends Controller
     {
         $user = request()->user();
 
-        $data = Cache::remember("achievements:user:{$user->id}", 300, fn() => $this->buildAchievements($user));
+        try {
+            $data = Cache::remember("achievements:user:{$user->id}", 300, fn() => $this->buildAchievements($user));
+        } catch (\Exception $e) {
+            $data = $this->buildAchievements($user);
+        }
 
         return response()->json($data);
     }
