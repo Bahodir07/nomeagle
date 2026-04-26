@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Country;
 use App\Models\UserLessonProgress;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class AchievementsController extends Controller
@@ -14,6 +15,13 @@ class AchievementsController extends Controller
     {
         $user = request()->user();
 
+        $data = Cache::remember("achievements:user:{$user->id}", 300, fn() => $this->buildAchievements($user));
+
+        return response()->json($data);
+    }
+
+    private function buildAchievements($user): array
+    {
         $countries = Country::query()
             ->where('is_active', true)
             ->with([
@@ -56,7 +64,7 @@ class AchievementsController extends Controller
         $perfectQuizCount = $this->computePerfectQuizCount($user->id);
         $lastQuizScorePct = $this->computeLastQuizScorePct($user->id);
 
-        return response()->json([
+        return [
             'completedCountriesCount' => count($completedCountryCodes),
             'completedCountryCodes' => $completedCountryCodes,
             'currentStreakDays' => (int) ($user->current_streak ?? 0),
@@ -65,7 +73,7 @@ class AchievementsController extends Controller
             'lastQuizScorePct' => $lastQuizScorePct,
             'completedLessonsByCountry' => $completedLessonsByCountry,
             'totalLessonsByCountry' => $totalLessonsByCountry,
-        ]);
+        ];
     }
 
     private function computePerfectQuizCount(int $userId): int

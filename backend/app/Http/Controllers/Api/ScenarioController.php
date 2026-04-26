@@ -11,6 +11,7 @@ use App\Models\ScenarioAttempt;
 use App\Models\UserLessonProgress;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class ScenarioController extends Controller
@@ -173,6 +174,10 @@ class ScenarioController extends Controller
 
             return compact('xpEarned', 'progress');
         });
+
+        $userId = $user->id;
+        Cache::forget("dashboard:user:{$userId}");
+        Cache::forget("statistics:user:{$userId}");
 
         return response()->json([
             'correct' => $isCorrect,

@@ -4,18 +4,20 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Lesson;
-use App\Models\User;
 use App\Models\UserLessonProgress;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class LeaderboardController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
-        $user = $request->user();
+        $user      = $request->user();
         $timeRange = $request->query('time_range', 'week');
+        $perPage   = min((int) $request->query('per_page', 50), 100);
+        $page      = max((int) $request->query('page', 1), 1);
 
         $since = match ($timeRange) {
             'today' => now()->startOfDay(),
@@ -24,56 +26,57 @@ class LeaderboardController extends Controller
             default => null,
         };
 
-        $totalActiveLessons = Lesson::where('is_active', true)->count();
+        $totalActiveLessons = Cache::remember('leaderboard:total_lessons', 600, fn() =>
+            Lesson::where('is_active', true)->count()
+        );
 
-        $xpQuery = UserLessonProgress::query()
-            ->select('user_id', DB::raw('SUM(xp_earned) as xp'))
-            ->when($since, fn($q) => $q->where('updated_at', '>=', $since))
-            ->groupBy('user_id');
+        $cacheKey = "leaderboard:{$timeRange}:p{$page}:pp{$perPage}";
 
-        $xpByUser = $xpQuery->pluck('xp', 'user_id');
+        // Single JOIN query replaces 3 separate queries
+        $entries = Cache::remember($cacheKey, 120, fn() => UserLessonProgress::query()
+            ->join('users', 'user_lesson_progress.user_id', '=', 'users.id')
+            ->select([
+                'users.id',
+                'users.name',
+                'users.avatar_path',
+                'users.current_streak',
+                DB::raw('SUM(user_lesson_progress.xp_earned) as xp'),
+                DB::raw('SUM(CASE WHEN user_lesson_progress.status = "completed" THEN 1 ELSE 0 END) as completed_count'),
+            ])
+            ->when($since, fn($q) => $q->where('user_lesson_progress.updated_at', '>=', $since))
+            ->groupBy('users.id', 'users.name', 'users.avatar_path', 'users.current_streak')
+            ->orderByDesc('xp')
+            ->limit($perPage)
+            ->offset(($page - 1) * $perPage)
+            ->get()
+            ->map(function ($row) use ($totalActiveLessons) {
+                $xp   = (int) $row->xp;
+                $completed = (int) $row->completed_count;
+                $lessonsCompletedPct = $totalActiveLessons > 0
+                    ? (int) floor(($completed / $totalActiveLessons) * 100)
+                    : 0;
 
-        if ($xpByUser->isEmpty()) {
-            return response()->json([
-                'timeRange'     => $timeRange,
-                'entries'       => [],
-                'currentUserId' => (string) $user->id,
-            ]);
-        }
-
-        $users = User::whereIn('id', $xpByUser->keys())
-            ->get(['id', 'name', 'avatar_path', 'current_streak']);
-
-        $completedByUser = UserLessonProgress::query()
-            ->whereIn('user_id', $xpByUser->keys())
-            ->where('status', 'completed')
-            ->select('user_id', DB::raw('COUNT(*) as cnt'))
-            ->groupBy('user_id')
-            ->pluck('cnt', 'user_id');
-
-        $entries = $users->map(function (User $u) use ($xpByUser, $completedByUser, $totalActiveLessons) {
-            $xp = (int) ($xpByUser[$u->id] ?? 0);
-            $level = intdiv($xp, 100) + 1;
-            $completedCount = (int) ($completedByUser[$u->id] ?? 0);
-            $lessonsCompletedPct = $totalActiveLessons > 0
-                ? (int) floor(($completedCount / $totalActiveLessons) * 100)
-                : 0;
-
-            return [
-                'userId'              => (string) $u->id,
-                'name'                => $u->name,
-                'avatarUrl'           => $u->avatar_url,
-                'level'               => $level,
-                'xp'                  => $xp,
-                'streakDays'          => (int) ($u->current_streak ?? 0),
-                'lessonsCompletedPct' => $lessonsCompletedPct,
-            ];
-        })->sortByDesc('xp')->values();
+                return [
+                    'userId'              => (string) $row->id,
+                    'name'                => $row->name,
+                    'avatarUrl'           => $row->avatar_path
+                        ? \Illuminate\Support\Facades\Storage::disk('public')->url($row->avatar_path)
+                        : null,
+                    'level'               => intdiv($xp, 100) + 1,
+                    'xp'                  => $xp,
+                    'streakDays'          => (int) ($row->current_streak ?? 0),
+                    'lessonsCompletedPct' => $lessonsCompletedPct,
+                ];
+            })
+            ->values()
+        );
 
         return response()->json([
             'timeRange'     => $timeRange,
             'entries'       => $entries,
             'currentUserId' => (string) $user->id,
+            'page'          => $page,
+            'perPage'       => $perPage,
         ]);
     }
 }

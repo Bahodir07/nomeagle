@@ -11,6 +11,7 @@ use App\Models\QuizQuestionAttempt;
 use App\Models\ScenarioAttempt;
 use App\Models\UserLessonProgress;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class StatisticsController extends Controller
@@ -19,6 +20,13 @@ class StatisticsController extends Controller
     {
         $user = request()->user();
 
+        $data = Cache::remember("statistics:user:{$user->id}", 300, fn() => $this->buildStatistics($user));
+
+        return response()->json($data);
+    }
+
+    private function buildStatistics($user): array
+    {
         // --- XP / Level ---
         $xp = (int) UserLessonProgress::where('user_id', $user->id)->sum('xp_earned');
         $level = intdiv($xp, 100) + 1;
@@ -69,7 +77,7 @@ class StatisticsController extends Controller
         // --- Country Mastery ---
         $countryMastery = $this->buildCountryMastery($user->id);
 
-        return response()->json([
+        return [
             'xpLevel' => [
                 'level' => $level,
                 'xpCurrent' => $xpCurrent,
@@ -85,7 +93,7 @@ class StatisticsController extends Controller
                 'week' => $weekCells,
             ],
             'countryMastery' => $countryMastery,
-        ]);
+        ];
     }
 
     private function collectAttemptTimestamps(int $userId, $from): array

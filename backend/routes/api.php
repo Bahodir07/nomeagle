@@ -94,7 +94,9 @@ Route::middleware('auth:sanctum')->group(function () {
         [LessonCompletionController::class, 'complete']
     );
 
-    Route::post('/scenarios/{scenario}/submit', [ScenarioController::class, 'submit']);
-    Route::post('/quiz-questions/{quizQuestion}/submit', [QuizQuestionController::class, 'submit']);
-    Route::post('/flashcards/{flashcard}/review', [FlashcardController::class, 'review']);
+    Route::middleware('throttle:120,1')->group(function () {
+        Route::post('/scenarios/{scenario}/submit', [ScenarioController::class, 'submit']);
+        Route::post('/quiz-questions/{quizQuestion}/submit', [QuizQuestionController::class, 'submit']);
+        Route::post('/flashcards/{flashcard}/review', [FlashcardController::class, 'review']);
+    });
 });

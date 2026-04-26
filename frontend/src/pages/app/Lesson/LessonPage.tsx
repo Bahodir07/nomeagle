@@ -7,7 +7,7 @@ import type {ArticleLesson} from "../../../features/lessons/article";
 import type {FlashcardsLesson, FlashcardsLessonResult} from "../../../features/lessons/flashcards";
 import type {QuizLesson} from "../../../features/lessons/quiz";
 import type {ScenarioLesson} from "../../../features/lessons/scenario";
-import type {MatchingLesson} from "../../../features/lessons/matching";
+import type {MatchingLesson, MatchingLessonResult} from "../../../features/lessons/matching";
 import type {SummaryLesson} from "../../../features/lessons/summary";
 import type {VideoLesson, VideoTranscriptBlock} from "../../../features/lessons/video";
 
@@ -51,6 +51,15 @@ type LocationState = {
     lessonTitle?: string;
 };
 
+type NextLesson = {
+    slug: string;
+    title: string;
+    type: string;
+    moduleSlug: string;
+    countrySlug: string;
+    estimatedMinutes?: number | null;
+};
+
 type ApiLesson = {
     id: number | string;
     title: string;
@@ -61,6 +70,7 @@ type ApiLesson = {
     xp_reward?: number | string | null;
     video_file?: string | null;
     external_video_url?: string | null;
+    next_lesson?: NextLesson | null;
 };
 
 type ApiScenarioOption = {
@@ -108,6 +118,7 @@ type CompletionSummary = {
     progressPct: number;
     correctCount?: number;
     totalCount?: number;
+    nextLesson?: NextLesson | null;
 };
 
 type LoadState =
@@ -394,6 +405,7 @@ export const LessonPage: React.FC = () => {
     const [isSaving, setIsSaving] = useState(false);
     const [completionSummary, setCompletionSummary] =
         useState<CompletionSummary | null>(null);
+    const [nextLesson, setNextLesson] = useState<NextLesson | null>(null);
     const startedAtRef = useRef<number>(Date.now());
 
     useEffect(() => {
@@ -402,6 +414,7 @@ export const LessonPage: React.FC = () => {
 
         startedAtRef.current = Date.now();
         setCompletionSummary(null);
+        setNextLesson(null);
 
         if (!countrySlug || !moduleSlug || !lessonSlug) {
             setState({
@@ -420,6 +433,10 @@ export const LessonPage: React.FC = () => {
                     moduleSlug,
                     lessonSlug
                 )) as ApiLesson;
+
+                if (apiLesson.next_lesson) {
+                    setNextLesson(apiLesson.next_lesson);
+                }
 
                 const normalizedType = normalizeLessonType(
                     lessonType ?? apiLesson.type
@@ -615,6 +632,7 @@ export const LessonPage: React.FC = () => {
                 xpEarned,
                 starsEarned: 0,
                 progressPct: normalizeProgressPct(response?.progress) || 100,
+                nextLesson,
             });
         } catch (error) {
             console.error("Failed to save lesson progress", error);
@@ -669,6 +687,7 @@ export const LessonPage: React.FC = () => {
                 progressPct: 100,
                 correctCount: result.correctCount || result.correctSteps || 0,
                 totalCount: result.totalSteps || result.totalCount || 0,
+                nextLesson,
             });
 
         } catch (error) {
@@ -706,6 +725,7 @@ export const LessonPage: React.FC = () => {
                     progressPct: result?.progressPct || 100,
                     correctCount: result?.correctCount || result?.correctAnswers || 0,
                     totalCount: result?.totalCount || result?.totalQuestions || 0,
+                    nextLesson,
                 });
                 return;
             }
@@ -734,6 +754,7 @@ export const LessonPage: React.FC = () => {
                 progressPct: normalizeProgressPct(lastProgress) || 100,
                 correctCount: result?.correctCount || result?.correctAnswers || 0,
                 totalCount: result?.totalCount || result?.totalQuestions || rawAnswers.length,
+                nextLesson,
             });
 
         } catch (error) {
@@ -749,12 +770,72 @@ export const LessonPage: React.FC = () => {
         await savePlainCompletion();
     };
 
-    const handleMatchingComplete = async (_result: any) => {
-        await savePlainCompletion();
+    const handleMatchingComplete = async (result: MatchingLessonResult) => {
+        if (isSaving) return;
+
+        const { countrySlug, moduleSlug, lessonSlug } = routeState;
+        if (!countrySlug || !moduleSlug || !lessonSlug) {
+            goBackToLearningPath();
+            return;
+        }
+
+        try {
+            setIsSaving(true);
+
+            const totalPairs = result.totalPairs;
+            const attempts   = result.attempts > 0 ? result.attempts : totalPairs;
+
+            const response = await completeLesson(
+                countrySlug,
+                moduleSlug,
+                lessonSlug,
+                durationSeconds(),
+                totalPairs,
+                attempts
+            );
+
+            const xpEarned = normalizeXp(
+                response?.xp_earned ??
+                response?.progress?.xp_earned ??
+                (state.status === "success" ? (state.payload as any)?.xpReward : 0)
+            );
+
+            const starsEarned = computeStarsFromProgress({
+                correct_answers: totalPairs,
+                total_attempts: attempts,
+            });
+
+            setCompletionSummary({
+                title: state.status === "success" ? state.lessonTitle : "Matching completed",
+                xpEarned,
+                starsEarned,
+                progressPct: normalizeProgressPct(response?.progress) || 100,
+                correctCount: totalPairs,
+                totalCount: attempts,
+                nextLesson,
+            });
+        } catch (error) {
+            console.error("Failed to save matching progress", error);
+            goBackToLearningPath();
+        } finally {
+            setIsSaving(false);
+        }
     };
 
     const handleGoBack = () => {
         navigate(-1);
+    };
+
+    const goToNextLesson = (next: NextLesson) => {
+        navigate(`/app/lesson/${next.slug}`, {
+            state: {
+                countrySlug: next.countrySlug,
+                moduleSlug: next.moduleSlug,
+                lessonSlug: next.slug,
+                lessonType: next.type as LessonType,
+                lessonTitle: next.title,
+            },
+        });
     };
 
     const renderPlayer = () => {
@@ -841,13 +922,35 @@ export const LessonPage: React.FC = () => {
                                 </div>
                             </div>
 
-                            <button
-                                type="button"
-                                className={styles.resultButton}
-                                onClick={goBackToLearningPath}
-                            >
-                                Continue
-                            </button>
+                            {completionSummary.nextLesson ? (
+                                <div className={styles.resultActions}>
+                                    <button
+                                        type="button"
+                                        className={styles.resultButtonSecondary}
+                                        onClick={goBackToLearningPath}
+                                    >
+                                        Back to path
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className={styles.resultButton}
+                                        onClick={() => goToNextLesson(completionSummary.nextLesson!)}
+                                    >
+                                        Next: {completionSummary.nextLesson.title}
+                                        {completionSummary.nextLesson.estimatedMinutes
+                                            ? ` · ${completionSummary.nextLesson.estimatedMinutes} min`
+                                            : ""}
+                                    </button>
+                                </div>
+                            ) : (
+                                <button
+                                    type="button"
+                                    className={styles.resultButton}
+                                    onClick={goBackToLearningPath}
+                                >
+                                    Continue
+                                </button>
+                            )}
                         </div>
                     </div>
                 </main>

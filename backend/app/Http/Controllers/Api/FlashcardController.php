@@ -11,6 +11,7 @@ use App\Models\FlashcardReview;
 use App\Models\UserLessonProgress;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class FlashcardController extends Controller
@@ -159,6 +160,10 @@ class FlashcardController extends Controller
 
             return compact('xpEarned', 'progress');
         });
+
+        $userId = $user->id;
+        Cache::forget("dashboard:user:{$userId}");
+        Cache::forget("statistics:user:{$userId}");
 
         return response()->json([
             'rating' => $rating,

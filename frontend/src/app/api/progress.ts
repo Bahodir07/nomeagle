@@ -62,13 +62,17 @@ export async function completeLesson(
     countrySlug: string,
     moduleSlug: string,
     lessonSlug: string,
-    durationSeconds = 0
+    durationSeconds = 0,
+    correctAnswers?: number,
+    totalAttempts?: number
 ) {
+    const body: Record<string, number> = { duration_seconds: durationSeconds };
+    if (correctAnswers !== undefined) body.correct_answers = correctAnswers;
+    if (totalAttempts  !== undefined) body.total_attempts  = totalAttempts;
+
     const { data } = await http.post(
         `/api/countries/${countrySlug}/modules/${moduleSlug}/lessons/${lessonSlug}/complete`,
-        {
-            duration_seconds: durationSeconds,
-        }
+        body
     );
 
     return data;

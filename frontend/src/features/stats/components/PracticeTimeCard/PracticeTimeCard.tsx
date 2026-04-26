@@ -75,7 +75,10 @@ function DonutChart({ data }: { data: PracticeTimeBreakdown }) {
       toOuterPoint(toAngle(lenT + lenL / 2)),
       toOuterPoint(toAngle(lenT + lenL + lenN / 2)),
     ];
-    return midpoints.map((pt) => {
+    const segmentSeconds = [typingSeconds, learningSeconds, notPassedSeconds];
+    return midpoints.map((pt, i) => {
+      if (segmentSeconds[i] === 0) return null;
+
       const ux = (pt.x - CENTER_X) / outerR;
       const uy = (pt.y - CENTER_Y) / outerR;
       const isRight = ux >= 0;
@@ -135,7 +138,9 @@ function DonutChart({ data }: { data: PracticeTimeBreakdown }) {
             />
           ))}
         </g>
-        {segmentLabels.map(({ ring, elbow, end, isRight }, i) => {
+        {segmentLabels.map((label, i) => {
+          if (!label) return null;
+          const { ring, elbow, end, isRight } = label;
           const item = LEGEND_ITEMS[i];
           const seconds = secondsByKey[item.key];
           const points = `${ring.x},${ring.y} ${elbow.x},${elbow.y} ${end.x},${end.y}`;

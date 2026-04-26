@@ -60,6 +60,25 @@ docker-compose down
 **Frontend** — copy `frontend/.env.example` to `frontend/.env`:
 - `VITE_API_URL=http://localhost:8000/api`
 
+## Auth Stack
+
+This project uses **token-based Sanctum auth** (not cookie/session-based). Cross-domain CORS constraints require token auth — do not revert to cookie or session auth under any circumstance.
+
+## Multi-Repo Deployment
+
+The backend lives in `backend/` in this monorepo for local development, but is also pushed to a **separate standalone repo** for Laravel Cloud deployment via `git subtree`. After backend changes, push to BOTH repos. Always confirm the working directory before running git commands.
+
+## Verification Before Edits
+
+- Before claiming a package doesn't exist, verify with `composer search` or check Packagist (e.g. `laravel/boost` is a real package).
+- When adding React Query hooks (`useQuery`, `useMutation`), verify `QueryClientProvider` is already set up in the app root.
+- When changing env variables (especially `VITE_API_URL` or Sanctum config), verify login/auth flows still work.
+
+## Database / Migrations
+
+- When adding columns, check if they already exist (`Schema::hasColumn`) before adding — migrations may partially run on some environments.
+- Composite indexes exist on all attempt/progress tables for `(user_id, created_at)` and `(user_id, status)` — use these columns in WHERE clauses for efficient queries.
+
 ## Backend Architecture
 
 **Authentication:** Laravel Sanctum token-based API auth. The `AuthController` issues tokens on login/register.

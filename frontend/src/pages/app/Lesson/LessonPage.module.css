@@ -156,16 +156,54 @@
     color: var(--ne-text, #0f172a);
 }
 
+.resultActions {
+    margin-top: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
 .resultButton {
     margin-top: 28px;
+    width: 100%;
     border: none;
     border-radius: 16px;
     padding: 16px 24px;
     background: var(--ne-primary, #22c55e);
     color: #ffffff;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 700;
     cursor: pointer;
+    transition: opacity 0.15s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.resultActions .resultButton {
+    margin-top: 0;
+}
+
+.resultButton:hover {
+    opacity: 0.88;
+}
+
+.resultButtonSecondary {
+    width: 100%;
+    border: 1.5px solid var(--ne-border, #e5e7eb);
+    border-radius: 16px;
+    padding: 14px 24px;
+    background: transparent;
+    color: var(--ne-text-muted, #64748b);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
+}
+
+.resultButtonSecondary:hover {
+    border-color: var(--ne-primary, #22c55e);
+    color: var(--ne-primary, #22c55e);
 }
 
 @media (max-width: 640px) {

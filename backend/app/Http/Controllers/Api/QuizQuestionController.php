@@ -12,6 +12,7 @@ use App\Models\UserLessonProgress;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class QuizQuestionController extends Controller
@@ -173,6 +174,11 @@ class QuizQuestionController extends Controller
 
             return compact('xpEarned', 'progress');
         });
+
+        $userId = $user->id;
+        Cache::forget("dashboard:user:{$userId}");
+        Cache::forget("statistics:user:{$userId}");
+        Cache::forget("achievements:user:{$userId}");
 
         return response()->json([
             'correct' => $isCorrect,
