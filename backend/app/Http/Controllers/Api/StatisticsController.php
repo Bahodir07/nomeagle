@@ -171,7 +171,7 @@ class StatisticsController extends Controller
             ->join('quiz_questions as qq', 'qa.quiz_question_id', '=', 'qq.id')
             ->where('qa.user_id', $userId)
             ->whereIn('qq.lesson_id', $allLessonIds)
-            ->select('qq.lesson_id', DB::raw('COUNT(*) as total'), DB::raw('SUM(qa.is_correct) as correct'))
+            ->select('qq.lesson_id', DB::raw('COUNT(*) as total'), DB::raw('SUM(CASE WHEN qa.is_correct THEN 1 ELSE 0 END) as correct'))
             ->groupBy('qq.lesson_id')
             ->get()
             ->keyBy('lesson_id');

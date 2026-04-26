@@ -87,7 +87,7 @@ class AchievementsController extends Controller
         return DB::table('quiz_questions as q')
             ->selectRaw('q.lesson_id')
             ->selectRaw('COUNT(DISTINCT q.id) as total')
-            ->selectRaw('COUNT(DISTINCT CASE WHEN a.is_correct = 1 THEN a.quiz_question_id END) as correct_count')
+            ->selectRaw('COUNT(DISTINCT CASE WHEN a.is_correct THEN a.quiz_question_id END) as correct_count')
             ->leftJoin('quiz_question_attempts as a', function ($join) use ($userId) {
                 $join->on('a.quiz_question_id', '=', 'q.id')
                      ->where('a.user_id', $userId);
@@ -116,7 +116,7 @@ class AchievementsController extends Controller
         // Query 2: score for that lesson
         $row = DB::table('quiz_questions as q')
             ->selectRaw('COUNT(DISTINCT q.id) as total')
-            ->selectRaw('COUNT(DISTINCT CASE WHEN a.is_correct = 1 THEN a.quiz_question_id END) as correct_count')
+            ->selectRaw('COUNT(DISTINCT CASE WHEN a.is_correct THEN a.quiz_question_id END) as correct_count')
             ->leftJoin('quiz_question_attempts as a', function ($join) use ($userId) {
                 $join->on('a.quiz_question_id', '=', 'q.id')
                      ->where('a.user_id', $userId);

@@ -44,7 +44,7 @@ class LeaderboardController extends Controller
                 'users.avatar_path',
                 'users.current_streak',
                 DB::raw('SUM(user_lesson_progress.xp_earned) as xp'),
-                DB::raw('SUM(CASE WHEN user_lesson_progress.status = "completed" THEN 1 ELSE 0 END) as completed_count'),
+                DB::raw("SUM(CASE WHEN user_lesson_progress.status = 'completed' THEN 1 ELSE 0 END) as completed_count"),
             ])
             ->when($since, fn($q) => $q->where('user_lesson_progress.updated_at', '>=', $since))
             ->groupBy('users.id', 'users.name', 'users.avatar_path', 'users.current_streak')

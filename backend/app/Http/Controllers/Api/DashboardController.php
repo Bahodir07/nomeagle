@@ -10,7 +10,6 @@ use App\Models\UserLessonProgress;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class DashboardController extends Controller
@@ -24,20 +23,10 @@ class DashboardController extends Controller
         }
 
         try {
-            $data = $this->buildDashboard($user);
+            $data = Cache::remember("dashboard:user:{$user->id}", 180, fn() => $this->buildDashboard($user));
         } catch (\Exception $e) {
-            Log::error('Dashboard build failed', [
-                'user_id' => $user->id,
-                'error'   => $e->getMessage(),
-                'file'    => $e->getFile(),
-                'line'    => $e->getLine(),
-            ]);
-            throw $e;
+            $data = $this->buildDashboard($user);
         }
-
-        try {
-            Cache::put("dashboard:user:{$user->id}", $data, 180);
-        } catch (\Exception $ignored) {}
 
         return response()->json($data);
     }
@@ -120,7 +109,7 @@ class DashboardController extends Controller
 
         // Quiz accuracy — 2 queries instead of 2 clones
         $quizAgg = QuizQuestionAttempt::where('user_id', $user->id)
-            ->selectRaw('COUNT(*) as total, SUM(is_correct) as correct')
+            ->selectRaw('COUNT(*) as total, SUM(CASE WHEN is_correct THEN 1 ELSE 0 END) as correct')
             ->first();
         $quizAccuracyPct = $quizAgg->total > 0
             ? (int) floor($quizAgg->correct / $quizAgg->total * 100)
