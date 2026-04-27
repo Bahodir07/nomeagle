@@ -108,13 +108,6 @@ class LessonForm
                             ->default(0)
                             ->minValue(0),
 
-                        TextInput::make('stars_reward')
-                            ->label('Stars reward')
-                            ->numeric()
-                            ->required()
-                            ->default(0)
-                            ->minValue(0),
-
                         TextInput::make('estimated_minutes')
                             ->label('Estimated minutes')
                             ->numeric()

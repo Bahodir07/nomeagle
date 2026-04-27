@@ -66,10 +66,6 @@ class LessonsTable
                     ->label('XP')
                     ->sortable(),
 
-                TextColumn::make('stars_reward')
-                    ->label('Stars')
-                    ->sortable(),
-
                 TextColumn::make('estimated_minutes')
                     ->label('Min')
                     ->sortable()
