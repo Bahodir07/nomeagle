@@ -55,8 +55,10 @@ function mergeStatusWithDefinition(
 }
 
 function groupByCategory(badges: BadgeWithDefinition[]): GroupedBadges {
-  const order = (a: BadgeWithDefinition, b: BadgeWithDefinition) =>
-    a.order - b.order;
+  const order = (a: BadgeWithDefinition, b: BadgeWithDefinition) => {
+    if (a.unlocked !== b.unlocked) return a.unlocked ? -1 : 1;
+    return a.order - b.order;
+  };
   return {
     explorer: badges.filter((b) => b.category === "explorer").sort(order),
     country: badges.filter((b) => b.category === "country").sort(order),
