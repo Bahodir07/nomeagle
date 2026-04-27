@@ -1,5 +1,6 @@
 import React, {useEffect, useMemo, useRef, useState, Suspense, lazy} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
+import {useQueryClient} from "@tanstack/react-query";
 import styles from "./LessonPage.module.css";
 import { PageLoader } from "../../../components/feedback";
 
@@ -401,12 +402,19 @@ export const LessonPage: React.FC = () => {
     const displayName = user?.name ?? 'User';
     const displayInitial = displayName.charAt(0).toUpperCase();
 
+    const queryClient = useQueryClient();
     const [state, setState] = useState<LoadState>({status: "loading"});
     const [isSaving, setIsSaving] = useState(false);
     const [completionSummary, setCompletionSummary] =
         useState<CompletionSummary | null>(null);
     const [nextLesson, setNextLesson] = useState<NextLesson | null>(null);
     const startedAtRef = useRef<number>(Date.now());
+
+    useEffect(() => {
+        if (completionSummary) {
+            queryClient.invalidateQueries({ queryKey: ["achievements"] });
+        }
+    }, [completionSummary, queryClient]);
 
     useEffect(() => {
         const {countrySlug, moduleSlug, lessonSlug, lessonType, lessonTitle} =
@@ -675,8 +683,14 @@ export const LessonPage: React.FC = () => {
             } else {
                 const { countrySlug, moduleSlug, lessonSlug } = routeState;
                 if (countrySlug && moduleSlug && lessonSlug) {
-                    const response = await completeLesson(countrySlug, moduleSlug, lessonSlug, durationSeconds());
+                    const correctCount = result.correctCount || result.correctSteps || 0;
+                    const totalCount = result.totalSteps || result.totalCount || 1;
+                    const response = await completeLesson(
+                        countrySlug, moduleSlug, lessonSlug, durationSeconds(),
+                        correctCount, totalCount
+                    );
                     totalXp = normalizeXp(response?.xp_earned) || totalXp;
+                    if (response?.progress) finalStars = computeStarsFromProgress(response.progress);
                 }
             }
 

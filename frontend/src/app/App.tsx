@@ -6,6 +6,7 @@ import { UiSettingsProvider } from './store/ui.store';
 import { ThemeProvider } from './providers/ThemeProvider';
 import { I18nProvider } from './providers/I18nProvider';
 import { useAuth } from './store/auth.store';
+import { BadgeNotifier } from '../features/achievements/components/BadgeNotifier/BadgeNotifier';
 
 const queryClient = new QueryClient();
 
@@ -21,7 +22,12 @@ const AppContent: React.FC = () => {
         fetchMe();
     }, [fetchMe]);
 
-    return <RouterProvider router={router} />;
+    return (
+        <>
+            <RouterProvider router={router} />
+            <BadgeNotifier />
+        </>
+    );
 };
 
 export const App: React.FC = () => (
