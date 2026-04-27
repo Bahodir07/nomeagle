@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\Flashcards\Schemas;
 
+use App\Enums\LessonType;
+use App\Models\Lesson;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -20,9 +22,16 @@ class FlashcardForm
                     ->schema([
                         Select::make('lesson_id')
                             ->label('Lesson')
-                            ->relationship('lesson', 'title')
+                            ->options(fn () => Lesson::query()
+                                ->where('type', LessonType::FLASHCARDS)
+                                ->with(['module.country'])
+                                ->orderBy('title')
+                                ->get()
+                                ->groupBy(fn ($l) => $l->module->country->name . ' › ' . $l->module->title)
+                                ->map(fn ($lessons) => $lessons->pluck('title', 'id'))
+                                ->toArray()
+                            )
                             ->searchable()
-                            ->preload()
                             ->required()
                             ->hiddenOn(\App\Filament\Resources\Lessons\RelationManagers\FlashcardsRelationManager::class),
 
