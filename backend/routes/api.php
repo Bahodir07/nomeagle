@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\LearningPathController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\StatisticsController;
 use App\Http\Controllers\Api\LeaderboardController;
+use App\Http\Controllers\Api\NotificationsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -81,6 +82,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/achievements', [AchievementsController::class, 'index']);
 
     Route::get('/leaderboard', [LeaderboardController::class, 'index']);
+
+    Route::get('/notifications', [NotificationsController::class, 'index']);
+    Route::post('/notifications/read-all', [NotificationsController::class, 'readAll']);
+    Route::patch('/notifications/{notification}/read', [NotificationsController::class, 'readOne']);
+    Route::post('/notifications/achievement', [NotificationsController::class, 'achievement']);
 
     Route::get('/countries/{country:slug}/learning-path', [LearningPathController::class, 'show']);
 

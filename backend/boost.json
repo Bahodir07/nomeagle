@@ -1,0 +1,11 @@
+{
+    "agents": [
+        "claude_code"
+    ],
+    "packages": [
+        "filament/filament"
+    ],
+    "skills": [
+        "laravel-best-practices"
+    ]
+}

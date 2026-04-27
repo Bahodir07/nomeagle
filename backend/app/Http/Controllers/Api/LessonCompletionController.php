@@ -7,6 +7,7 @@ use App\Http\Requests\Api\CompleteLessonRequest;
 use App\Models\Country;
 use App\Models\LessonCompletionEvent;
 use App\Models\UserLessonProgress;
+use App\Models\UserNotification;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -107,6 +108,28 @@ class LessonCompletionController extends Controller
         Cache::forget("dashboard:user:{$userId}");
         Cache::forget("statistics:user:{$userId}");
         Cache::forget("achievements:user:{$userId}");
+
+        if ($result['xpEarned'] > 0) {
+            UserNotification::create([
+                'user_id' => $userId,
+                'type'    => 'lesson_completed',
+                'title'   => 'Lesson Complete!',
+                'body'    => "You finished \"{$lessonRecord->title}\" and earned {$result['xpEarned']} XP.",
+                'data'    => ['lesson_id' => $lessonRecord->id, 'xp' => $result['xpEarned']],
+            ]);
+
+            $user->refresh();
+            $streak = (int) $user->current_streak;
+            if (in_array($streak, [3, 7, 14, 30, 60, 100, 365], true)) {
+                UserNotification::create([
+                    'user_id' => $userId,
+                    'type'    => 'streak_milestone',
+                    'title'   => "{$streak}-Day Streak!",
+                    'body'    => "Amazing! You've kept a {$streak}-day learning streak going. Keep it up!",
+                    'data'    => ['streak_days' => $streak],
+                ]);
+            }
+        }
 
         return response()->json([
             'completed' => true,
