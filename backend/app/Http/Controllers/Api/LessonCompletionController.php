@@ -60,7 +60,7 @@ class LessonCompletionController extends Controller
                 'matching'                   => XpRewards::MATCHING_PAIR,
                 'quiz'                       => XpRewards::QUIZ_QUESTION     * max(0, $correctAnswers ?? 0),
                 'scenario'                   => XpRewards::SCENARIO_QUESTION * max(0, $correctAnswers ?? 0),
-                'flashcards', 'flashcard'    => XpRewards::FLASHCARD          * max(0, $correctAnswers ?? 0),
+                'flashcards', 'flashcard'    => XpRewards::FLASHCARD,
                 default                      => 0,
             };
 
