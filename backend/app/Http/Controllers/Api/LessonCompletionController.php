@@ -54,6 +54,32 @@ class LessonCompletionController extends Controller
         $isPerItemType = in_array($currentType, $perItemTypes, true);
 
         $result = DB::transaction(function () use ($user, $lessonRecord, $durationSeconds, $correctAnswers, $totalAttempts, $currentType, $isPerItemType) {
+            $baseXp = match ($currentType) {
+                'article', 'summary'         => XpRewards::ARTICLE,
+                'video'                      => XpRewards::VIDEO,
+                'matching'                   => XpRewards::MATCHING_PAIR     * max(0, $correctAnswers ?? 0),
+                'quiz'                       => XpRewards::QUIZ_QUESTION     * max(0, $correctAnswers ?? 0),
+                'scenario'                   => XpRewards::SCENARIO_QUESTION * max(0, $correctAnswers ?? 0),
+                'flashcards', 'flashcard'    => XpRewards::FLASHCARD          * max(0, $correctAnswers ?? 0),
+                default                      => 0,
+            };
+
+            // If lesson was previously granted but with 0 XP (old bug), allow re-granting.
+            $existingProgress = UserLessonProgress::query()
+                ->where('user_id', $user->id)
+                ->where('lesson_id', $lessonRecord->id)
+                ->first();
+
+            $previousXp = (int) ($existingProgress?->xp_earned ?? 0);
+
+            if ($baseXp > 0 && $previousXp === 0) {
+                DB::table('user_xp_grants')
+                    ->where('user_id', $user->id)
+                    ->where('grantable_type', 'lesson')
+                    ->where('grantable_id', $lessonRecord->id)
+                    ->delete();
+            }
+
             $granted = (bool) DB::table('user_xp_grants')->insertOrIgnore([
                 'user_id'        => $user->id,
                 'grantable_type' => 'lesson',
@@ -61,16 +87,6 @@ class LessonCompletionController extends Controller
                 'created_at'     => now(),
                 'updated_at'     => now(),
             ]);
-
-            $baseXp = match ($currentType) {
-                'article', 'summary'         => XpRewards::ARTICLE,
-                'video'                      => XpRewards::VIDEO,
-                'matching'                   => XpRewards::MATCHING_PAIR    * max(0, $correctAnswers ?? 0),
-                'quiz'                       => XpRewards::QUIZ_QUESTION    * max(0, $correctAnswers ?? 0),
-                'scenario'                   => XpRewards::SCENARIO_QUESTION * max(0, $correctAnswers ?? 0),
-                'flashcards', 'flashcard'    => XpRewards::FLASHCARD         * max(0, $correctAnswers ?? 0),
-                default                      => 0,
-            };
 
             $xpEarned = $granted ? $baseXp : 0;
 
@@ -87,12 +103,7 @@ class LessonCompletionController extends Controller
                 ->where('lesson_id', $lessonRecord->id)
                 ->count();
 
-            $existingProgress = UserLessonProgress::query()
-                ->where('user_id', $user->id)
-                ->where('lesson_id', $lessonRecord->id)
-                ->first();
-
-            $xpTotal = max($existingProgress?->xp_earned ?? 0, $xpEarned);
+            $xpTotal = max($previousXp, $xpEarned);
 
             // For per-item types, preserve the metrics already tracked by individual submissions.
             if ($isPerItemType) {

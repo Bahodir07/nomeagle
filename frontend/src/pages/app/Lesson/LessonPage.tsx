@@ -794,13 +794,12 @@ export const LessonPage: React.FC = () => {
         try {
             setIsSaving(true);
 
-            const reviewedCards = result.totalCards - result.mistakes;
             const response = await completeLesson(
                 countrySlug,
                 moduleSlug,
                 lessonSlug,
                 durationSeconds(),
-                reviewedCards,
+                result.totalCards,
                 result.totalCards,
             );
 
