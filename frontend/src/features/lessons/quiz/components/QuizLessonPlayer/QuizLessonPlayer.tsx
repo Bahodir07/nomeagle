@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import styles from './QuizLessonPlayer.module.css';
 import type { QuizLesson } from '../../types';
-import type { QuizSessionState } from '../../engine/quizSession.types';
+import type { QuizAnswer, QuizSessionState } from '../../engine/quizSession.types';
 import {
     createSession,
     selectOption,
@@ -22,6 +22,7 @@ export interface QuizLessonResult {
     correctCount: number;
     totalCount: number;
     xpEarned: number;
+    answers: QuizAnswer[];
 }
 
 export interface QuizLessonPlayerProps {
@@ -67,7 +68,8 @@ export const QuizLessonPlayer: React.FC<QuizLessonPlayerProps> = ({
     );
 
     const completed = isComplete(session);
-    const progressPct = (session.questionIndex / session.totalCount) * 100;
+    const answeredCount = session.checked ? session.questionIndex + 1 : session.questionIndex;
+    const progressPct = (answeredCount / session.totalCount) * 100;
 
     const handleSelect = useCallback(
         (optionId: string) => {
@@ -96,8 +98,9 @@ export const QuizLessonPlayer: React.FC<QuizLessonPlayerProps> = ({
             correctCount: session.correctCount,
             totalCount: session.totalCount,
             xpEarned: session.correctCount * lesson.xpPerCorrect,
+            answers: session.answers,
         });
-    }, [lesson, session.correctCount, session.totalCount, onComplete]);
+    }, [lesson, session.correctCount, session.totalCount, session.answers, onComplete]);
 
     if (lesson.questions.length === 0) {
         return (

@@ -726,7 +726,11 @@ export const LessonPage: React.FC = () => {
             if (rawAnswers.length === 0) {
                 const { countrySlug, moduleSlug, lessonSlug } = routeState;
                 if (countrySlug && moduleSlug && lessonSlug) {
-                    await completeLesson(countrySlug, moduleSlug, lessonSlug, durationSeconds());
+                    await completeLesson(
+                        countrySlug, moduleSlug, lessonSlug, durationSeconds(),
+                        result?.correctCount || result?.correctAnswers || 0,
+                        result?.totalCount || result?.totalQuestions || 0,
+                    );
                 }
 
                 setCompletionSummary({
@@ -778,10 +782,51 @@ export const LessonPage: React.FC = () => {
             setIsSaving(false);
         }
     };
-    const handleFlashcardsComplete = async (
-        _result: FlashcardsLessonResult
-    ) => {
-        await savePlainCompletion();
+    const handleFlashcardsComplete = async (result: FlashcardsLessonResult) => {
+        if (isSaving) return;
+
+        const { countrySlug, moduleSlug, lessonSlug } = routeState;
+        if (!countrySlug || !moduleSlug || !lessonSlug) {
+            goBackToLearningPath();
+            return;
+        }
+
+        try {
+            setIsSaving(true);
+
+            const response = await completeLesson(
+                countrySlug,
+                moduleSlug,
+                lessonSlug,
+                durationSeconds(),
+                result.masteredCount,
+                result.totalCards,
+            );
+
+            const xpEarned = normalizeXp(
+                response?.xp_earned ??
+                response?.progress?.xp_earned ??
+                0
+            );
+
+            setCompletionSummary({
+                title: state.status === 'success' ? state.lessonTitle : 'Flashcards completed',
+                xpEarned,
+                starsEarned: computeStarsFromProgress({
+                    correct_answers: result.masteredCount,
+                    total_attempts: result.totalCards,
+                }),
+                progressPct: normalizeProgressPct(response?.progress) || 100,
+                correctCount: result.masteredCount,
+                totalCount: result.totalCards,
+                nextLesson,
+            });
+        } catch (error) {
+            console.error('Failed to save flashcards progress', error);
+            goBackToLearningPath();
+        } finally {
+            setIsSaving(false);
+        }
     };
 
     const handleMatchingComplete = async (result: MatchingLessonResult) => {

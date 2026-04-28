@@ -49,7 +49,7 @@ class LessonCompletionController extends Controller
         $correctAnswers   = $request->has('correct_answers') ? (int)$request->input('correct_answers') : null;
         $totalAttempts    = $request->has('total_attempts')  ? (int)$request->input('total_attempts')  : null;
 
-        // Types where XP and progress metrics are tracked per-item (not per-lesson).
+        // Types where progress metrics are tracked per-item (not per-lesson).
         $perItemTypes = ['quiz', 'scenario', 'flashcards', 'flashcard'];
         $isPerItemType = in_array($currentType, $perItemTypes, true);
 
@@ -63,10 +63,13 @@ class LessonCompletionController extends Controller
             ]);
 
             $baseXp = match ($currentType) {
-                'article', 'summary' => XpRewards::ARTICLE,
-                'video'              => XpRewards::VIDEO,
-                'matching'           => XpRewards::MATCHING_PAIR * max(0, $correctAnswers ?? 0),
-                default              => 0,
+                'article', 'summary'         => XpRewards::ARTICLE,
+                'video'                      => XpRewards::VIDEO,
+                'matching'                   => XpRewards::MATCHING_PAIR    * max(0, $correctAnswers ?? 0),
+                'quiz'                       => XpRewards::QUIZ_QUESTION    * max(0, $correctAnswers ?? 0),
+                'scenario'                   => XpRewards::SCENARIO_QUESTION * max(0, $correctAnswers ?? 0),
+                'flashcards', 'flashcard'    => XpRewards::FLASHCARD         * max(0, $correctAnswers ?? 0),
+                default                      => 0,
             };
 
             $xpEarned = $granted ? $baseXp : 0;
