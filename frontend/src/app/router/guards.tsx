@@ -1,6 +1,7 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../store/auth.store';
+import { PageLoader } from '../../components/feedback';
 
 interface ProtectedRouteProps {
     children: React.ReactNode;
@@ -11,7 +12,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     const location = useLocation();
 
     if (!isAuthChecked) {
-        return <div>Loading...</div>;
+        return <PageLoader />;
     }
 
     if (!isAuthenticated) {
