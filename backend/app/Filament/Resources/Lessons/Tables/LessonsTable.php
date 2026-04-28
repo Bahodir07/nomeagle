@@ -62,10 +62,6 @@ class LessonsTable
                         return LessonType::from($state)->label();
                     }),
 
-                TextColumn::make('xp_reward')
-                    ->label('XP')
-                    ->sortable(),
-
                 TextColumn::make('estimated_minutes')
                     ->label('Min')
                     ->sortable()

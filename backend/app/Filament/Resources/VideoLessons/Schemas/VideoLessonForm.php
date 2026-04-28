@@ -63,13 +63,6 @@ class VideoLessonForm
                         ->default(1)
                         ->minValue(1),
 
-                    TextInput::make('xp_reward')
-                        ->label('XP reward')
-                        ->numeric()
-                        ->required()
-                        ->default(0)
-                        ->minValue(0),
-
                     TextInput::make('estimated_minutes')
                         ->label('Estimated minutes')
                         ->numeric()

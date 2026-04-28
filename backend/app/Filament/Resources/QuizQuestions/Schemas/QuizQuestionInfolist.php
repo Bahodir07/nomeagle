@@ -21,8 +21,6 @@ class QuizQuestionInfolist
                     ->columnSpanFull(),
                 TextEntry::make('order')
                     ->numeric(),
-                TextEntry::make('xp_reward')
-                    ->numeric(),
                 IconEntry::make('is_active')
                     ->boolean(),
                 TextEntry::make('created_at')

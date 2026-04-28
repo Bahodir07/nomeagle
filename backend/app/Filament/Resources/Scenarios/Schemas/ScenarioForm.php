@@ -123,13 +123,6 @@ class ScenarioForm
                             ->default(1)
                             ->minValue(1),
 
-                        TextInput::make('xp_reward')
-                            ->label('XP reward')
-                            ->numeric()
-                            ->required()
-                            ->default(0)
-                            ->minValue(0),
-
                         Toggle::make('is_active')
                             ->label('Active')
                             ->default(true)

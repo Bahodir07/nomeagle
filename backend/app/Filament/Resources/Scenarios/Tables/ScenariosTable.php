@@ -57,10 +57,6 @@ class ScenariosTable
                 TextColumn::make('type')
                     ->badge(),
 
-                TextColumn::make('xp_reward')
-                    ->label('XP')
-                    ->sortable(),
-
                 IconColumn::make('is_active')
                     ->label('Active')
                     ->boolean()
