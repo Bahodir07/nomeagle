@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { BADGE_DEFINITIONS } from "../config";
 import { evaluateBadges } from "../engine";
 import { getAchievements } from "../../../app/api/achievements";
+import { reportAchievement } from "../../../app/api/notifications";
 import { useAuth } from "../../../app/store/auth.store";
 import type { BadgeWithDefinition } from "./useAchievements";
 
@@ -25,6 +26,7 @@ function markSeen(id: string) {
 
 export function useBadgeUnlockNotifier() {
   const { isAuthenticated } = useAuth();
+  const qc = useQueryClient();
   const [queue, setQueue] = useState<BadgeWithDefinition[]>([]);
   const initializedRef = useRef(false);
 
@@ -74,6 +76,18 @@ export function useBadgeUnlockNotifier() {
 
     if (newlyUnlocked.length > 0) {
       setQueue((q) => [...q, ...newlyUnlocked]);
+
+      Promise.all(
+        newlyUnlocked.map((badge) =>
+          reportAchievement({
+            badge_id: badge.id,
+            title: badge.title,
+            description: badge.description,
+          })
+        )
+      )
+        .then(() => qc.invalidateQueries({ queryKey: ['notifications'] }))
+        .catch((err) => console.error('[useBadgeUnlockNotifier] Failed to report achievement:', err));
     }
   }, [context]);
 

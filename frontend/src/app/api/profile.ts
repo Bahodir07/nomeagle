@@ -39,6 +39,10 @@ export async function updateProfilePassword(payload: UpdatePasswordPayload): Pro
   });
 }
 
+export async function deleteAccount(): Promise<void> {
+  await http.delete('/api/profile');
+}
+
 export async function uploadAvatar(file: File): Promise<string> {
   const form = new FormData();
   form.append('avatar', file);

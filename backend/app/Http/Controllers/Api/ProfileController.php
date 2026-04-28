@@ -89,6 +89,21 @@ class ProfileController extends Controller
         return response()->json(['message' => 'Password updated.']);
     }
 
+    public function destroy(Request $request): JsonResponse
+    {
+        $user = $request->user();
+
+        $request->user()->tokens()->delete();
+
+        if ($user->avatar_path) {
+            Storage::disk('public')->delete($user->avatar_path);
+        }
+
+        $user->delete();
+
+        return response()->json(['message' => 'Account deleted.']);
+    }
+
     public function uploadAvatar(Request $request): JsonResponse
     {
         $request->validate([

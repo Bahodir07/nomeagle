@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Toast } from '../../../components/ui';
 import { useUiSettings } from '../../../app/store/ui.store';
 import { useAuth } from '../../../app/store/auth.store';
+import { deleteAccount } from '../../../app/api/profile';
 import {
     SettingsSectionCard,
     ThemeSetting,
@@ -88,6 +89,16 @@ export const SettingsPage: React.FC = () => {
         }
     }, [logout, navigate, showToast]);
 
+    const handleDeleteAccount = useCallback(async () => {
+        try {
+            await deleteAccount();
+            await logout();
+            navigate('/login');
+        } catch {
+            showToast('Failed to delete account. Please try again.');
+        }
+    }, [logout, navigate, showToast]);
+
     return (
         <div className={styles.wrap}>
             <header className={styles.header}>
@@ -151,9 +162,7 @@ export const SettingsPage: React.FC = () => {
                     >
                         <AccountActions
                             onLogout={handleLogout}
-                            onDeleteAccount={() => {
-                                showToast('Account deletion requested');
-                            }}
+                            onDeleteAccount={handleDeleteAccount}
                         />
                     </SettingsSectionCard>
                 </div>

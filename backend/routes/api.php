@@ -74,6 +74,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/profile/preferences', [ProfileController::class, 'updatePreferences']);
     Route::patch('/profile/password', [ProfileController::class, 'updatePassword']);
     Route::post('/profile/avatar', [ProfileController::class, 'uploadAvatar']);
+    Route::delete('/profile', [ProfileController::class, 'destroy']);
 
     Route::get('/dashboard', [DashboardController::class, 'index']);
 

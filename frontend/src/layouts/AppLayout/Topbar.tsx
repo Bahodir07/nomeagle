@@ -2,6 +2,7 @@ import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { Avatar } from '../../components/ui/Avatar/Avatar';
 import { useAuth } from '../../app/store/auth.store';
+import { NotificationBell } from '../../features/notifications/components/NotificationBell';
 import styles from './Topbar.module.css';
 
 /* ── Route → Page title map ─────────────────────────────────────────────── */
@@ -35,6 +36,8 @@ export const Topbar: React.FC = () => {
 
       {/* Right – actions */}
       <div className={styles.actions}>
+        <NotificationBell />
+
         {/* Language selector placeholder */}
         <button
           type="button"

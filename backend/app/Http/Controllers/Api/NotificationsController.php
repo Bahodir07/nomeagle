@@ -47,8 +47,17 @@ class NotificationsController extends Controller
 
     public function achievement(Request $request): JsonResponse
     {
+        $validBadgeIds = [
+            'first-step', 'cultural-traveler', 'world-explorer', 'global-citizen', 'master-explorer',
+            'streak-3',
+            'it-expert', 'cn-scholar', 'de-expert', 'jp-scholar', 'fr-expert',
+            'br-expert', 'ca-scholar', 'au-expert', 'in-scholar', 'mx-expert',
+            'kz-scholar', 'tr-scholar', 'es-expert', 'eg-scholar', 'th-expert',
+            'perfect-quiz',
+        ];
+
         $request->validate([
-            'badge_id'    => 'required|string',
+            'badge_id'    => ['required', 'string', 'in:' . implode(',', $validBadgeIds)],
             'title'       => 'required|string|max:255',
             'description' => 'required|string|max:500',
         ]);
