@@ -8,6 +8,7 @@ use App\Models\Country;
 use App\Models\LessonCompletionEvent;
 use App\Models\UserLessonProgress;
 use App\Models\UserNotification;
+use App\Support\XpRewards;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -48,7 +49,7 @@ class LessonCompletionController extends Controller
         $correctAnswers   = $request->has('correct_answers') ? (int)$request->input('correct_answers') : null;
         $totalAttempts    = $request->has('total_attempts')  ? (int)$request->input('total_attempts')  : null;
 
-        $result = DB::transaction(function () use ($user, $lessonRecord, $durationSeconds, $correctAnswers, $totalAttempts) {
+        $result = DB::transaction(function () use ($user, $lessonRecord, $durationSeconds, $correctAnswers, $totalAttempts, $currentType) {
             $granted = DB::table('user_xp_grants')->insertOrIgnore([
                 'user_id'        => $user->id,
                 'grantable_type' => 'lesson',
@@ -57,7 +58,14 @@ class LessonCompletionController extends Controller
                 'updated_at'     => now(),
             ]);
 
-            $xpEarned = $granted ? (int) $lessonRecord->xp_reward : 0;
+            $baseXp = match ($currentType) {
+                'article', 'summary' => XpRewards::ARTICLE,
+                'video'              => XpRewards::VIDEO,
+                'matching'           => XpRewards::MATCHING_PAIR * max(0, $correctAnswers ?? 0),
+                default              => 0,
+            };
+
+            $xpEarned = $granted ? $baseXp : 0;
 
             LessonCompletionEvent::create([
                 'user_id' => $user->id,

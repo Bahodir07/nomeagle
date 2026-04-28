@@ -12,6 +12,7 @@ use App\Models\UserLessonProgress;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use App\Support\XpRewards;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
@@ -105,7 +106,7 @@ class QuizQuestionController extends Controller
                     'created_at'     => now(),
                     'updated_at'     => now(),
                 ]);
-                $xpEarned = $granted ? $quizQuestion->xp_reward : 0;
+                $xpEarned = $granted ? XpRewards::QUIZ_QUESTION : 0;
             }
 
             QuizQuestionAttempt::create([

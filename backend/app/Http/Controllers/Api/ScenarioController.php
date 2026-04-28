@@ -11,6 +11,7 @@ use App\Models\ScenarioAttempt;
 use App\Models\UserLessonProgress;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use App\Support\XpRewards;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
@@ -105,7 +106,7 @@ class ScenarioController extends Controller
                     'created_at'     => now(),
                     'updated_at'     => now(),
                 ]);
-                $xpEarned = $granted ? $scenario->xp_reward : 0;
+                $xpEarned = $granted ? XpRewards::SCENARIO_QUESTION : 0;
             }
 
             ScenarioAttempt::create([

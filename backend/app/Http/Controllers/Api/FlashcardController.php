@@ -11,6 +11,7 @@ use App\Models\FlashcardReview;
 use App\Models\UserLessonProgress;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use App\Support\XpRewards;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
@@ -83,11 +84,7 @@ class FlashcardController extends Controller
                 'updated_at'     => now(),
             ]);
 
-            $xpEarned = match ($rating) {
-                'good'  => $granted ? 1 : 0,
-                'easy'  => $granted ? 2 : 0,
-                default => 0,
-            };
+            $xpEarned = $granted ? XpRewards::FLASHCARD : 0;
 
             FlashcardReview::create([
                 'user_id' => $user->id,
