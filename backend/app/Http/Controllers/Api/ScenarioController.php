@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\SubmitScenarioRequest;
 use App\Http\Resources\Api\ScenarioResource;
 use App\Models\Country;
+use App\Models\LessonCompletionEvent;
 use App\Models\Scenario;
 use App\Models\ScenarioAttempt;
 use App\Models\UserLessonProgress;
@@ -155,6 +156,11 @@ class ScenarioController extends Controller
                 default => 'in_progress',
             };
 
+            $existingProgress = UserLessonProgress::query()
+                ->where('user_id', $user->id)
+                ->where('lesson_id', $lesson->id)
+                ->first();
+
             $progress = UserLessonProgress::query()->updateOrCreate(
                 [
                     'user_id' => $user->id,
@@ -168,10 +174,22 @@ class ScenarioController extends Controller
                     'correct_answers' => $correctAnswers,
                     'total_attempts' => $totalAttempts,
                     'xp_earned' => $xpTotal,
-                    'completed_at' => $status === 'completed' ? now() : null,
+                    'completed_at' => $status === 'completed' ? ($existingProgress?->completed_at ?? now()) : null,
                     'last_activity_at' => now(),
                 ]
             );
+
+            // Fire a lesson completion event for streak/dashboard tracking when lesson first completes.
+            if ($status === 'completed' && ! $existingProgress?->completed_at) {
+                LessonCompletionEvent::create([
+                    'user_id'          => $user->id,
+                    'lesson_id'        => $lesson->id,
+                    'xp_earned'        => $xpTotal,
+                    'duration_seconds' => $durationSeconds,
+                    'completed_at'     => now(),
+                ]);
+                $user->updateStreak();
+            }
 
             return compact('xpEarned', 'progress');
         });
@@ -179,6 +197,7 @@ class ScenarioController extends Controller
         $userId = $user->id;
         Cache::forget("dashboard:user:{$userId}");
         Cache::forget("statistics:user:{$userId}");
+        Cache::forget("achievements:user:{$userId}");
 
         return response()->json([
             'correct' => $isCorrect,

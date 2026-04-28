@@ -161,6 +161,7 @@ class FlashcardController extends Controller
         $userId = $user->id;
         Cache::forget("dashboard:user:{$userId}");
         Cache::forget("statistics:user:{$userId}");
+        Cache::forget("achievements:user:{$userId}");
 
         return response()->json([
             'rating' => $rating,

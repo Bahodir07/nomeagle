@@ -49,8 +49,12 @@ class LessonCompletionController extends Controller
         $correctAnswers   = $request->has('correct_answers') ? (int)$request->input('correct_answers') : null;
         $totalAttempts    = $request->has('total_attempts')  ? (int)$request->input('total_attempts')  : null;
 
-        $result = DB::transaction(function () use ($user, $lessonRecord, $durationSeconds, $correctAnswers, $totalAttempts, $currentType) {
-            $granted = DB::table('user_xp_grants')->insertOrIgnore([
+        // Types where XP and progress metrics are tracked per-item (not per-lesson).
+        $perItemTypes = ['quiz', 'scenario', 'flashcards', 'flashcard'];
+        $isPerItemType = in_array($currentType, $perItemTypes, true);
+
+        $result = DB::transaction(function () use ($user, $lessonRecord, $durationSeconds, $correctAnswers, $totalAttempts, $currentType, $isPerItemType) {
+            $granted = (bool) DB::table('user_xp_grants')->insertOrIgnore([
                 'user_id'        => $user->id,
                 'grantable_type' => 'lesson',
                 'grantable_id'   => $lessonRecord->id,
@@ -87,29 +91,43 @@ class LessonCompletionController extends Controller
 
             $xpTotal = max($existingProgress?->xp_earned ?? 0, $xpEarned);
 
-            $progress = UserLessonProgress::query()->updateOrCreate(
-                [
-                    'user_id' => $user->id,
-                    'lesson_id' => $lessonRecord->id,
-                ],
-                [
-                    'status' => 'completed',
-                    'progress_pct' => 100,
-                    'total_items' => 1,
-                    'completed_items' => 1,
-                    'correct_answers' => $correctAnswers ?? 0,
-                    'total_attempts' => $totalAttempts ?? $completionCount,
-                    'xp_earned' => $xpTotal,
-                    'completed_at' => $existingProgress?->completed_at ?? now(),
+            // For per-item types, preserve the metrics already tracked by individual submissions.
+            if ($isPerItemType) {
+                $progressData = [
+                    'status'           => 'completed',
+                    'progress_pct'     => 100,
+                    'total_items'      => $existingProgress?->total_items      ?? 1,
+                    'completed_items'  => $existingProgress?->completed_items  ?? 1,
+                    'correct_answers'  => $existingProgress?->correct_answers  ?? 0,
+                    'total_attempts'   => $existingProgress?->total_attempts   ?? ($totalAttempts ?? $completionCount),
+                    'xp_earned'        => $xpTotal,
+                    'completed_at'     => $existingProgress?->completed_at     ?? now(),
                     'last_activity_at' => now(),
-                ]
+                ];
+            } else {
+                $progressData = [
+                    'status'           => 'completed',
+                    'progress_pct'     => 100,
+                    'total_items'      => 1,
+                    'completed_items'  => 1,
+                    'correct_answers'  => $correctAnswers ?? 0,
+                    'total_attempts'   => $totalAttempts  ?? $completionCount,
+                    'xp_earned'        => $xpTotal,
+                    'completed_at'     => $existingProgress?->completed_at ?? now(),
+                    'last_activity_at' => now(),
+                ];
+            }
+
+            $progress = UserLessonProgress::query()->updateOrCreate(
+                ['user_id' => $user->id, 'lesson_id' => $lessonRecord->id],
+                $progressData
             );
 
-            if ($xpEarned > 0) {
+            if ($granted) {
                 $user->updateStreak();
             }
 
-            return compact('xpEarned', 'progress');
+            return compact('xpEarned', 'progress', 'granted');
         });
 
         $userId = $user->id;
@@ -117,13 +135,15 @@ class LessonCompletionController extends Controller
         Cache::forget("statistics:user:{$userId}");
         Cache::forget("achievements:user:{$userId}");
 
-        if ($result['xpEarned'] > 0) {
+        $responseXp = $result['xpEarned'] ?: $result['progress']->xp_earned;
+
+        if ($result['granted'] && $responseXp > 0) {
             UserNotification::create([
                 'user_id' => $userId,
                 'type'    => 'lesson_completed',
                 'title'   => 'Lesson Complete!',
-                'body'    => "You finished \"{$lessonRecord->title}\" and earned {$result['xpEarned']} XP.",
-                'data'    => ['lesson_id' => $lessonRecord->id, 'xp' => $result['xpEarned']],
+                'body'    => "You finished \"{$lessonRecord->title}\" and earned {$responseXp} XP.",
+                'data'    => ['lesson_id' => $lessonRecord->id, 'xp' => $responseXp],
             ]);
 
             $user->refresh();
@@ -141,7 +161,7 @@ class LessonCompletionController extends Controller
 
         return response()->json([
             'completed' => true,
-            'xp_earned' => $result['xpEarned'],
+            'xp_earned' => $responseXp,
             'progress' => [
                 'status' => $result['progress']->status,
                 'progress_pct' => $result['progress']->progress_pct,
