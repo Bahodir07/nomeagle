@@ -2,10 +2,7 @@
     "agents": [
         "claude_code"
     ],
-    "packages": [
-        "filament/filament"
-    ],
-    "skills": [
-        "laravel-best-practices"
-    ]
+    "mcp": true,
+    "nightwatch_mcp": false,
+    "sail": false
 }

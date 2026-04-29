@@ -38,9 +38,15 @@ class AuthController extends Controller
     {
         $validated = $request->validated();
 
+        if (! User::where('email', $validated['email'])->exists()) {
+            return response()->json([
+                'message' => 'No account found with this email address.',
+            ], 422);
+        }
+
         if (! Auth::attempt($validated)) {
             return response()->json([
-                'message' => 'Invalid credentials.',
+                'message' => 'Incorrect password.',
             ], 422);
         }
 
