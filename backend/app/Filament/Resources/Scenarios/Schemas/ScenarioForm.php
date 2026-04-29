@@ -75,7 +75,8 @@ class ScenarioForm
                         FileUpload::make('image_path')
                             ->label('Hint image')
                             ->image()
-                            ->disk('public')
+                            ->disk('s3')
+                            ->visibility('public')
                             ->directory('scenario-images')
                             ->columnSpanFull(),
 

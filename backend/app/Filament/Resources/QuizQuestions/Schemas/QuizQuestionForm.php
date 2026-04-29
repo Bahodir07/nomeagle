@@ -47,7 +47,8 @@ class QuizQuestionForm
                         FileUpload::make('question_image_path')
                             ->label('Question image')
                             ->image()
-                            ->disk('public')
+                            ->disk('s3')
+                            ->visibility('public')
                             ->directory('quiz-question-images')
                             ->columnSpanFull(),
 

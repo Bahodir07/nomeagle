@@ -71,7 +71,7 @@ class CountryForm
                             ->image()
                             ->imageEditor()
                             ->directory('flags')
-                            ->disk('public')
+                            ->disk('s3')
                             ->visibility('public')
                             ->imagePreviewHeight('120')
                             ->helperText('Upload the country flag image.'),

@@ -90,7 +90,7 @@ class VideoLessonForm
 
                     FileUpload::make('video_file')
                         ->label('Video file')
-                        ->disk('public')
+                        ->disk('s3')
                         ->directory('lesson-videos')
                         ->visibility('public')
                         ->acceptedFileTypes([
