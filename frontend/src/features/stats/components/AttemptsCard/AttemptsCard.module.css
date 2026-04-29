@@ -82,23 +82,23 @@
   transition: background 0.15s ease;
 }
 
-/* Contribution tiers: more attempts = greener (streak / gamification) */
+/* Contribution tiers: more attempts = greener (GitHub-style palette) */
 .cellTier0 {
-  background: rgb(238, 238, 238);
+  background: #ebedf0;
 }
 
 .cellTier1 {
-  background: #d3d3d3;
+  background: #9be9a8;
 }
 
 .cellTier2 {
-  background: #d6e685;
+  background: #40c463;
 }
 
 .cellTier3 {
-  background: #44a340;
+  background: #30a14e;
 }
 
 .cellTier4 {
-  background: #1e6823;
+  background: #216e39;
 }
