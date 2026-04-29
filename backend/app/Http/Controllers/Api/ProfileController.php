@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 namespace App\Http\Controllers\Api;
 
@@ -121,7 +121,8 @@ class ProfileController extends Controller
         $user->update(['avatar_path' => $path]);
 
         return response()->json([
-            'avatarUrl' => Storage::disk('public')->url($path),
+            'avatarUrl' => Storage::disk('s3')->url($path),
         ]);
     }
 }
+

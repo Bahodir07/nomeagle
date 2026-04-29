@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 namespace App\Http\Resources\Api;
 
@@ -19,7 +19,7 @@ class QuizQuestionResource extends JsonResource
             ],
             'question' => $this->question,
             'image_url' => $this->question_image_path
-                ? Storage::disk('public')->url($this->question_image_path)
+                ? Storage::disk('s3')->url($this->question_image_path)
                 : null,
             'image_alt' => $this->question_image_alt,
             'options' => $this->options,
@@ -32,3 +32,4 @@ class QuizQuestionResource extends JsonResource
         ];
     }
 }
+

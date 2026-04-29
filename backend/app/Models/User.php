@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 namespace App\Models;
 
@@ -75,7 +75,7 @@ class User extends Authenticatable implements FilamentUser
     {
         return Attribute::make(
             get: fn () => $this->avatar_path
-                ? Storage::disk('public')->url($this->avatar_path)
+                ? Storage::disk('s3')->url($this->avatar_path)
                 : null,
         );
     }
@@ -137,3 +137,4 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasMany(LessonCompletionEvent::class);
     }
 }
+

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 namespace App\Http\Controllers\Api;
 
@@ -88,7 +88,7 @@ class DashboardController extends Controller
                 'teaser'          => str($country->description ?? '')->limit(90)->toString(),
                 'lastLessonTitle' => $lastLessonTitle,
                 'flagPath'        => $country->flag_path,
-                'flagUrl'         => $country->flag_path ? Storage::disk('public')->url($country->flag_path) : null,
+                'flagUrl'         => $country->flag_path ? Storage::disk('s3')->url($country->flag_path) : null,
                 'flagEmoji'       => $country->flagEmoji(),
             ];
         })->values();
@@ -107,7 +107,7 @@ class DashboardController extends Controller
             ? (int) floor(($completedLessonCount / $totalActiveLessons) * 100)
             : 0;
 
-        // Quiz accuracy — 2 queries instead of 2 clones
+        // Quiz accuracy вЂ” 2 queries instead of 2 clones
         $quizAgg = QuizQuestionAttempt::where('user_id', $user->id)
             ->selectRaw('COUNT(*) as total, SUM(CASE WHEN is_correct THEN 1 ELSE 0 END) as correct')
             ->first();
@@ -118,7 +118,7 @@ class DashboardController extends Controller
         $todayStart = now()->startOfDay();
         $weekStart  = now()->startOfWeek();
 
-        // Time breakdown — 4 queries (one per table) instead of 12
+        // Time breakdown вЂ” 4 queries (one per table) instead of 12
         $tables = [
             ['table' => 'scenario_attempts',        'label' => 'scenario'],
             ['table' => 'quiz_question_attempts',   'label' => 'quiz'],
@@ -149,7 +149,7 @@ class DashboardController extends Controller
         $timeSpentWeekSeconds  = array_sum(array_column($times, 'week'));
         $timeSpentTotalSeconds = array_sum(array_column($times, 'total'));
 
-        // Week progress — 1 query instead of 7 exists() calls
+        // Week progress вЂ” 1 query instead of 7 exists() calls
         $activeDates = DB::table('lesson_completion_events')
             ->where('user_id', $user->id)
             ->where('created_at', '>=', $weekStart)
@@ -185,3 +185,4 @@ class DashboardController extends Controller
         ];
     }
 }
+

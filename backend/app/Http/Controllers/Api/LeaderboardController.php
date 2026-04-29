@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 namespace App\Http\Controllers\Api;
 
@@ -63,7 +63,7 @@ class LeaderboardController extends Controller
                     'userId'              => (string) $row->id,
                     'name'                => $row->name,
                     'avatarUrl'           => $row->avatar_path
-                        ? \Illuminate\Support\Facades\Storage::disk('public')->url($row->avatar_path)
+                        ? \Illuminate\Support\Facades\Storage::disk('s3')->url($row->avatar_path)
                         : null,
                     'level'               => intdiv($xp, 100) + 1,
                     'xp'                  => $xp,
@@ -88,3 +88,4 @@ class LeaderboardController extends Controller
         ]);
     }
 }
+

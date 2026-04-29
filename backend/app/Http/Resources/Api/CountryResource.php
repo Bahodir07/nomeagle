@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 namespace App\Http\Resources\Api;
 
@@ -18,7 +18,7 @@ class CountryResource extends JsonResource
             'description' => $this->description,
             'flag_path' => $this->flag_path,
             'flag_url' => $this->flag_path
-                ? Storage::disk('public')->url($this->flag_path)
+                ? Storage::disk('s3')->url($this->flag_path)
                 : null,
             'is_active' => $this->is_active,
             'created_at' => $this->created_at?->toISOString(),
@@ -26,3 +26,4 @@ class CountryResource extends JsonResource
         ];
     }
 }
+

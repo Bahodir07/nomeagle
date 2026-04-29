@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 namespace App\Http\Resources\Api;
 
@@ -24,7 +24,7 @@ class ScenarioResource extends JsonResource
             'type' => $this->type,
             'prompt' => $this->prompt,
             'image_url' => $this->image_path
-                ? Storage::disk('public')->url($this->image_path)
+                ? Storage::disk('s3')->url($this->image_path)
                 : null,
             'image_alt' => $this->image_alt,
             'payload' => $this->normalizedPayload(),
@@ -36,3 +36,4 @@ class ScenarioResource extends JsonResource
         ];
     }
 }
+

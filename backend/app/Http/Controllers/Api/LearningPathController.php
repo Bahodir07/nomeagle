@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 namespace App\Http\Controllers\Api;
 
@@ -163,7 +163,7 @@ class LearningPathController extends Controller
                 'countryName' => $country->name,
                 'flagPath' => $country->flag_path,
                 'flagUrl' => $country->flag_path
-                    ? Storage::disk('public')->url($country->flag_path)
+                    ? Storage::disk('s3')->url($country->flag_path)
                     : null,
                 'flagEmoji' => $country->flagEmoji(),
 
@@ -247,3 +247,4 @@ class LearningPathController extends Controller
     }
 
 }
+
