@@ -37,6 +37,15 @@
     gap: var(--ne-4);
 }
 
+.questionCounter {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ne-muted);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin: 0;
+}
+
 .prompt {
     font-size: 18px;
     font-weight: 700;
@@ -47,6 +56,14 @@
     max-width: 720px;
 }
 
+.questionImage {
+    max-width: 480px;
+    width: 100%;
+    max-height: 280px;
+    object-fit: contain;
+    border-radius: var(--ne-radius-md);
+}
+
 /* --- 2x2 options grid --- */
 
 .optionsGrid {
@@ -55,6 +72,7 @@
     gap: var(--ne-2);
     width: 100%;
 }
+
 
 /* --- Feedback slot (between options and bottom bar) --- */
 

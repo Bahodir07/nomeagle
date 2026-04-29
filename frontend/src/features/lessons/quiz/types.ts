@@ -6,6 +6,8 @@ export interface QuizOption {
 export interface QuizQuestion {
     id: string;
     prompt: string;
+    imageUrl?: string;
+    imageAlt?: string;
     options: [QuizOption, QuizOption, QuizOption, QuizOption];
     correctOptionId: string;
     explanation?: string;

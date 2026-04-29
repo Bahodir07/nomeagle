@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\LearningPathController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\StatisticsController;
 use App\Http\Controllers\Api\LeaderboardController;
+use App\Http\Controllers\Api\GameCompletionController;
 use App\Http\Controllers\Api\NotificationsController;
 use Illuminate\Support\Facades\Route;
 
@@ -83,6 +84,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/achievements', [AchievementsController::class, 'index']);
 
     Route::get('/leaderboard', [LeaderboardController::class, 'index']);
+
+    Route::post('/games/complete', [GameCompletionController::class, 'store']);
 
     Route::get('/notifications', [NotificationsController::class, 'index']);
     Route::post('/notifications/read-all', [NotificationsController::class, 'readAll']);

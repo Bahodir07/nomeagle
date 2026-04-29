@@ -5,25 +5,19 @@ import { GameBoard } from './components/GameBoard';
 import { XPToast } from './components/XPToast';
 import { EndScreen } from './components/EndScreen';
 import { LearnMoreModal } from './components/LearnMoreModal';
-import { japanLevelMock } from './data/jp.mock';
+import { SetupMenu } from './components/SetupMenu';
 import { motion, AnimatePresence } from 'framer-motion';
 import japanBg from '../../../assets/images/japan_background.png';
 import styles from './CultureMatchRush.module.css';
 
 export const GameContainer: React.FC = () => {
   const {
-    gameState, countdownPhase, learnMoreOpen,
+    gameState, countdownPhase, learnMoreOpen, phase,
     lastMatchResult, lastPointsEarned,
-    initializeGame, tickCountdown, clearMatchFeedback, level,
+    tickCountdown, clearMatchFeedback, level,
   } = useGameStore();
 
   const [isShaking, setIsShaking] = React.useState(false);
-
-  useEffect(() => { 
-    // Auto-init and auto-start
-    initializeGame(japanLevelMock); 
-    useGameStore.getState().startCountdown();
-  }, [initializeGame]);
 
   useEffect(() => {
     if (countdownPhase === null) return;
@@ -45,6 +39,11 @@ export const GameContainer: React.FC = () => {
   }, [lastMatchResult, clearMatchFeedback]);
 
   const bg = level?.backgroundImage || japanBg;
+
+  /* ──── Setup Screen ──── */
+  if (phase === 'setup') {
+    return <SetupMenu />;
+  }
 
   /* ──── Countdown Overlay ──── */
   if (gameState === 'idle' && countdownPhase !== null) {

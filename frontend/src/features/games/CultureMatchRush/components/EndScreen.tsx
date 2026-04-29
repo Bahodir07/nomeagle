@@ -2,6 +2,7 @@ import React from 'react';
 import { useGameStore } from '../store/useGameStore';
 import { motion } from 'framer-motion';
 import { useGameCompletion } from '../../../map-roadmap/components/GameLauncher/GameCompletionContext';
+import { submitGameCompletion } from '../../../../app/api/progress';
 import styles from '../CultureMatchRush.module.css';
 
 export const EndScreen: React.FC = () => {
@@ -75,6 +76,7 @@ export const EndScreen: React.FC = () => {
           </button>
           <button
             onClick={() => {
+              submitGameCompletion('culture_match', xpGained, score).catch(console.error);
               if (completion) {
                 completion.onComplete();
               } else {

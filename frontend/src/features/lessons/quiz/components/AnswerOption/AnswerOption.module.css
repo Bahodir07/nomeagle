@@ -120,10 +120,21 @@
     filter: brightness(0) invert(1);
 }
 
+/* Shake keyframe for wrong answers */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    15%       { transform: translateX(-6px); }
+    30%       { transform: translateX(6px); }
+    50%       { transform: translateX(-4px); }
+    70%       { transform: translateX(4px); }
+    85%       { transform: translateX(-2px); }
+}
+
 /* Wrong */
 .wrong {
     border-color: var(--ne-danger);
     background: #fef2f2;
+    animation: shake 0.38s ease;
 }
 
 .wrong .radio {

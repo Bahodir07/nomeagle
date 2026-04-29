@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useSprintStore } from '../store/useSprintStore';
 import { useGameCompletion } from '../../../map-roadmap/components/GameLauncher/GameCompletionContext';
+import { submitGameCompletion } from '../../../../app/api/progress';
 import type { TappedFood } from '../types';
 import styles from '../StreetFoodSprint.module.css';
 
@@ -43,6 +44,7 @@ export const PostGameReview: React.FC = () => {
   };
 
   const handleDone = () => {
+    submitGameCompletion('street_food_sprint', xpGained, score).catch(console.error);
     reset();
     if (completion) {
       completion.onComplete();

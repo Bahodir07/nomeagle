@@ -1,6 +1,7 @@
 import React from 'react';
 import { useFestivalStore } from '../store/useFestivalStore';
 import { useGameCompletion } from '../../../map-roadmap/components/GameLauncher/GameCompletionContext';
+import { submitGameCompletion } from '../../../../app/api/progress';
 import styles from '../FestivalTimeline.module.css';
 
 export const ResultScreen: React.FC = () => {
@@ -68,7 +69,10 @@ export const ResultScreen: React.FC = () => {
                     {completion && (
                         <button
                             className={styles.playBtn}
-                            onClick={() => completion.onComplete()}
+                            onClick={() => {
+                                submitGameCompletion('festival_timeline', scoreDetails.total).catch(console.error);
+                                completion.onComplete();
+                            }}
                             style={{ background: 'linear-gradient(135deg, #16a34a, #22c55e)' }}
                         >
                             COMPLETE ✓

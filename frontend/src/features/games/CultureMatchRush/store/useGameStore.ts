@@ -12,7 +12,10 @@ export type CountdownPhase = 3 | 2 | 1 | 'go' | null;
 interface GameStore {
   // Config
   level: GameLevel | null;
-  
+
+  // Setup phase — shown before countdown starts
+  phase: 'setup' | 'playing';
+
   // State
   gameState: GameState;
   countdownPhase: CountdownPhase;
@@ -34,6 +37,7 @@ interface GameStore {
   learnMoreData: ToastData | null;
   
   // Actions
+  startSetup: () => void;
   initializeGame: (level: GameLevel) => void;
   startCountdown: () => void;
   tickCountdown: () => void;
@@ -51,6 +55,7 @@ interface GameStore {
 
 export const useGameStore = create<GameStore>((set, get) => ({
   level: null,
+  phase: 'setup',
   gameState: 'idle',
   countdownPhase: null,
   timeLeft: 0,
@@ -68,10 +73,13 @@ export const useGameStore = create<GameStore>((set, get) => ({
   learnMoreOpen: false,
   learnMoreData: null,
 
+  startSetup: () => set({ phase: 'setup' }),
+
   initializeGame: (level: GameLevel) => {
     const shuffledCards = [...level.traditions].sort(() => Math.random() - 0.5);
     set({
       level,
+      phase: 'playing',
       gameState: 'idle',
       countdownPhase: null,
       timeLeft: level.timeLimitSeconds,

@@ -135,6 +135,26 @@ export async function reviewFlashcard(
     return data;
 }
 
+export type GameType = 'culture_match' | 'festival_timeline' | 'guess_landmark' | 'street_food_sprint';
+
+export interface GameCompletionResponse {
+    xp_earned: number;
+    total_xp: number;
+}
+
+export async function submitGameCompletion(
+    gameType: GameType,
+    xpEarned: number,
+    score?: number,
+): Promise<GameCompletionResponse> {
+    const { data } = await http.post<GameCompletionResponse>('/api/games/complete', {
+        game_type: gameType,
+        xp_earned: xpEarned,
+        score,
+    });
+    return data;
+}
+
 export async function getLeaderboard(timeRange: LeaderboardTimeRange = 'week'): Promise<LeaderboardResponse> {
     const { data } = await http.get<LeaderboardResponse>('/api/leaderboard', {
         params: { time_range: timeRange },

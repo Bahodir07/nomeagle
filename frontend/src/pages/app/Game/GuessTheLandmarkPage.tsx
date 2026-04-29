@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { GuessTheLandmark } from '../../../features/games/GuessTheLandmark/GuessTheLandmark';
 import { landmarkGameMockData } from '../../../features/games/GuessTheLandmark/landmarks.mock';
+import { submitGameCompletion } from '../../../app/api/progress';
 import styles from './GuessTheLandmarkPage.module.css';
 
 /**
@@ -16,7 +17,10 @@ export const GuessTheLandmarkPage: React.FC = () => {
   };
 
   const handleAnswer = (isCorrect: boolean, score: number) => {
-    console.log(`Answer Correct: ${isCorrect}, Score: ${score}`);
+    if (isCorrect) {
+      const xp = score >= 700 ? 15 : score >= 400 ? 10 : 5;
+      submitGameCompletion('guess_landmark', xp, score).catch(console.error);
+    }
   };
 
   // Format options for the component

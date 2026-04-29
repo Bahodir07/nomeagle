@@ -87,6 +87,8 @@ type ApiScenario = {
     slug?: string;
     title?: string;
     prompt?: string;
+    image_url?: string | null;
+    image_alt?: string | null;
     payload?: {
         options?: ApiScenarioOption[];
     };
@@ -102,6 +104,8 @@ type ApiQuizOption = {
 type ApiQuizQuestion = {
     id?: number | string;
     question?: string;
+    image_url?: string | null;
+    image_alt?: string | null;
     explanation?: string;
     options?: ApiQuizOption[];
 };
@@ -273,7 +277,7 @@ function mapScenarioLesson(
                 slug: scenario?.slug ? String(scenario.slug) : undefined,
                 title: String(scenario?.title ?? `Scenario ${index + 1}`),
                 description: String(scenario?.prompt ?? ""),
-                imageUrl: undefined,
+                imageUrl: scenario?.image_url ?? undefined,
                 choices: normalizedChoices,
             };
         }),
@@ -303,6 +307,8 @@ function mapQuizLesson(
             return {
                 id: String(question?.id ?? `question-${index + 1}`),
                 prompt: String(question?.question ?? ""),
+                imageUrl: question?.image_url ?? undefined,
+                imageAlt: question?.image_alt ?? undefined,
                 options: normalizedOptions as [any, any, any, any],
                 correctOptionId: String(correctOption?.id ?? normalizedOptions[0]?.id ?? ""),
                 explanation: question?.explanation || undefined,

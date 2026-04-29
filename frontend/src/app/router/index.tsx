@@ -110,6 +110,40 @@ export const router = createBrowserRouter([
     ),
   },
 
+  /* Standalone game routes (no country code required) */
+  {
+    path: '/app/games/culture-match',
+    element: (
+      <ProtectedRoute>
+        <CultureMatchRushPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/app/games/festival',
+    element: (
+      <ProtectedRoute>
+        <FestivalTimelinePage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/app/games/landmark',
+    element: (
+      <ProtectedRoute>
+        <GuessTheLandmarkPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/app/games/sprint',
+    element: (
+      <ProtectedRoute>
+        <StreetFoodSprintPage />
+      </ProtectedRoute>
+    ),
+  },
+
   /* Full-screen Article Lesson (protected) */
   {
     path: '/app/lesson/:lessonId',
