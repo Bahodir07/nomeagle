@@ -8,6 +8,7 @@ use App\Models\Country;
 use App\Models\Lesson;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Storage;
 
 class LessonController extends Controller
 {
@@ -81,6 +82,7 @@ class LessonController extends Controller
             'content'            => $lesson->content,
             'video_source'       => $lesson->video_source,
             'video_file'         => $lesson->video_file,
+            'video_url'          => $lesson->video_file ? Storage::disk('s3')->url($lesson->video_file) : null,
             'external_video_url' => $lesson->external_video_url,
             'video_disk'         => $lesson->video_disk,
             'order'              => $lesson->order,

@@ -70,6 +70,7 @@ type ApiLesson = {
     content?: Record<string, any> | null;
     xp_reward?: number | string | null;
     video_file?: string | null;
+    video_url?: string | null;
     external_video_url?: string | null;
     next_lesson?: NextLesson | null;
 };
@@ -208,17 +209,11 @@ function mapVideoLesson(apiLesson: ApiLesson): VideoLesson {
             text,
         }));
 
-    const backendUrl = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000/"; // или твой домен
-
-    const filePath = apiLesson?.video_file
-        ? `${backendUrl}/storage/${String(apiLesson.video_file).replace(/^\/+/, "")}`
-        : null;
-
     return {
         lessonId: String(apiLesson.id),
         title: apiLesson.title,
         description: apiLesson.description || apiLesson?.content?.summary || "",
-        videoUrl: apiLesson.external_video_url || filePath || "",
+        videoUrl: apiLesson.external_video_url || apiLesson.video_url || "",
         thumbnailUrl: apiLesson?.content?.thumbnail_url || undefined,
         durationSeconds: Number(apiLesson?.content?.duration_seconds ?? 0),
         transcript,
